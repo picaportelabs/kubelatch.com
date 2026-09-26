@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>kubelatch · Stop messing with Kubernetes credentials</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* Same look as the landing's ink band: near-black ground, a faint 48px
+         hairline grid, white type, 1px lines, one 4px radius. Inter and JetBrains
+         Mono (bundled by Hyperframes) stand in for the system fonts so every
+         render is identical. */
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0b0f19; }
+      #root {
+        position: relative; width: 100%; height: 100%; overflow: hidden;
+        color: #fff; font-family: "Inter", sans-serif;
+      }
+      #grid {
+        position: absolute; inset: 0;
+        background-image:
+          linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+        background-size: 48px 48px; background-position: center center;
+        mask-image: radial-gradient(ellipse 75% 70% at 50% 50%, #000 35%, transparent 100%);
+      }
+      .clip { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+      .mono { font-family: "JetBrains Mono", monospace; }
+      .panel {
+        background: #101828; border: 1px solid rgb(255 255 255 / 0.22); border-radius: 4px;
+      }
+      .panel-head {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 18px 28px; border-bottom: 1px solid rgb(255 255 255 / 0.22);
+        font-size: 24px; color: #d1d5dc;
+      }
+      .dim { color: #99a1af; }
+      .ok { color: #05df72; }
+      .bad { color: #ff6467; }
+      .type { display: inline-block; overflow: hidden; white-space: pre; vertical-align: bottom; width: 0; }
+
+      /* 1. The shared kubeconfig */
+      #chat { width: 1240px; }
+      #chat .body { padding: 32px 36px 36px; }
+      .who { display: flex; align-items: center; gap: 20px; font-size: 34px; }
+      .avatar {
+        width: 64px; height: 64px; border: 1px solid rgb(255 255 255 / 0.4); border-radius: 4px;
+        display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 28px;
+      }
+      .msg { margin-top: 24px; font-size: 46px; line-height: 1.35; }
+      .file {
+        position: relative; margin-top: 28px; display: flex; align-items: center; justify-content: space-between;
+        border: 1px solid rgb(255 255 255 / 0.3); border-radius: 4px; padding: 24px 30px; font-size: 36px;
+      }
+      #strike {
+        position: absolute; left: -12px; right: -12px; top: 50%; height: 6px; margin-top: -3px;
+        background: #fff; transform-origin: left center;
+      }
+      #copies { margin-top: 28px; font-size: 30px; }
+
+      /* 2. The questions */
+      #questions { flex-direction: column; align-items: flex-start; padding-left: 300px; gap: 18px; }
+      .q { font-size: 112px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.08; }
+      #nobody { margin-top: 30px; font-size: 40px; }
+
+      /* 3. kubelatch */
+      #brand { flex-direction: column; gap: 56px; }
+      #lockup { display: flex; align-items: center; gap: 36px; }
+      #mark { width: 190px; height: 190px; }
+      #mark .s { fill: none; stroke: #fff; stroke-width: 4.2; stroke-linejoin: round; }
+      #mark .f { fill: #fff; }
+      #wordmark { font-size: 150px; font-weight: 800; letter-spacing: -0.045em; }
+      #signin {
+        display: flex; align-items: center; gap: 28px; font-size: 34px;
+      }
+      #btn-github {
+        background: #fff; color: #101828; font-weight: 700; border-radius: 4px; padding: 20px 36px;
+      }
+      #kubeconfig { font-size: 30px; }
+
+      /* 4-5. kubectl, audit, revoke */
+      #work { gap: 40px; padding: 0 110px; align-items: center; }
+      #term { flex: 1.1; display: flex; flex-direction: column; }
+      #term pre { padding: 34px 36px; font-size: 30px; line-height: 1.6; font-family: "JetBrains Mono", monospace; white-space: pre; }
+      #side { flex: 1; display: flex; flex-direction: column; gap: 40px; }
+      .rows { padding: 12px 28px 20px; font-size: 28px; font-family: "JetBrains Mono", monospace; }
+      .row { display: grid; align-items: center; padding: 14px 0; border-bottom: 1px solid rgb(255 255 255 / 0.12); }
+      .row:last-child { border-bottom: 0; }
+      #creds .row { grid-template-columns: 1fr 1.3fr 1.5fr auto; }
+      #audit .row { grid-template-columns: 1.45fr 0.8fr 0.8fr 1.25fr 0.6fr; }
+      #revoke {
+        font-family: "Inter", sans-serif; font-size: 24px; font-weight: 700;
+        border: 1px solid rgb(255 255 255 / 0.5); border-radius: 4px; padding: 8px 18px; text-align: center;
+      }
+
+      /* 6. Slogan */
+      #end { flex-direction: column; gap: 60px; }
+      #end-mark { width: 150px; height: 150px; }
+      #end-mark .s { fill: none; stroke: #fff; stroke-width: 4.2; stroke-linejoin: round; }
+      #end-mark .f { fill: #fff; }
+      #slogan {
+        width: 1500px; text-align: center; font-size: 132px; font-weight: 800;
+        letter-spacing: -0.045em; line-height: 1.02;
+      }
+      #url { font-size: 34px; color: #d1d5dc; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="24" data-fps="30" data-width="1920" data-height="1080">
+      <div id="grid"></div>
+
+      <section id="s1" class="clip" data-start="0" data-duration="4.3" data-track-index="1">
+        <div id="chat" class="panel">
+          <div class="panel-head mono"><span># platform</span><span class="dim">10:42</span></div>
+          <div class="body">
+            <div class="who"><div class="avatar">M</div><strong>marta</strong><span class="dim">platform team</span></div>
+            <p class="msg">here's the prod kubeconfig, don't share it</p>
+            <div class="file mono" data-layout-allow-occlusion><span>admin.conf</span><span class="dim">5.4 KB · cluster-admin</span><div id="strike"></div></div>
+            <p id="copies" class="mono dim">copied to 5 laptops, 2 CI secrets, 1 wiki page</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="questions" class="clip" data-start="4.3" data-duration="4" data-track-index="1">
+        <p id="q1" class="q">who has it?</p>
+        <p id="q2" class="q">until when?</p>
+        <p id="q3" class="q">what did they run?</p>
+        <p id="nobody" class="mono dim">the API server only sees kubernetes-admin</p>
+      </section>
+
+      <section id="brand" class="clip" data-start="8.3" data-duration="4" data-track-index="1">
+        <div id="lockup">
+          <svg id="mark" viewBox="0 0 48 48" aria-hidden="true">
+            <polygon id="bow" class="s" points="15.50,12.80 24.26,17.02 26.42,26.49 20.36,34.09 10.64,34.09 4.58,26.49 6.74,17.02" />
+            <path id="hub" class="f" d="M16.22 20.95 L17.44 21.53 Q18.16 21.88 18.34 22.66 L18.64 23.98 Q18.81 24.76 18.32 25.38 L17.47 26.44 Q16.98 27.06 16.18 27.06 L14.82 27.06 Q14.02 27.06 13.53 26.44 L12.68 25.38 Q12.19 24.76 12.36 23.98 L12.66 22.66 Q12.84 21.88 13.56 21.53 L14.78 20.95 Q15.50 20.60 16.22 20.95 Z" />
+            <g id="blade">
+              <rect class="f" x="25" y="21.5" width="19.5" height="5" rx="2.5" />
+              <rect class="f" x="35" y="24" width="3.6" height="7.5" rx="1.8" />
+              <rect class="f" x="40.9" y="24" width="3.6" height="5.8" rx="1.8" />
+            </g>
+          </svg>
+          <span id="wordmark">kubelatch</span>
+        </div>
+        <div id="signin">
+          <span id="btn-github">Sign in with GitHub</span>
+          <span id="kubeconfig" class="mono dim">→ kubeconfig · ana · klt_3fQ9… · expires in 30 d</span>
+        </div>
+      </section>
+
+      <section id="work" class="clip" data-start="12.3" data-duration="8.2" data-track-index="1">
+        <div id="term" class="panel">
+          <div class="panel-head mono"><span>ana@laptop</span><span class="dim">kubeconfig: kubelatch</span></div>
+<pre><span class="dim">$ </span><span id="cmd1" class="type">kubectl get pods -n shop</span>
+<span id="out1">NAME              READY   STATUS
+web-7f9c6d        1/1     Running
+api-5d2b88        1/1     Running
+worker-8c1a4f     1/1     Running</span>
+<span id="p2"><span class="dim">$ </span><span id="cmd2" class="type">kubectl get pods -n shop</span></span>
+<span id="out2" class="bad">error: You must be logged in to the server
+(Unauthorized)</span></pre>
+        </div>
+        <div id="side">
+          <div id="creds" class="panel">
+            <div class="panel-head"><span>Credentials</span><span class="mono dim">prod-eu</span></div>
+            <div class="rows">
+              <div class="row dim"><span>owner</span><span>name</span><span>tier</span><span></span></div>
+              <div id="cred-row" class="row"><span>ana</span><span>laptop</span><span>developer</span>
+                <span id="revoke">Revoke</span></div>
+            </div>
+          </div>
+          <div id="audit" class="panel">
+            <div class="panel-head"><span>Audit</span><span class="mono dim">every request</span></div>
+            <div class="rows">
+              <div class="row dim"><span>time</span><span>user</span><span>verb</span><span>resource</span><span>code</span></div>
+              <div id="a1" class="row"><span>12:04:31</span><span>ana</span><span>list</span><span>pods</span><span class="ok">200</span></div>
+              <div id="a2" class="row"><span>12:05:02</span><span>ana</span><span>list</span><span>pods</span><span class="bad">401</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="end" class="clip" data-start="20.5" data-duration="3.5" data-track-index="1">
+        <svg id="end-mark" viewBox="0 0 48 48" aria-hidden="true">
+          <polygon class="s" points="15.50,12.80 24.26,17.02 26.42,26.49 20.36,34.09 10.64,34.09 4.58,26.49 6.74,17.02" />
+          <path class="f" d="M16.22 20.95 L17.44 21.53 Q18.16 21.88 18.34 22.66 L18.64 23.98 Q18.81 24.76 18.32 25.38 L17.47 26.44 Q16.98 27.06 16.18 27.06 L14.82 27.06 Q14.02 27.06 13.53 26.44 L12.68 25.38 Q12.19 24.76 12.36 23.98 L12.66 22.66 Q12.84 21.88 13.56 21.53 L14.78 20.95 Q15.50 20.60 16.22 20.95 Z" />
+          <rect class="f" x="25" y="21.5" width="19.5" height="5" rx="2.5" />
+          <rect class="f" x="35" y="24" width="3.6" height="7.5" rx="1.8" />
+          <rect class="f" x="40.9" y="24" width="3.6" height="5.8" rx="1.8" />
+        </svg>
+        <p id="slogan">Stop messing with Kubernetes credentials</p>
+        <p id="url" class="mono">kubelatch.com</p>
+      </section>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const out = "power3.out";
+      const typeOn = (sel, at, dur) => {
+        const n = document.querySelector(sel).textContent.length;
+        tl.fromTo(sel, { width: "0ch" }, { width: n + "ch", duration: dur, ease: "steps(" + n + ")" }, at);
+      };
+
+      // 1. The shared kubeconfig (0 - 4.3)
+      tl.fromTo("#chat", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7, ease: out }, 0.2);
+      tl.fromTo("#copies", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 1.5);
+      tl.fromTo("#strike", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.inOut" }, 2.3);
+      tl.to("#chat", { opacity: 0, y: -30, duration: 0.45, ease: "power2.in" }, 3.75);
+
+      // 2. The questions (4.3 - 8.3)
+      ["#q1", "#q2", "#q3"].forEach((q, i) => {
+        tl.fromTo(q, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: out }, 4.45 + i * 0.6);
+      });
+      tl.fromTo("#nobody", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 6.4);
+      tl.to(["#q1", "#q2", "#q3", "#nobody"], { opacity: 0, duration: 0.4, ease: "power2.in" }, 7.8);
+
+      // 3. kubelatch (8.3 - 12.3): the mark draws itself, then sign-in.
+      const bow = document.querySelector("#bow");
+      const len = bow.getTotalLength();
+      tl.fromTo(bow, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, 8.4);
+      tl.fromTo("#hub", { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 9.0);
+      tl.fromTo("#blade", { opacity: 0, x: -6 }, { opacity: 1, x: 0, duration: 0.4, ease: out }, 9.2);
+      tl.fromTo("#wordmark", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.5, ease: out }, 9.35);
+      tl.fromTo("#btn-github", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.45, ease: out }, 10.0);
+      tl.to("#btn-github", { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1 }, 10.7);
+      tl.fromTo("#kubeconfig", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.45, ease: out }, 10.95);
+      tl.to(["#lockup", "#signin"], { opacity: 0, duration: 0.4, ease: "power2.in" }, 11.85);
+
+      // 4. kubectl through kubelatch, audited (12.3 - 16)
+      tl.fromTo("#term", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.6, ease: out }, 12.35);
+      tl.fromTo("#side", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: out }, 12.5);
+      typeOn("#cmd1", 13.1, 1.1);
+      tl.fromTo("#out1", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 14.45);
+      tl.fromTo("#a1", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.4, ease: out }, 14.7);
+
+      // 5. Revoke: the next request gets 401 (16 - 20.5)
+      tl.fromTo("#revoke", { backgroundColor: "rgba(255,255,255,0)", color: "#ffffff" }, { backgroundColor: "rgba(255,255,255,1)", color: "#101828", duration: 0.15 }, 16.1);
+      tl.to("#cred-row", { opacity: 0.35, duration: 0.4 }, 16.5);
+      tl.fromTo("#p2", { opacity: 0 }, { opacity: 1, duration: 0.01 }, 17.0);
+      typeOn("#cmd2", 17.05, 1.1);
+      tl.fromTo("#out2", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 18.4);
+      tl.fromTo("#a2", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.4, ease: out }, 18.6);
+      tl.to(["#term", "#side"], { opacity: 0, duration: 0.4, ease: "power2.in" }, 20.05);
+
+      // 6. Slogan (20.5 - 24), then back to the empty grid so the loop joins scene 1.
+      tl.fromTo("#end-mark", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: out }, 20.55);
+      tl.fromTo("#slogan", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: out }, 20.6);
+      tl.fromTo("#url", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 20.8);
+      tl.to(["#end-mark", "#slogan", "#url"], { opacity: 0, duration: 0.5, ease: "power2.in" }, 23.2);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

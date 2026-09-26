@@ -1,0 +1,4 @@
+# Build context for landing/Dockerfile: only what the site needs.
+*
+!landing/nginx.conf
+!landing/site/**

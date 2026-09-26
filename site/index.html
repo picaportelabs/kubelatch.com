@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>kubelatch · Stop messing with Kubernetes credentials</title>
+<meta name="description" content="kubelatch gives every person and every CI pipeline their own credential for your Kubernetes clusters, with tiered permissions, an expiry and a record of every request.">
+<link rel="canonical" href="https://kubelatch.com/">
+<link rel="alternate" hreflang="en" href="https://kubelatch.com/">
+<link rel="alternate" hreflang="es" href="https://kubelatch.com/es/">
+<link rel="alternate" hreflang="x-default" href="https://kubelatch.com/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/style.css">
+<meta name="theme-color" content="#101828">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kubelatch.com/">
+<meta property="og:title" content="kubelatch · Stop messing with Kubernetes credentials">
+<meta property="og:description" content="One credential per person and per pipeline, with tiered permissions, an expiry and a record of every request.">
+<meta property="og:image" content="https://kubelatch.com/og.png">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<svg hidden><symbol id="mark" viewBox="0 0 48 48"><polygon class="s" points="15.50,12.80 24.26,17.02 26.42,26.49 20.36,34.09 10.64,34.09 4.58,26.49 6.74,17.02"/><path class="f" d="M16.22 20.95 L17.44 21.53 Q18.16 21.88 18.34 22.66 L18.64 23.98 Q18.81 24.76 18.32 25.38 L17.47 26.44 Q16.98 27.06 16.18 27.06 L14.82 27.06 Q14.02 27.06 13.53 26.44 L12.68 25.38 Q12.19 24.76 12.36 23.98 L12.66 22.66 Q12.84 21.88 13.56 21.53 L14.78 20.95 Q15.50 20.60 16.22 20.95 Z"/><rect class="f" x="25" y="21.5" width="19.5" height="5" rx="2.5"/><rect class="f" x="35" y="24" width="3.6" height="7.5" rx="1.8"/><rect class="f" x="40.9" y="24" width="3.6" height="5.8" rx="1.8"/></symbol></svg>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="band">
+  <nav class="wrap nav" aria-label="Main">
+    <a class="lockup" href="/"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg>kubelatch</a>
+    <ul>
+      <li><a href="https://docs.kubelatch.com/">Docs</a></li>
+      <li class="lang"><a href="/" aria-current="page" hreflang="en" lang="en">EN</a><span aria-hidden="true">·</span><a href="/es/" hreflang="es" lang="es">ES</a></li>
+    </ul>
+  </nav>
+
+  <div class="wrap hero">
+    <p class="eyebrow">credential broker for Kubernetes</p>
+    <h1 class="slogan">Stop messing with Kubernetes credentials</h1>
+    <p class="lead">kubelatch gives every person and every CI pipeline their own credential for your clusters, with tiered permissions, an expiry and a record of every request.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="https://docs.kubelatch.com/">Read the docs</a>
+      <a class="btn btn-secondary" href="https://docs.kubelatch.com/getting-started/local/">Try it in 15 minutes</a>
+    </div>
+
+    <figure class="film">
+      <div class="film-frame">
+        <video autoplay muted loop playsinline controls preload="metadata" poster="/media/poster.jpg" aria-describedby="film-caption">
+          <source src="/media/kubelatch.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
+        </video>
+      </div>
+      <figcaption id="film-caption">A shared admin kubeconfig, replaced by a credential per person: kubectl goes through kubelatch, every request is audited, and a revoked credential gets 401 at once.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<main id="main">
+  <section class="wrap section" aria-labelledby="why">
+    <p class="kicker">// the problem</p>
+    <h2 id="why">Nobody knows who holds the admin kubeconfig.</h2>
+    <p class="intro">The usual setup is one admin kubeconfig passed around, or a ServiceAccount made by hand for each person. Nobody knows who uses it or when it expires. kubelatch puts an owner, an expiry and a record behind every credential.</p>
+
+    <div class="versus">
+      <article class="card without">
+        <div class="card-head"><h3>Without kubelatch</h3><span class="mono">admin.conf</span></div>
+<pre><span class="dim"># shared in #platform, copied to five laptops</span>
+users:
+- name: kubernetes-admin
+  user:
+    client-certificate-data: LS0tLS1CRUdJTi…
+    client-key-data: LS0tLS1CRUdJTiBSU0Eg…</pre>
+        <ul>
+          <li>Nobody knows who has a copy.</li>
+          <li>It is valid until the certificate expires, years from now.</li>
+          <li>The API server sees <code>kubernetes-admin</code> for everyone.</li>
+          <li>Taking it back means rotating credentials on the whole cluster.</li>
+        </ul>
+      </article>
+
+      <article class="card with">
+        <div class="card-head"><h3>With kubelatch</h3><span class="mono">credentials</span></div>
+<pre><span class="dim">owner          name            tier       expires    last used</span>
+ana            laptop          developer  in 12 d    2 min ago
+luis           k9s             viewer     in 27 d    1 h ago
+bot:shop-api   github-actions  developer  in 58 min  <span class="ok">just now</span></pre>
+        <ul>
+          <li>Every credential has an owner and a name.</li>
+          <li>It expires on its own, in days, not years.</li>
+          <li>Every request is recorded as that person.</li>
+          <li>Revoke it and the next <code>kubectl</code> gets 401.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="wrap section" aria-labelledby="what">
+    <p class="kicker">// what you get</p>
+    <h2 id="what">Access you can explain to an auditor.</h2>
+
+    <div class="grid">
+      <article class="feature">
+        <h3>A credential of your own</h3>
+        <p>A <code>klt_</code> token and its kubeconfig for each person or pipeline, with an expiry, revoked instantly. GitHub Actions workflows get theirs without storing a secret in GitHub.</p>
+        <code>kubeconfig · klt_3fQ9… · expires in 30 d</code>
+      </article>
+      <article class="feature">
+        <h3>Tiered permissions</h3>
+        <p>Six fixed tiers over a namespace or a whole cluster. kubelatch keeps each cluster's RBAC in sync, so nobody writes a RoleBinding by hand.</p>
+        <code>viewer · developer · debugger · secrets-reader · admin · cluster-admin</code>
+      </article>
+      <article class="feature">
+        <h3>Inventory</h3>
+        <p>Who each credential belongs to, which clusters it reaches, until when it is valid and when it was last used.</p>
+        <code>ana · laptop · 12 d left · used 2 min ago</code>
+      </article>
+      <article class="feature">
+        <h3>Per-request audit</h3>
+        <p>Every request to the API server with who, what, where and the result, including <code>exec</code> and <code>port-forward</code>.</p>
+        <code>ana  create  pods/exec web-7f9c (shop)  101</code>
+      </article>
+      <article class="feature">
+        <h3>Any cluster</h3>
+        <p>Managed or self-managed, it works the same: kubelatch only uses the standard Kubernetes API.</p>
+        <code>EKS · GKE · AKS · kubeadm · k3s · RKE2 · Talos</code>
+      </article>
+      <article class="feature">
+        <h3>One binary and Postgres</h3>
+        <p>A web UI, an API, the proxy and the RBAC reconciler in a single Go binary. Sign in with GitHub, or with local accounts.</p>
+        <code>kubelatch + postgres</code>
+      </article>
+    </div>
+  </section>
+
+  <section class="wrap section" aria-labelledby="how">
+    <p class="kicker">// how it works</p>
+    <h2 id="how">kubectl talks to kubelatch. kubelatch talks to your cluster as you.</h2>
+
+    <ol class="steps">
+      <li>
+        <h3>An admin grants a tier</h3>
+        <p>For example <code>developer</code> on the <code>shop</code> namespace of <code>prod-eu</code>, with an expiry if it should end.</p>
+      </li>
+      <li>
+        <h3>You sign in and get a kubeconfig</h3>
+        <p>Issue a credential in the web UI and use it with kubectl, k9s, Lens or Helm. Nothing to install.</p>
+      </li>
+      <li>
+        <h3>Every request goes through kubelatch</h3>
+        <p>It checks the token, forwards the request to the cluster impersonating you, and records it.</p>
+      </li>
+    </ol>
+
+    <div class="flow" role="img" aria-label="kubectl sends the request with its own credential to kubelatch, which acts as that person on the cluster">
+      <div class="node"><strong>kubectl, k9s, Helm, CI</strong><span>klt_ token</span></div>
+      <div class="arrow">own credential</div>
+      <div class="node core"><strong>kubelatch</strong><span>proxy · RBAC · audit</span></div>
+      <div class="arrow">acts as you</div>
+      <div class="node"><strong>Your clusters</strong><span>Kubernetes API</span></div>
+    </div>
+
+    <div class="clusters">
+      <span class="kicker">works with</span>
+      <span class="chip">EKS</span><span class="chip">GKE</span><span class="chip">AKS</span><span class="chip">kubeadm</span><span class="chip">k3s</span><span class="chip">RKE2</span><span class="chip">Talos</span>
+    </div>
+  </section>
+</main>
+
+<section class="band closing" aria-labelledby="closing">
+  <div class="wrap">
+    <svg class="mark" aria-hidden="true"><use href="#mark"/></svg>
+    <h2 id="closing">Stop messing with Kubernetes credentials.</h2>
+    <div class="actions">
+      <a class="btn btn-primary" href="https://docs.kubelatch.com/">Read the docs</a>
+      <a class="btn btn-secondary" href="https://docs.kubelatch.com/getting-started/local/">Try it in 15 minutes</a>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap footer">
+  <a class="lockup" href="/"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg>kubelatch</a>
+  <ul>
+    <li><a href="https://docs.kubelatch.com/">Documentation</a></li>
+    <li><a href="https://docs.kubelatch.com/concepts/architecture/">Architecture</a></li>
+    <li><a href="https://docs.kubelatch.com/concepts/security/">Security model</a></li>
+    <li><a href="/es/" hreflang="es" lang="es">Español</a></li>
+  </ul>
+</footer>
+</body>
+</html>
