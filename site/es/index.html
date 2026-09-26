@@ -44,11 +44,11 @@
 
     <figure class="film">
       <div class="film-frame">
-        <video autoplay muted loop playsinline controls preload="metadata" poster="/media/poster.jpg" aria-describedby="film-caption">
-          <source src="/media/kubelatch.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
+        <video autoplay muted loop playsinline controls preload="metadata" poster="/media/poster-8610be5a07.jpg" aria-describedby="film-caption">
+          <source src="/media/kubelatch-00d67eca34.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
         </video>
       </div>
-      <figcaption id="film-caption">Un kubeconfig de admin compartido, sustituido por una credencial por persona: kubectl pasa por kubelatch, cada petición queda auditada y una credencial revocada recibe 401 al instante.</figcaption>
+      <figcaption id="film-caption">Un kubeconfig de admin compartido, sustituido por una credencial por persona: kubectl pasa por kubelatch, cada petición queda auditada y una credencial revocada recibe 401 al instante. <a class="film-link" href="/media/kubelatch-00d67eca34.mp4">Ver el vídeo (24 s, MP4)</a></figcaption>
     </figure>
   </div>
 </header>
@@ -70,7 +70,7 @@ users:
     client-key-data: LS0tLS1CRUdJTiBSU0Eg…</pre>
         <ul>
           <li>Nadie sabe quién tiene una copia.</li>
-          <li>Vale hasta que caduque el certificado, dentro de años.</li>
+          <li>Vale lo que dure su certificado: un año o más.</li>
           <li>El API server ve <code>kubernetes-admin</code> para todos.</li>
           <li>Quitarlo obliga a rotar credenciales en todo el cluster.</li>
         </ul>
@@ -78,10 +78,10 @@ users:
 
       <article class="card with">
         <div class="card-head"><h3>Con kubelatch</h3><span class="mono">credenciales</span></div>
-<pre><span class="dim">dueño          nombre          nivel      caduca     último uso</span>
-ana            portátil        developer  en 12 d    hace 2 min
-luis           k9s             viewer     en 27 d    hace 1 h
-bot:shop-api   github-actions  developer  en 58 min  <span class="ok">ahora</span></pre>
+<pre><span class="dim">dueño          nombre          cluster   caduca     último uso</span>
+ana            portátil        prod-eu   en 12 d    hace 2 min
+luis           k9s             todos     en 27 d    hace 1 h
+bot:shop-api   github-actions  prod-eu   en 58 min  <span class="ok">ahora</span></pre>
         <ul>
           <li>Cada credencial tiene dueño y nombre.</li>
           <li>Caduca sola, en días, no en años.</li>
@@ -115,7 +115,7 @@ bot:shop-api   github-actions  developer  en 58 min  <span class="ok">ahora</spa
       <article class="feature">
         <h3>Auditoría por petición</h3>
         <p>Cada petición al API server con quién, qué, dónde y el resultado, incluidos <code>exec</code> y <code>port-forward</code>.</p>
-        <code>ana  create  pods/exec web-7f9c (shop)  101</code>
+        <code>ana  exec  web-7f9c (shop)  101</code>
       </article>
       <article class="feature">
         <h3>Cualquier cluster</h3>
@@ -152,7 +152,7 @@ bot:shop-api   github-actions  developer  en 58 min  <span class="ok">ahora</spa
     <div class="flow" role="img" aria-label="kubectl envía la petición con su propia credencial a kubelatch, que actúa como esa persona en el cluster">
       <div class="node"><strong>kubectl, k9s, Helm, CI</strong><span>token klt_</span></div>
       <div class="arrow">credencial propia</div>
-      <div class="node core"><strong>kubelatch</strong><span>proxy · RBAC · audit</span></div>
+      <div class="node core"><strong>kubelatch</strong><span>proxy · RBAC · auditoría</span></div>
       <div class="arrow">actúa como tú</div>
       <div class="node"><strong>Tus clusters</strong><span>API de Kubernetes</span></div>
     </div>

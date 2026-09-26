@@ -330,3 +330,7 @@ img, video, svg { display: block; max-width: 100%; }
 .notfound p { color: var(--band-secondary); font-size: 1.125rem; }
 .actions-start { justify-content: flex-start; }
 .notfound .wrap { width: 100%; }
+/* With reduced motion no <source> matches and the video shows only its
+   poster; this link lets those visitors open the video on purpose. */
+.film-link { display: none; }
+@media (prefers-reduced-motion: reduce) { .film-link { display: inline; color: var(--band-text); } }

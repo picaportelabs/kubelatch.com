@@ -44,11 +44,11 @@
 
     <figure class="film">
       <div class="film-frame">
-        <video autoplay muted loop playsinline controls preload="metadata" poster="/media/poster.jpg" aria-describedby="film-caption">
-          <source src="/media/kubelatch.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
+        <video autoplay muted loop playsinline controls preload="metadata" poster="/media/poster-8610be5a07.jpg" aria-describedby="film-caption">
+          <source src="/media/kubelatch-00d67eca34.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
         </video>
       </div>
-      <figcaption id="film-caption">A shared admin kubeconfig, replaced by a credential per person: kubectl goes through kubelatch, every request is audited, and a revoked credential gets 401 at once.</figcaption>
+      <figcaption id="film-caption">A shared admin kubeconfig, replaced by a credential per person: kubectl goes through kubelatch, every request is audited, and a revoked credential gets 401 at once. <a class="film-link" href="/media/kubelatch-00d67eca34.mp4">Watch the video (24 s, MP4)</a></figcaption>
     </figure>
   </div>
 </header>
@@ -70,7 +70,7 @@ users:
     client-key-data: LS0tLS1CRUdJTiBSU0Eg…</pre>
         <ul>
           <li>Nobody knows who has a copy.</li>
-          <li>It is valid until the certificate expires, years from now.</li>
+          <li>It stays valid as long as its certificate: a year or more.</li>
           <li>The API server sees <code>kubernetes-admin</code> for everyone.</li>
           <li>Taking it back means rotating credentials on the whole cluster.</li>
         </ul>
@@ -78,10 +78,10 @@ users:
 
       <article class="card with">
         <div class="card-head"><h3>With kubelatch</h3><span class="mono">credentials</span></div>
-<pre><span class="dim">owner          name            tier       expires    last used</span>
-ana            laptop          developer  in 12 d    2 min ago
-luis           k9s             viewer     in 27 d    1 h ago
-bot:shop-api   github-actions  developer  in 58 min  <span class="ok">just now</span></pre>
+<pre><span class="dim">owner          name            cluster   expires    last used</span>
+ana            laptop          prod-eu   in 12 d    2 min ago
+luis           k9s             all       in 27 d    1 h ago
+bot:shop-api   github-actions  prod-eu   in 58 min  <span class="ok">just now</span></pre>
         <ul>
           <li>Every credential has an owner and a name.</li>
           <li>It expires on its own, in days, not years.</li>
@@ -115,7 +115,7 @@ bot:shop-api   github-actions  developer  in 58 min  <span class="ok">just now</
       <article class="feature">
         <h3>Per-request audit</h3>
         <p>Every request to the API server with who, what, where and the result, including <code>exec</code> and <code>port-forward</code>.</p>
-        <code>ana  create  pods/exec web-7f9c (shop)  101</code>
+        <code>ana  exec  web-7f9c (shop)  101</code>
       </article>
       <article class="feature">
         <h3>Any cluster</h3>

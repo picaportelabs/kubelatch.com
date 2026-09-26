@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1920, height=1080" />
     <title>kubelatch · Stop messing with Kubernetes credentials</title>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js" integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2" crossorigin="anonymous"></script>
     <style>
       /* Same look as the landing's ink band: near-black ground, a faint 48px
          hairline grid, white type, 1px lines, one 4px radius. Inter and JetBrains
@@ -87,7 +87,7 @@
       .row { display: grid; align-items: center; padding: 14px 0; border-bottom: 1px solid rgb(255 255 255 / 0.12); }
       .row:last-child { border-bottom: 0; }
       #creds .row { grid-template-columns: 1fr 1.3fr 1.5fr auto; }
-      #audit .row { grid-template-columns: 1.45fr 0.8fr 0.8fr 1.25fr 0.6fr; }
+      #audit .row { grid-template-columns: 1.1fr 1.35fr 1.3fr 0.5fr; }
       #revoke {
         font-family: "Inter", sans-serif; font-size: 24px; font-weight: 700;
         border: 1px solid rgb(255 255 255 / 0.5); border-radius: 4px; padding: 8px 18px; text-align: center;
@@ -157,23 +157,23 @@ api-5d2b88        1/1     Running
 worker-8c1a4f     1/1     Running</span>
 <span id="p2"><span class="dim">$ </span><span id="cmd2" class="type">kubectl get pods -n shop</span></span>
 <span id="out2" class="bad">error: You must be logged in to the server
-(Unauthorized)</span></pre>
+(credential revoked)</span></pre>
         </div>
         <div id="side">
           <div id="creds" class="panel">
-            <div class="panel-head"><span>Credentials</span><span class="mono dim">prod-eu</span></div>
+            <div class="panel-head"><span>Credentials</span><span class="mono dim">admin</span></div>
             <div class="rows">
-              <div class="row dim"><span>owner</span><span>name</span><span>tier</span><span></span></div>
-              <div id="cred-row" class="row"><span>ana</span><span>laptop</span><span>developer</span>
+              <div class="row dim"><span>owner</span><span>name</span><span>cluster</span><span></span></div>
+              <div id="cred-row" class="row"><span>ana</span><span>laptop</span><span>prod-eu</span>
                 <span id="revoke">Revoke</span></div>
             </div>
           </div>
           <div id="audit" class="panel">
             <div class="panel-head"><span>Audit</span><span class="mono dim">every request</span></div>
             <div class="rows">
-              <div class="row dim"><span>time</span><span>user</span><span>verb</span><span>resource</span><span>code</span></div>
-              <div id="a1" class="row"><span>12:04:31</span><span>ana</span><span>list</span><span>pods</span><span class="ok">200</span></div>
-              <div id="a2" class="row"><span>12:05:02</span><span>ana</span><span>list</span><span>pods</span><span class="bad">401</span></div>
+              <div class="row dim"><span>time</span><span>who</span><span>action</span><span>code</span></div>
+              <div id="a1" class="row"><span>12:04:31</span><span>ana</span><span>list pods</span><span class="ok">200</span></div>
+              <div id="a2" class="row"><span>12:05:02</span><span>klt_3fQ9…</span><span class="dim">rejected</span><span class="bad">401</span></div>
             </div>
           </div>
         </div>
