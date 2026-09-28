@@ -23,6 +23,10 @@
   --hairline: var(--gray-900);
   --success: oklch(52.7% 0.154 150.069);
   --danger: oklch(50.5% 0.213 27.518);
+  /* Blueprint Blue (cobalt): the one accent, for action and position. */
+  --accent: oklch(42% 0.17 262);
+  --accent-hover: oklch(36% 0.17 262);
+  --band-accent: oklch(74% 0.13 262);
 
   /* The ink bands (hero, closing) are dark in both themes. */
   --band: var(--gray-900);
@@ -52,6 +56,8 @@
     --hairline: var(--gray-700);
     --success: oklch(79.2% 0.209 151.711);
     --danger: oklch(70.4% 0.191 22.216);
+    --accent: oklch(74% 0.13 262);
+    --accent-hover: oklch(80% 0.11 262);
     --band: oklch(9% 0.02 261.692);
     color-scheme: dark;
   }
@@ -90,6 +96,11 @@ img, video, svg { display: block; max-width: 100%; }
 [hidden] { display: none !important; }
 .s { fill: none; stroke: currentColor; stroke-width: 4.2; stroke-linejoin: round; }
 .f { fill: currentColor; }
+.a { fill: var(--accent); }
+.band .a { fill: var(--band-accent); }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.band :focus-visible { outline-color: var(--band-accent); }
 
 .lockup {
   display: inline-flex; align-items: center; gap: 0.5rem;
@@ -170,16 +181,16 @@ img, video, svg { display: block; max-width: 100%; }
   font-size: 1rem; line-height: 1.5rem; font-weight: 600; text-decoration: none;
   border: 1px solid transparent;
 }
-.btn-primary { background: var(--ink); color: var(--on-ink); }
-.btn-primary:hover { background: var(--gray-700); }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-hover); }
 .btn-secondary { border-color: var(--hairline); }
 .btn-secondary:hover { background: var(--gray-100); }
-.band .btn-primary { background: var(--band-text); color: var(--gray-900); }
-.band .btn-primary:hover { background: var(--gray-300); }
+.band .btn-primary { background: var(--band-accent); color: var(--gray-950); }
+.band .btn-primary:hover { background: oklch(80% 0.11 262); }
 .band .btn-secondary { border-color: var(--band-line); color: var(--band-text); }
 .band .btn-secondary:hover { background: oklch(100% 0 0 / 0.08); }
 @media (prefers-color-scheme: dark) {
-  .btn-primary:hover { background: var(--gray-300); }
+  .btn-primary { color: var(--gray-950); }
   .btn-secondary:hover { background: var(--gray-800); }
 }
 
