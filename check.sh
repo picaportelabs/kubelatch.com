@@ -3,8 +3,8 @@
 #   landing/check.sh http://127.0.0.1:3001
 #   landing/check.sh https://kubelatch.com
 # Checks status codes, languages, custom 404s, security headers on every kind
-# of response and that every link and asset of both pages answers 200 (docs
-# links included).
+# of response, that every link and asset of both pages answers 200 (docs
+# links included) and that the stylesheet's font is served from the site.
 set -eu
 
 base=${1:?usage: landing/check.sh BASE_URL}
@@ -44,9 +44,10 @@ ok "custom 404 pages"
 
 # Every kind of response carries the same headers: nginx drops the
 # server-level add_header in any location that declares its own.
-csp="default-src 'none'; style-src 'self'; img-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+csp="default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
 poster=$(grep -oE 'poster="[^"]*"' "$tmp/_.html" | sed -E 's/^poster="//; s/"$//')
-for p in / /es/ /nope /style.css "$poster"; do
+font=/fonts/InterVariable.woff2
+for p in / /es/ /nope /style.css "$poster" "$font"; do
     curl -s -o /dev/null -D "$tmp/h" "$base$p" || true
     for want in 'x-content-type-options: nosniff' 'referrer-policy: strict-origin-when-cross-origin' \
         'x-frame-options: DENY' 'strict-transport-security: max-age=31536000'; do
@@ -82,6 +83,22 @@ for pair in "/ _.html" "/es/ _es_.html"; do
     done
 done
 ok "links and assets"
+
+# The stylesheet loads nothing from another origin, and every file it names
+# answers 200; the font comes as a font and is cached like the media.
+curl -s -o "$tmp/style.css" "$base/style.css" || true
+if grep -qE 'url\(["'"'"']?(https?:)?//|@import' "$tmp/style.css"; then
+    bad "style.css loads from another origin"
+fi
+grep -q "url(\"$font\")" "$tmp/style.css" || bad "style.css does not load $font"
+for l in $(grep -oE 'url\("?/[^")]*' "$tmp/style.css" | sed -E 's/^url\("?//' | sort -u); do
+    code=$(status "$base$l")
+    [ "$code" = 200 ] || bad "style.css -> $l answered $code"
+done
+curl -s -o /dev/null -D "$tmp/h" "$base$font" || true
+grep -qi '^content-type: font/woff2' "$tmp/h" || bad "$font is not font/woff2"
+grep -qi '^cache-control: max-age=31536000' "$tmp/h" || bad "$font is not cached for a year"
+ok "stylesheet and font"
 
 if [ "$fail" -ne 0 ]; then
     echo "landing check FAILED"
