@@ -7,16 +7,9 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js" integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2" crossorigin="anonymous"></script>
     <style>
       /* Same look as the landing's ink band: near-black ground, a faint 48px
-         hairline grid, white type, 1px lines, one 4px radius. Inter is the
-         SPA's own file (a copy of web/public/fonts/InterVariable.woff2 in
-         fonts/, SIL OFL) and JetBrains Mono (bundled by Hyperframes) stands in
-         for the system monospace, so every render is identical. */
-      @font-face {
-        font-family: "Inter";
-        src: url("fonts/InterVariable.woff2") format("woff2");
-        font-weight: 100 900;
-        font-style: normal;
-      }
+         hairline grid, white type, 1px lines, one 4px radius. Inter and JetBrains
+         Mono (bundled by Hyperframes) stand in for the system fonts so every
+         render is identical. */
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0b0f19; }
       #root {
@@ -87,156 +80,20 @@
       }
       #kubeconfig { font-size: 30px; }
 
-      /* 4-5. kubectl, audit, revoke. The terminal stays on ink; the interface
-         is the SPA's shell in light mode, drawn at its real CSS sizes and
-         enlarged with zoom. Tokens are the light values of web/src/index.css. */
-      #work { gap: 32px; padding: 0 48px; align-items: center; }
-      #left { width: 626px; flex: none; display: flex; flex-direction: column; gap: 32px; }
-      #term { display: flex; flex-direction: column; }
-      #term .panel-head { font-size: 21px; padding: 16px 24px; }
-      #term pre { padding: 26px 24px; font-size: 21px; line-height: 1.6; font-family: "JetBrains Mono", monospace; white-space: pre; }
-
-      .ui {
-        --paper: oklch(97% 0.004 80);
-        --sheet: #fff;
-        --line: oklch(91% 0.006 80);
-        --line-strong: oklch(62% 0.015 80);
-        --ink: oklch(21% 0.034 264.665);
-        --ink-muted: oklch(53% 0.027 264.364);
-        --wash: oklch(95% 0.005 80);
-        --brand: oklch(42% 0.17 262);
-        --brand-tint: oklch(95% 0.025 262);
-        --success-tint: oklch(95% 0.045 150);
-        --success-ink: oklch(35% 0.11 150);
-        --danger-tint: oklch(96% 0.025 20);
-        --danger-ink: oklch(38% 0.15 25);
-        --sidebar: oklch(98.2% 0.003 80);
-        --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.04);
-        --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 12px -6px rgb(0 0 0 / 0.06);
-        --shadow-lg: 0 10px 30px -10px rgb(0 0 0 / 0.18), 0 2px 6px -2px rgb(0 0 0 / 0.08);
-        zoom: 1.2;
-        color: var(--ink); font-family: "Inter", sans-serif; font-size: 14px; line-height: 20px;
-        font-feature-settings: "cv11", "ss01";
+      /* 4-5. kubectl, audit, revoke */
+      #work { gap: 40px; padding: 0 110px; align-items: center; }
+      #term { flex: 1.1; display: flex; flex-direction: column; }
+      #term pre { padding: 34px 36px; font-size: 30px; line-height: 1.6; font-family: "JetBrains Mono", monospace; white-space: pre; }
+      #side { flex: 1; display: flex; flex-direction: column; gap: 40px; }
+      .rows { padding: 12px 28px 20px; font-size: 28px; font-family: "JetBrains Mono", monospace; }
+      .row { display: grid; align-items: center; padding: 14px 0; border-bottom: 1px solid rgb(255 255 255 / 0.12); }
+      .row:last-child { border-bottom: 0; }
+      #creds .row { grid-template-columns: 1fr 1.3fr 1.5fr auto; }
+      #audit .row { grid-template-columns: 1.1fr 1.35fr 1.3fr 0.5fr; }
+      #revoke {
+        font-family: "Inter", sans-serif; font-size: 24px; font-weight: 700;
+        border: 1px solid rgb(255 255 255 / 0.5); border-radius: 4px; padding: 8px 18px; text-align: center;
       }
-      .ui .mono { font-size: 14px; font-variant-ligatures: none; }
-      .ui .muted { color: var(--ink-muted); }
-      .ui svg.i { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-      .card { background: var(--sheet); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow-sm); }
-      .btn {
-        display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 16px;
-        border-radius: 8px; font-size: 14px; font-weight: 500; white-space: nowrap;
-      }
-      .btn.primary { background: var(--brand); color: #fff; }
-      .btn.outline { background: var(--paper); border: 1px solid var(--line); box-shadow: var(--shadow-xs); }
-      .btn.sm { height: 32px; padding: 0 12px; gap: 6px; }
-      .btn.icon { width: 36px; padding: 0; }
-      .pill {
-        display: inline-flex; align-items: center; border-radius: 9999px; border: 1px solid var(--line);
-        padding: 2px 8px; font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap;
-      }
-      .pill.ok { border-color: transparent; background: var(--success-tint); color: var(--success-ink); }
-      .pill.err { border-color: transparent; background: var(--danger-tint); color: var(--danger-ink); }
-      .ui table { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
-      .ui th { height: 40px; padding: 0 8px; text-align: left; font-weight: 500; white-space: nowrap; border-bottom: 1px solid var(--line); }
-      .ui td { padding: 8px; vertical-align: middle; white-space: nowrap; border-bottom: 1px solid var(--line); }
-      .ui tbody tr:last-child td { border-bottom: 0; }
-      .person { display: flex; align-items: center; gap: 8px; }
-      .av {
-        display: flex; align-items: center; justify-content: center; flex: none; width: 24px; height: 24px;
-        border-radius: 8px; background: var(--wash); font-size: 10px; font-weight: 600;
-      }
-      .tabs { display: inline-flex; align-items: center; height: 36px; padding: 3px; border-radius: 8px; background: var(--wash); }
-      .tab {
-        position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-        height: 29px; padding: 4px 8px; border-radius: 8px; font-size: 14px; font-weight: 500; white-space: nowrap;
-      }
-      .tab .on { position: absolute; inset: 0; border-radius: 8px; background: var(--paper); box-shadow: var(--shadow-sm); }
-      .tab .lbl { position: relative; display: inline-flex; gap: 6px; opacity: 0.6; }
-      .tab .n { color: var(--ink-muted); font-variant-numeric: tabular-nums; }
-      .swap { display: inline-grid; }
-      .swap > * { grid-area: 1 / 1; }
-
-      /* The window: sidebar, top bar, the Credentials page. */
-      #app {
-        position: relative; flex: 1; min-width: 0; display: flex; overflow: hidden;
-        background: var(--paper); border-radius: 8px;
-      }
-      #sidebar {
-        width: 256px; flex: none; display: flex; flex-direction: column;
-        background: var(--sidebar); border-right: 1px solid var(--line);
-      }
-      #sb-head { height: 56px; padding: 8px; display: flex; align-items: center; }
-      #sb-brand { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 4px; font-size: 16px; font-weight: 700; letter-spacing: -0.025em; }
-      #sb-brand svg { width: 24px; height: 24px; }
-      #sb-brand .s { fill: none; stroke: currentColor; stroke-width: 4.2; stroke-linejoin: round; }
-      #sb-brand .f { fill: currentColor; }
-      #sb-brand .a { fill: var(--brand); }
-      #sb-groups { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-      .sb-group { padding: 8px; display: flex; flex-direction: column; }
-      .sb-label { height: 32px; padding: 0 8px; display: flex; align-items: center; font-size: 12px; font-weight: 500; color: oklch(21% 0.034 264.665 / 0.7); }
-      .sb-menu { display: flex; flex-direction: column; gap: 4px; }
-      .sb-item { display: flex; align-items: center; gap: 8px; height: 32px; padding: 8px; border-radius: 8px; font-size: 14px; }
-      .sb-item.active { background: var(--brand-tint); color: var(--brand); font-weight: 500; }
-      #sb-foot { padding: 8px; }
-      #sb-person { display: flex; align-items: center; gap: 8px; height: 48px; padding: 8px; border-radius: 8px; }
-      #sb-person .av { width: 32px; height: 32px; font-size: 12px; }
-      #sb-person .who2 { flex: 1; display: grid; line-height: 1.25; }
-      #sb-person .who2 strong { font-weight: 600; }
-      #sb-person .who2 span { font-size: 12px; color: var(--ink-muted); }
-      #inset { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-      #topbar {
-        height: 56px; flex: none; display: flex; align-items: center; gap: 8px; padding: 0 16px;
-        background: var(--sheet); border-bottom: 1px solid var(--line);
-      }
-      #sb-trigger { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
-      #topbar .sep { width: 1px; height: 16px; margin-right: 8px; background: var(--line); }
-      #crumbs { display: flex; align-items: center; gap: 10px; color: var(--ink-muted); }
-      #crumbs svg.i { width: 14px; height: 14px; }
-      #crumbs .here { color: var(--ink); }
-      #topbar .right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-      #search { width: 224px; justify-content: flex-start; color: var(--ink-muted); }
-      #search kbd {
-        margin-left: auto; padding: 0 6px; border: 1px solid var(--line); border-radius: 4px; background: var(--wash);
-        font-family: "JetBrains Mono", monospace; font-size: 12px; line-height: 16px;
-      }
-      #page { padding: 24px 32px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
-      #page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
-      #page-head h1 { font-size: 24px; line-height: 1.2; font-weight: 600; letter-spacing: -0.025em; }
-      #page-head p { margin-top: 4px; max-width: 65ch; font-size: 14px; color: var(--ink-muted); }
-      #stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-      .stat { padding: 16px; display: flex; flex-direction: column; gap: 4px; }
-      .stat dt { font-size: 14px; color: var(--ink-muted); }
-      .stat dd { font-size: 24px; line-height: 32px; font-weight: 600; font-variant-numeric: tabular-nums; }
-      #list { padding: 16px; display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
-      #filter {
-        width: 320px; height: 36px; display: flex; align-items: center; padding: 4px 12px; border-radius: 8px;
-        border: 1px solid var(--line-strong); box-shadow: var(--shadow-xs); color: var(--ink-muted); font-size: 14px;
-      }
-      #tables { position: relative; width: 100%; }
-      #t-revoked { position: absolute; left: 0; top: 0; color: var(--ink-muted); }
-      #row-menu { position: relative; width: 32px; height: 32px; margin-left: auto; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
-      #row-menu .on, #row-menu-2 .on { position: absolute; inset: 0; border-radius: 8px; background: var(--wash); }
-      #row-menu svg, #row-menu-2 svg { position: relative; }
-      #row-menu-2 { width: 32px; height: 32px; margin-left: auto; display: flex; align-items: center; justify-content: center; }
-
-      /* The confirmation (ConfirmDialog): Cancel in outline, the action as the primary button, never red. */
-      #overlay { position: absolute; inset: 0; background: rgb(0 0 0 / 0.5); }
-      #dialog {
-        position: absolute; left: 50%; top: 50%; width: 512px; margin: -125px 0 0 -256px; display: grid; gap: 16px;
-        padding: 24px; background: var(--sheet); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow-lg);
-      }
-      #dialog h2 { font-size: 18px; line-height: 28px; font-weight: 600; letter-spacing: -0.01em; }
-      #dialog p { margin-top: 6px; font-size: 14px; color: var(--ink-muted); }
-      #dialog .field { display: grid; gap: 8px; }
-      #dialog label { font-size: 14px; line-height: 1; font-weight: 500; }
-      #dialog .input { height: 36px; border-radius: 8px; border: 1px solid var(--line-strong); box-shadow: var(--shadow-xs); }
-      #dialog .foot { display: flex; justify-content: flex-end; gap: 8px; }
-
-      /* The Audit page's list, on its own. */
-      #audit { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
-      #audit-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-      #audit-head strong { font-size: 16px; font-weight: 600; line-height: 1; }
-      #audit .date { text-decoration: underline; text-decoration-color: oklch(53% 0.027 264.364 / 0.4); text-underline-offset: 4px; }
 
       /* 6. Slogan */
       #end { flex-direction: column; gap: 60px; }
@@ -294,9 +151,8 @@
       </section>
 
       <section id="work" class="clip" data-start="12.3" data-duration="8.2" data-track-index="1">
-        <div id="left">
-          <div id="term" class="panel">
-            <div class="panel-head mono"><span>ana@laptop</span><span class="dim">kubeconfig: kubelatch</span></div>
+        <div id="term" class="panel">
+          <div class="panel-head mono"><span>ana@laptop</span><span class="dim">kubeconfig: kubelatch</span></div>
 <pre><span class="dim">$ </span><span id="cmd1" class="type">kubectl get pods -n shop</span>
 <span id="out1">NAME              READY   STATUS
 web-7f9c6d        1/1     Running
@@ -305,104 +161,23 @@ worker-8c1a4f     1/1     Running</span>
 <span id="p2"><span class="dim">$ </span><span id="cmd2" class="type">kubectl get pods -n shop</span></span>
 <span id="out2" class="bad">error: You must be logged in to the server
 (credential revoked)</span></pre>
-          </div>
-          <div id="audit" class="ui card">
-            <div id="audit-head">
-              <strong>Audit</strong>
-              <div class="tabs">
-                <span class="tab"><span class="on"></span><span class="lbl" style="opacity: 1">Requests to clusters</span></span>
-                <span class="tab"><span class="lbl">Control plane</span></span>
-              </div>
-            </div>
-            <table>
-              <thead><tr><th>Date</th><th>Subject</th><th>Action</th><th>Resource</th><th>Status</th></tr></thead>
-              <tbody>
-                <tr id="a1"><td><span class="date">Sep 29, 2026, 12:04 PM</span></td><td><div class="person"><span class="av">A</span><span class="mono">ana</span></div></td><td class="mono">list</td><td>pods (shop)</td><td><span class="pill ok">200</span></td></tr>
-                <tr id="a2"><td><span class="date">Sep 29, 2026, 12:05 PM</span></td><td><span class="mono">klt_3fQ9…</span></td><td class="mono">list</td><td>pods (shop)</td><td><span class="pill err">401</span></td></tr>
-              </tbody>
-            </table>
-          </div>
         </div>
-
-        <div id="app" class="ui">
-          <div id="sidebar">
-            <div id="sb-head">
-              <div id="sb-brand">
-                <svg viewBox="0 0 48 48" aria-hidden="true">
-                  <polygon class="s" points="15.50,12.80 24.26,17.02 26.42,26.49 20.36,34.09 10.64,34.09 4.58,26.49 6.74,17.02" />
-                  <path class="f" d="M16.22 20.95 L17.44 21.53 Q18.16 21.88 18.34 22.66 L18.64 23.98 Q18.81 24.76 18.32 25.38 L17.47 26.44 Q16.98 27.06 16.18 27.06 L14.82 27.06 Q14.02 27.06 13.53 26.44 L12.68 25.38 Q12.19 24.76 12.36 23.98 L12.66 22.66 Q12.84 21.88 13.56 21.53 L14.78 20.95 Q15.50 20.60 16.22 20.95 Z" />
-                  <rect class="a" x="25" y="21.5" width="19.5" height="5" rx="2.5" />
-                  <rect class="a" x="35" y="24" width="3.6" height="7.5" rx="1.8" />
-                  <rect class="a" x="40.9" y="24" width="3.6" height="5.8" rx="1.8" />
-                </svg>
-                <span>kubelatch</span>
-              </div>
-            </div>
-            <div id="sb-groups">
-              <div class="sb-group"><div class="sb-menu"><div class="sb-item"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Home</span></div></div></div>
-              <div class="sb-group"><div class="sb-label">Access</div><div class="sb-menu"><div class="sb-item"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg><span>Permissions</span></div><div class="sb-item active"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg><span>Credentials</span></div><div class="sb-item"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg><span>Users</span></div></div></div>
-              <div class="sb-group"><div class="sb-label">Record</div><div class="sb-menu"><div class="sb-item"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"/></svg><span>Audit</span></div></div></div>
-              <div class="sb-group"><div class="sb-label">Platform</div><div class="sb-menu"><div class="sb-item"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg><span>Clusters</span></div><div class="sb-item"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6a9 9 0 0 0-9 9V3"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/></svg><span>CI</span></div></div></div>
-            </div>
-            <div id="sb-foot">
-              <div id="sb-person"><span class="av">M</span><div class="who2"><strong>marta</strong><span>Administrator</span></div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></div>
+        <div id="side">
+          <div id="creds" class="panel">
+            <div class="panel-head"><span>Credentials</span><span class="mono dim">admin</span></div>
+            <div class="rows">
+              <div class="row dim"><span>owner</span><span>name</span><span>cluster</span><span></span></div>
+              <div id="cred-row" class="row"><span>ana</span><span>laptop</span><span>prod-eu</span>
+                <span id="revoke">Revoke</span></div>
             </div>
           </div>
-          <div id="inset">
-            <div id="topbar">
-              <span id="sb-trigger"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg></span>
-              <span class="sep"></span>
-              <div id="crumbs"><span>Home</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg><span>Access</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg><span class="here">Credentials</span></div>
-              <div class="right">
-                <span id="search" class="btn outline sm"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg><span>Search…</span><kbd>⌘K</kbd></span>
-                <span class="btn icon"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg></span>
-              </div>
+          <div id="audit" class="panel">
+            <div class="panel-head"><span>Audit</span><span class="mono dim">every request</span></div>
+            <div class="rows">
+              <div class="row dim"><span>time</span><span>who</span><span>action</span><span>code</span></div>
+              <div id="a1" class="row"><span>12:04:31</span><span>ana</span><span>list pods</span><span class="ok">200</span></div>
+              <div id="a2" class="row"><span>12:05:02</span><span>klt_3fQ9…</span><span class="dim">rejected</span><span class="bad">401</span></div>
             </div>
-            <div id="page">
-              <div id="page-head">
-                <div>
-                  <h1>Credentials</h1>
-                  <p>Every credential issued. Revoking one cuts its access right away (open streams, within 10 s). Bots get their credentials here.</p>
-                </div>
-                <span class="btn primary">Issue a credential</span>
-              </div>
-              <dl id="stats">
-                <div class="card stat"><dt>Active</dt><dd class="swap"><span class="before">1</span><span class="after">0</span></dd></div>
-                <div class="card stat"><dt>Expire within 7 days</dt><dd>0</dd></div>
-                <div class="card stat"><dt>CLI sessions</dt><dd>0</dd></div>
-                <div class="card stat"><dt>Revoked in 30 days</dt><dd class="swap"><span class="before">0</span><span class="after">1</span></dd></div>
-              </dl>
-              <div id="list" class="card">
-                <div class="tabs">
-                  <span class="tab"><span id="tab-active-on" class="on"></span><span id="tab-active" class="lbl">Active <span class="n swap"><span class="before">1</span><span class="after">0</span></span></span></span>
-                  <span class="tab"><span class="lbl">Expired <span class="n">0</span></span></span>
-                  <span class="tab"><span id="tab-revoked-on" class="on"></span><span id="tab-revoked" class="lbl">Revoked <span class="n swap"><span class="before">0</span><span class="after">1</span></span></span></span>
-                </div>
-                <div id="filter">login, name, prefix, cluster…</div>
-                <div id="tables">
-                  <table id="t-active">
-                    <thead><tr><th>Owner</th><th>Name</th><th>Prefix</th><th>Cluster</th><th>Expires</th><th></th></tr></thead>
-                    <tbody>
-                      <tr><td><div class="person"><span class="av">A</span><span class="mono">ana</span></div></td><td>laptop</td><td><span class="mono">klt_3fQ9…</span></td><td>prod-eu</td><td><span class="pill">in 30 d · Oct 29</span></td>
-                        <td><div id="row-menu"><span id="row-menu-on" class="on"></span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div></td></tr>
-                    </tbody>
-                  </table>
-                  <table id="t-revoked">
-                    <thead><tr><th>Owner</th><th>Name</th><th>Prefix</th><th>Cluster</th><th>Expires</th><th></th></tr></thead>
-                    <tbody>
-                      <tr><td><div class="person"><span class="av">A</span><span class="mono">ana</span></div></td><td>laptop</td><td><span class="mono">klt_3fQ9…</span></td><td>prod-eu</td><td>Revoked on Sep 29, 2026, 12:05 PM</td>
-                        <td><div id="row-menu-2"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div></td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div id="overlay" data-layout-allow-occlusion data-layout-allow-overlap></div>
-          <div id="dialog" data-layout-allow-occlusion data-layout-allow-overlap>
-            <div><h2 data-layout-allow-overlap>Revoke "laptop" from ana</h2><p data-layout-allow-overlap>kubectl will get a 401 right away.</p></div>
-            <div class="field"><label data-layout-allow-overlap>Reason (optional)</label><div class="input"></div></div>
-            <div class="foot"><span class="btn outline" data-layout-allow-overlap>Cancel</span><span id="revoke" class="btn primary" data-layout-allow-overlap>Revoke</span></div>
           </div>
         </div>
       </section>
@@ -454,34 +229,20 @@ worker-8c1a4f     1/1     Running</span>
       tl.to(["#lockup", "#signin"], { opacity: 0, duration: 0.4, ease: "power2.in" }, 11.85);
 
       // 4. kubectl through kubelatch, audited (12.3 - 16)
-      tl.fromTo("#left", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.6, ease: out }, 12.35);
-      tl.fromTo("#app", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: out }, 12.5);
+      tl.fromTo("#term", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.6, ease: out }, 12.35);
+      tl.fromTo("#side", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: out }, 12.5);
       typeOn("#cmd1", 13.1, 1.1);
       tl.fromTo("#out1", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 14.45);
       tl.fromTo("#a1", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.4, ease: out }, 14.7);
-      // The row's menu opens the confirmation, as on the admin page.
-      tl.fromTo("#row-menu-on", { opacity: 0 }, { opacity: 1, duration: 0.1 }, 15.4);
-      tl.fromTo("#overlay", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 15.5);
-      tl.fromTo("#dialog", { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.2, ease: out }, 15.5);
 
       // 5. Revoke: the next request gets 401 (16 - 20.5)
-      tl.to("#revoke", { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1 }, 16.1);
-      tl.to(["#overlay", "#dialog"], { opacity: 0, duration: 0.2, ease: "power2.in" }, 16.3);
-      tl.to("#row-menu-on", { opacity: 0, duration: 0.1 }, 16.3);
-      // The credential leaves Active; the Revoked segment shows it, muted.
-      tl.fromTo("#t-active", { opacity: 1 }, { opacity: 0, duration: 0.3 }, 16.5);
-      tl.fromTo("#work .swap .before", { opacity: 1 }, { opacity: 0, duration: 0.2 }, 16.5);
-      tl.fromTo("#work .swap .after", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 16.5);
-      tl.fromTo("#tab-active-on", { opacity: 1 }, { opacity: 0, duration: 0.2 }, 16.7);
-      tl.fromTo("#tab-active", { opacity: 1 }, { opacity: 0.6, duration: 0.2 }, 16.7);
-      tl.fromTo("#tab-revoked-on", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 16.7);
-      tl.fromTo("#tab-revoked", { opacity: 0.6 }, { opacity: 1, duration: 0.2 }, 16.7);
-      tl.fromTo("#t-revoked", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 16.75);
+      tl.fromTo("#revoke", { backgroundColor: "rgba(125,170,253,0)", color: "#ffffff" }, { backgroundColor: "rgba(125,170,253,1)", color: "#0b0f19", duration: 0.15 }, 16.1);
+      tl.to("#cred-row", { opacity: 0.35, duration: 0.4 }, 16.5);
       tl.fromTo("#p2", { opacity: 0 }, { opacity: 1, duration: 0.01 }, 17.0);
       typeOn("#cmd2", 17.05, 1.1);
       tl.fromTo("#out2", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 18.4);
       tl.fromTo("#a2", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.4, ease: out }, 18.6);
-      tl.to(["#left", "#app"], { opacity: 0, duration: 0.4, ease: "power2.in" }, 20.05);
+      tl.to(["#term", "#side"], { opacity: 0, duration: 0.4, ease: "power2.in" }, 20.05);
 
       // 6. Slogan (20.5 - 24), then back to the empty grid so the loop joins scene 1.
       tl.fromTo("#end-mark", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: out }, 20.55);
