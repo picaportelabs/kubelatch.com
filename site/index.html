@@ -4,24 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>kubelatch · Stop messing with Kubernetes credentials</title>
-<meta name="description" content="kubelatch gives every person and every CI pipeline their own credential for your Kubernetes clusters, with tiered permissions, an expiry and a record of every request.">
+<meta name="description" content="kubelatch gives every person, every CI pipeline and every AI agent their own credential for your Kubernetes clusters, with tiered permissions, an expiry and a record of every request.">
 <link rel="canonical" href="https://kubelatch.com/">
 <link rel="alternate" hreflang="en" href="https://kubelatch.com/">
 <link rel="alternate" hreflang="es" href="https://kubelatch.com/es/">
 <link rel="alternate" hreflang="x-default" href="https://kubelatch.com/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/style.css">
-<meta name="theme-color" content="#faf9f7" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#080f1c" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#080f1c">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kubelatch.com/">
 <meta property="og:title" content="kubelatch · Stop messing with Kubernetes credentials">
-<meta property="og:description" content="One credential per person and per pipeline, with tiered permissions, an expiry and a record of every request.">
+<meta property="og:description" content="One credential per person, per pipeline and per AI agent, with tiered permissions, an expiry and a record of every request.">
 <meta property="og:image" content="https://kubelatch.com/og.png">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 </head>
-<body>
+<body class="scheme-dark">
 <svg hidden><symbol id="mark" viewBox="0 0 48 48"><polygon class="s" points="15.50,12.80 24.26,17.02 26.42,26.49 20.36,34.09 10.64,34.09 4.58,26.49 6.74,17.02"/><path class="f" d="M16.22 20.95 L17.44 21.53 Q18.16 21.88 18.34 22.66 L18.64 23.98 Q18.81 24.76 18.32 25.38 L17.47 26.44 Q16.98 27.06 16.18 27.06 L14.82 27.06 Q14.02 27.06 13.53 26.44 L12.68 25.38 Q12.19 24.76 12.36 23.98 L12.66 22.66 Q12.84 21.88 13.56 21.53 L14.78 20.95 Q15.50 20.60 16.22 20.95 Z"/><rect class="a" x="25" y="21.5" width="19.5" height="5" rx="2.5"/><rect class="a" x="35" y="24" width="3.6" height="7.5" rx="1.8"/><rect class="a" x="40.9" y="24" width="3.6" height="5.8" rx="1.8"/></symbol></svg>
 <a class="skip" href="#main">Skip to content</a>
 
@@ -39,7 +38,7 @@
   <div class="wrap hero">
     <p class="eyebrow">credential broker for Kubernetes</p>
     <h1 class="slogan">Stop messing with Kubernetes credentials</h1>
-    <p class="lead">kubelatch gives every person and every CI pipeline their own credential for your clusters, with tiered permissions, an expiry and a record of every request.</p>
+    <p class="lead">kubelatch gives every person, every CI pipeline and every AI agent their own credential for your clusters, with tiered permissions, an expiry and a record of every request.</p>
     <div class="actions">
       <a class="btn btn-primary" href="https://docs.kubelatch.com/">Read the docs</a>
       <a class="btn btn-secondary" href="https://docs.kubelatch.com/getting-started/local/">Try it in 15 minutes</a>
@@ -47,16 +46,16 @@
 
     <figure class="film">
       <div class="film-frame">
-        <video autoplay muted loop playsinline controls preload="metadata" poster="/media/poster-b4bac9db23.jpg" aria-describedby="film-caption">
-          <source src="/media/kubelatch-2edb8a5d46.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
+        <video autoplay muted loop playsinline controls preload="metadata" poster="/media/poster-760ea6ef28.jpg" aria-describedby="film-caption">
+          <source src="/media/kubelatch-09211430ff.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
         </video>
       </div>
-      <figcaption id="film-caption">A shared admin kubeconfig, replaced by a credential per person: kubectl goes through kubelatch, every request is audited, and a revoked credential gets 401 at once. <a class="film-link" href="/media/kubelatch-2edb8a5d46.mp4">Watch the video (24 s, MP4)</a></figcaption>
+      <figcaption id="film-caption">A shared admin kubeconfig, replaced by one credential for each person, pipeline and AI agent: every request is audited under its name, the agent's delete is refused with 403, and once revoked its next call gets 401. <a class="film-link" href="/media/kubelatch-09211430ff.mp4">Watch the video (26 s, MP4)</a></figcaption>
     </figure>
   </div>
 </header>
 
-<main id="main">
+<main id="main" class="scheme-light">
   <section class="wrap section" aria-labelledby="why">
     <p class="kicker">// the problem</p>
     <h2 id="why">Nobody knows who holds the admin kubeconfig.</h2>
@@ -163,6 +162,33 @@ bot:shop-api   github-actions  prod-eu   in 58 min  <span class="ok">just now</s
     <div class="clusters">
       <span class="kicker">works with</span>
       <span class="chip">EKS</span><span class="chip">GKE</span><span class="chip">AKS</span><span class="chip">kubeadm</span><span class="chip">k3s</span><span class="chip">RKE2</span><span class="chip">Talos</span>
+    </div>
+  </section>
+  <section class="wrap section" aria-labelledby="agents">
+    <p class="kicker">// for AI agents</p>
+    <h2 id="agents">Ready for AI agents.</h2>
+    <p class="intro">An agent that runs kubectl is one more identity to govern. In kubelatch it gets a bot account of its own: the tier it needs, an expiry in hours, and every request it makes in the audit, under its name.</p>
+
+    <div class="versus agents">
+      <article class="card">
+        <div class="card-head"><h3>bot:ops-agent</h3><span class="mono">viewer · prod-eu · expires in 8 h</span></div>
+<pre><span class="dim">time      action                  code</span>
+12:04:31  get pods -n shop        <span class="ok">200</span>
+12:04:33  logs web-7f9c           <span class="ok">200</span>
+12:04:40  delete pod web-7f9c     <span class="bad">403</span>
+12:06:02  get pods -n shop        <span class="bad">401</span>  <span class="dim">revoked</span></pre>
+        <ul>
+          <li>It does what its tier allows; the cluster answers 403 to the rest.</li>
+          <li>Its credential expires on its own, in hours if you want.</li>
+          <li>Every request it made is in the audit, with the result.</li>
+          <li>Revoke it and its next call gets 401.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><h3>MCP server</h3><span class="chip">coming soon</span></div>
+        <p class="body">A kubelatch MCP server is on the way, so agents can work with your clusters through the Model Context Protocol under the same rules: a credential of their own, a tier and every request audited.</p>
+      </article>
     </div>
   </section>
 </main>

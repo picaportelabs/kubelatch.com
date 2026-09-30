@@ -1,8 +1,11 @@
 /* kubelatch landing. The tokens are the ones of the web UI (web/src/index.css,
    DESIGN.md): warm paper and hairlines, blueprint ink, one cobalt for action
    and position, Inter self-hosted, a 0.5rem base radius and the two-layer card
-   shadow. Each token has its light value in :root and its dark one in the
-   media query below; the scheme follows the system. */
+   shadow. The page mixes both schemes and does not follow the system: the
+   bands (header with the video, closing, footer, 404) are dark and the
+   sections in <main> are light. Each token has its light value in :root and
+   .scheme-light, and its dark one in .scheme-dark; <body> carries
+   .scheme-dark and <main> .scheme-light. */
 
 /* Inter, self-hosted (fonts/, SIL OFL; a copy of web/public/fonts).
    Metric-compatible fallback so the swap does not reflow. */
@@ -22,7 +25,7 @@
   line-gap-override: 0%;
 }
 
-:root {
+:root, .scheme-light {
   --paper: oklch(97% 0.004 80);
   --sheet: #fff;
   --line: oklch(91% 0.006 80);
@@ -61,30 +64,31 @@
   accent-color: var(--brand);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: oklch(13% 0.028 261.692);
-    --sheet: oklch(21% 0.034 264.665);
-    --line: oklch(30% 0.03 260);
-    --line-strong: oklch(56% 0.02 260);
-    --ink: oklch(98.5% 0.002 247.839);
-    --on-ink: oklch(13% 0.028 261.692);
-    --on-ink-secondary: oklch(44.6% 0.03 256.802);
-    --secondary: oklch(87.2% 0.01 258.338);
-    --muted: oklch(70.7% 0.022 261.325);
-    --wash: oklch(27.8% 0.033 256.848);
-    --success: oklch(79.2% 0.209 151.711);
-    --danger: oklch(70.4% 0.191 22.216);
-    --brand: oklch(74% 0.13 262);
-    --brand-hover: oklch(80% 0.11 262);
-    --on-brand: oklch(13% 0.028 261.692);
-    --band: oklch(17% 0.03 262);
-    --band-grid: oklch(100% 0 0 / 0.05);
-    --shade-1: rgb(0 0 0 / 0.3);
-    --shade-2: rgb(0 0 0 / 0.4);
-    color-scheme: dark;
-  }
+.scheme-dark {
+  --paper: oklch(13% 0.028 261.692);
+  --sheet: oklch(21% 0.034 264.665);
+  --line: oklch(30% 0.03 260);
+  --line-strong: oklch(56% 0.02 260);
+  --ink: oklch(98.5% 0.002 247.839);
+  --on-ink: oklch(13% 0.028 261.692);
+  --on-ink-secondary: oklch(44.6% 0.03 256.802);
+  --secondary: oklch(87.2% 0.01 258.338);
+  --muted: oklch(70.7% 0.022 261.325);
+  --wash: oklch(27.8% 0.033 256.848);
+  --success: oklch(79.2% 0.209 151.711);
+  --danger: oklch(70.4% 0.191 22.216);
+  --brand: oklch(74% 0.13 262);
+  --brand-hover: oklch(80% 0.11 262);
+  --on-brand: oklch(13% 0.028 261.692);
+  --band: oklch(17% 0.03 262);
+  --band-grid: oklch(100% 0 0 / 0.05);
+  --shade-1: rgb(0 0 0 / 0.3);
+  --shade-2: rgb(0 0 0 / 0.4);
+  color-scheme: dark;
 }
+
+/* Each zone paints its own ground, so the tokens it declares are the ones seen. */
+.scheme-light, .scheme-dark { background: var(--paper); color: var(--ink); }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -282,7 +286,12 @@ img, video, svg { display: block; max-width: 100%; }
 .card .ok { color: var(--success); }
 .card ul { margin: 0; padding: 1.25rem 1.5rem 1.5rem 2.75rem; display: grid; gap: 0.5rem; color: var(--secondary); }
 .card li::marker { color: var(--muted); }
+.card .bad { color: var(--danger); }
+.card > .body { margin: 0; padding: 1.25rem 1.5rem 1.5rem; color: var(--secondary); }
+.card-head .chip { color: var(--secondary); }
 .card.without pre { text-decoration: none; }
+/* AI agents: the agent's audit, wider, beside the MCP note. */
+@media (min-width: 900px) { .versus.agents { grid-template-columns: 1.6fr 1fr; align-items: start; } }
 .card.without .card-head h3 { color: var(--secondary); }
 
 /* Features */

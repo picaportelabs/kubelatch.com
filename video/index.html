@@ -6,134 +6,178 @@
     <title>kubelatch · Stop messing with Kubernetes credentials</title>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js" integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2" crossorigin="anonymous"></script>
     <style>
-      /* Same look as the landing's ink band: near-black ground, a faint 48px
-         hairline grid, white type, 1px lines, one 4px radius. Inter and JetBrains
-         Mono (bundled by Hyperframes) stand in for the system fonts so every
-         render is identical. */
+      /* The web UI in its dark scheme (web/src/index.css, DESIGN.md), drawn at
+         twice its size: the video plays at about 960px wide on the landing.
+         Paper ground with the bands' faint 48px grid, sheet cards with a
+         hairline, a 24px card radius and the two-layer shadow, cobalt only for
+         the mark's bar, tinted pills that always carry their word. Inter and
+         JetBrains Mono (bundled by Hyperframes) so every render is identical. */
+      :root {
+        --paper: oklch(13% 0.028 261.692);
+        --sheet: oklch(21% 0.034 264.665);
+        --line: oklch(30% 0.03 260);
+        --line-strong: oklch(56% 0.02 260);
+        --ink: oklch(98.5% 0.002 247.839);
+        --secondary: oklch(87.2% 0.01 258.338);
+        --muted: oklch(70.7% 0.022 261.325);
+        --wash: oklch(27.8% 0.033 256.848);
+        --brand: oklch(74% 0.13 262);
+        --success-tint: oklch(25% 0.05 155);
+        --success-ink: oklch(88% 0.15 155);
+        --danger: oklch(70.4% 0.191 22.216);
+        --danger-tint: oklch(25% 0.06 20);
+        --danger-ink: oklch(88% 0.08 20);
+        --on-danger: oklch(13% 0.028 261.692);
+        --shadow: 0 2px 4px rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.4);
+      }
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0b0f19; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--paper); }
       #root {
         position: relative; width: 100%; height: 100%; overflow: hidden;
-        color: #fff; font-family: "Inter", sans-serif;
+        color: var(--ink); font-family: "Inter", sans-serif;
       }
       #grid {
         position: absolute; inset: 0;
         background-image:
-          linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
-          linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+          linear-gradient(oklch(100% 0 0 / 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, oklch(100% 0 0 / 0.05) 1px, transparent 1px);
         background-size: 48px 48px; background-position: center center;
         mask-image: radial-gradient(ellipse 75% 70% at 50% 50%, #000 35%, transparent 100%);
       }
       .clip { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
       .mono { font-family: "JetBrains Mono", monospace; }
-      .panel {
-        background: #101828; border: 1px solid rgb(255 255 255 / 0.22); border-radius: 4px;
+      .muted { color: var(--muted); }
+      .card {
+        background: var(--sheet); border: 2px solid var(--line); border-radius: 24px;
+        box-shadow: var(--shadow); overflow: hidden;
       }
-      .panel-head {
+      .card-head {
         display: flex; justify-content: space-between; align-items: center;
-        padding: 18px 28px; border-bottom: 1px solid rgb(255 255 255 / 0.22);
-        font-size: 24px; color: #d1d5dc;
+        padding: 26px 36px; border-bottom: 2px solid var(--line);
+        font-size: 30px; font-weight: 600;
       }
-      .dim { color: #99a1af; }
-      .ok { color: #05df72; }
-      .bad { color: #ff6467; }
-      .type { display: inline-block; overflow: hidden; white-space: pre; vertical-align: bottom; width: 0; }
+      .card-head .mono { font-size: 24px; font-weight: 400; color: var(--muted); }
+      .pill {
+        display: inline-block; border-radius: 999px; padding: 4px 16px;
+        font-size: 24px; font-weight: 600; line-height: 1.4; white-space: nowrap;
+      }
+      .pill.neutral { background: var(--wash); color: var(--secondary); }
+      .pill.ok { background: var(--success-tint); color: var(--success-ink); }
+      .pill.bad { background: var(--danger-tint); color: var(--danger-ink); }
+      /* The mark's shapes by class, so the <use> copies of the symbol get them too. */
+      .s { fill: none; stroke: var(--ink); stroke-width: 4.2; stroke-linejoin: round; }
+      .f { fill: var(--ink); }
+      .a { fill: var(--brand); }
 
       /* 1. The shared kubeconfig */
       #chat { width: 1240px; }
-      #chat .body { padding: 32px 36px 36px; }
-      .who { display: flex; align-items: center; gap: 20px; font-size: 34px; }
+      #chat .body { padding: 36px 40px 40px; }
+      .who { display: flex; align-items: center; gap: 20px; font-size: 32px; }
       .avatar {
-        width: 64px; height: 64px; border: 1px solid rgb(255 255 255 / 0.4); border-radius: 4px;
-        display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 28px;
+        width: 64px; height: 64px; border-radius: 999px; background: var(--wash); color: var(--secondary);
+        display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 26px; flex-shrink: 0;
       }
       .msg { margin-top: 24px; font-size: 46px; line-height: 1.35; }
       .file {
-        position: relative; margin-top: 28px; display: flex; align-items: center; justify-content: space-between;
-        border: 1px solid rgb(255 255 255 / 0.3); border-radius: 4px; padding: 24px 30px; font-size: 36px;
+        position: relative; margin-top: 30px; display: flex; align-items: center; justify-content: space-between;
+        border: 2px solid var(--line-strong); border-radius: 16px; padding: 24px 30px; font-size: 34px;
       }
       #strike {
         position: absolute; left: -12px; right: -12px; top: 50%; height: 6px; margin-top: -3px;
-        background: #fff; transform-origin: left center;
+        background: var(--danger); border-radius: 3px; transform-origin: left center;
       }
-      #copies { margin-top: 28px; font-size: 30px; }
+      #copies { margin-top: 30px; display: flex; gap: 16px; }
 
       /* 2. The questions */
       #questions { flex-direction: column; align-items: flex-start; padding-left: 300px; gap: 18px; }
       .q { font-size: 112px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.08; }
-      #nobody { margin-top: 30px; font-size: 40px; }
+      #nobody { margin-top: 30px; font-size: 38px; }
 
-      /* 3. kubelatch */
-      #brand { flex-direction: column; gap: 56px; }
-      #lockup { display: flex; align-items: center; gap: 36px; }
-      #mark { width: 190px; height: 190px; }
-      #mark .s { fill: none; stroke: #fff; stroke-width: 4.2; stroke-linejoin: round; }
-      #mark .f { fill: #fff; }
-      /* Blueprint Blue on ink (--band-accent in landing/site/style.css): the bar of the key. */
-      #mark .a { fill: #7daafd; }
-      #wordmark { font-size: 150px; font-weight: 800; letter-spacing: -0.045em; }
-      #signin {
-        display: flex; align-items: center; gap: 28px; font-size: 34px;
-      }
-      #btn-github {
-        background: #7daafd; color: #0b0f19; font-weight: 700; border-radius: 4px; padding: 20px 36px;
-      }
-      #kubeconfig { font-size: 30px; }
+      /* 3. kubelatch: one credential for each */
+      #brand { flex-direction: column; gap: 44px; }
+      #lockup { display: flex; align-items: center; gap: 28px; }
+      #mark { width: 132px; height: 132px; }
+      #wordmark { font-size: 112px; font-weight: 800; letter-spacing: -0.045em; }
+      #each { font-size: 44px; color: var(--secondary); }
+      #ids { display: flex; gap: 40px; margin-top: 12px; }
+      .id { width: 500px; padding: 34px 36px 32px; display: flex; flex-direction: column; gap: 22px; }
+      .id-top { display: flex; align-items: center; gap: 20px; }
+      .id-name { font-size: 36px; font-weight: 700; letter-spacing: -0.01em; }
+      .id-top .pill { margin-left: auto; }
+      .id-line { font-size: 26px; color: var(--secondary); }
+      .id-foot { padding-top: 20px; border-top: 2px solid var(--line); font-size: 24px; }
 
-      /* 4-5. kubectl, audit, revoke */
-      #work { gap: 40px; padding: 0 110px; align-items: center; }
-      #term { flex: 1.1; display: flex; flex-direction: column; }
-      #term pre { padding: 34px 36px; font-size: 30px; line-height: 1.6; font-family: "JetBrains Mono", monospace; white-space: pre; }
-      #side { flex: 1; display: flex; flex-direction: column; gap: 40px; }
-      .rows { padding: 12px 28px 20px; font-size: 28px; font-family: "JetBrains Mono", monospace; }
-      .row { display: grid; align-items: center; padding: 14px 0; border-bottom: 1px solid rgb(255 255 255 / 0.12); }
+      /* 4. Credentials and audit: 403, revoke, 401 */
+      #work { gap: 40px; padding: 0 80px; align-items: flex-start; padding-top: 245px; }
+      #creds { width: 700px; }
+      #audit { flex: 1; }
+      .rows { padding: 8px 36px 16px; font-size: 26px; }
+      .row { display: grid; align-items: center; gap: 16px; padding: 18px 0; border-bottom: 2px solid var(--line); min-height: 84px; }
       .row:last-child { border-bottom: 0; }
-      #creds .row { grid-template-columns: 1fr 1.3fr 1.5fr auto; }
-      #audit .row { grid-template-columns: 1.1fr 1.35fr 1.3fr 0.5fr; }
+      .row.head { min-height: 0; padding: 14px 0; font-size: 22px; color: var(--muted); font-weight: 500; }
+      #creds .row { grid-template-columns: 1.35fr 1fr 0.8fr auto; }
+      #audit .row { grid-template-columns: 150px 250px 1fr 90px; }
+      .name { font-weight: 600; }
+      .row .mono { font-size: 24px; }
+      .cell-end { justify-self: end; }
       #revoke {
-        font-family: "Inter", sans-serif; font-size: 24px; font-weight: 700;
-        border: 1px solid rgb(255 255 255 / 0.5); border-radius: 4px; padding: 8px 18px; text-align: center;
+        background: var(--danger); color: var(--on-danger); font-size: 22px; font-weight: 600;
+        border-radius: 12px; padding: 8px 18px;
       }
+      .act { position: relative; display: grid; justify-items: end; }
+      .act > * { grid-area: 1 / 1; }
 
-      /* 6. Slogan */
-      #end { flex-direction: column; gap: 60px; }
-      #end-mark { width: 150px; height: 150px; }
-      #end-mark .s { fill: none; stroke: #fff; stroke-width: 4.2; stroke-linejoin: round; }
-      #end-mark .f { fill: #fff; }
-      #end-mark .a { fill: #7daafd; }
+      /* 5. Slogan */
+      #end { flex-direction: column; gap: 52px; }
+      #end-mark { width: 140px; height: 140px; }
       #slogan {
-        width: 1500px; text-align: center; font-size: 132px; font-weight: 800;
+        width: 1500px; text-align: center; font-size: 128px; font-weight: 800;
         letter-spacing: -0.045em; line-height: 1.02;
       }
-      #url { font-size: 34px; color: #d1d5dc; }
+      #for { font-size: 40px; color: var(--secondary); margin-top: -12px; }
+      #url { font-size: 32px; color: var(--muted); }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="24" data-fps="30" data-width="1920" data-height="1080">
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <symbol id="k" viewBox="0 0 48 48">
+        <polygon class="s" points="15.50,12.80 24.26,17.02 26.42,26.49 20.36,34.09 10.64,34.09 4.58,26.49 6.74,17.02" />
+        <path class="f" d="M16.22 20.95 L17.44 21.53 Q18.16 21.88 18.34 22.66 L18.64 23.98 Q18.81 24.76 18.32 25.38 L17.47 26.44 Q16.98 27.06 16.18 27.06 L14.82 27.06 Q14.02 27.06 13.53 26.44 L12.68 25.38 Q12.19 24.76 12.36 23.98 L12.66 22.66 Q12.84 21.88 13.56 21.53 L14.78 20.95 Q15.50 20.60 16.22 20.95 Z" />
+        <rect class="a" x="25" y="21.5" width="19.5" height="5" rx="2.5" />
+        <rect class="a" x="35" y="24" width="3.6" height="7.5" rx="1.8" />
+        <rect class="a" x="40.9" y="24" width="3.6" height="5.8" rx="1.8" />
+      </symbol>
+    </svg>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="26" data-fps="30" data-width="1920" data-height="1080">
       <div id="grid"></div>
 
-      <section id="s1" class="clip" data-start="0" data-duration="4.3" data-track-index="1">
-        <div id="chat" class="panel">
-          <div class="panel-head mono"><span># platform</span><span class="dim">10:42</span></div>
+      <section id="s1" class="clip" data-start="0" data-duration="4.8" data-track-index="1">
+        <div id="chat" class="card">
+          <div class="card-head"><span># platform</span><span class="mono">10:42</span></div>
           <div class="body">
-            <div class="who"><div class="avatar">M</div><strong>marta</strong><span class="dim">platform team</span></div>
+            <div class="who"><div class="avatar">M</div><strong>marta</strong><span class="muted">platform team</span></div>
             <p class="msg">here's the prod kubeconfig, don't share it</p>
-            <div class="file mono" data-layout-allow-occlusion><span>admin.conf</span><span class="dim">5.4 KB · cluster-admin</span><div id="strike"></div></div>
-            <p id="copies" class="mono dim">copied to 5 laptops, 2 CI secrets, 1 wiki page</p>
+            <div class="file mono" data-layout-allow-occlusion><span>admin.conf</span><span class="muted">cluster-admin</span><div id="strike"></div></div>
+            <div id="copies">
+              <span class="pill neutral">5 laptops</span>
+              <span class="pill neutral">2 CI secrets</span>
+              <span class="pill neutral">1 wiki page</span>
+              <span class="pill neutral">1 AI agent</span>
+            </div>
           </div>
         </div>
       </section>
 
-      <section id="questions" class="clip" data-start="4.3" data-duration="4" data-track-index="1">
+      <section id="questions" class="clip" data-start="4.8" data-duration="3.8" data-track-index="1">
         <p id="q1" class="q">who has it?</p>
         <p id="q2" class="q">until when?</p>
         <p id="q3" class="q">what did they run?</p>
-        <p id="nobody" class="mono dim">the API server only sees kubernetes-admin</p>
+        <p id="nobody" class="mono muted">the API server only sees kubernetes-admin</p>
       </section>
 
-      <section id="brand" class="clip" data-start="8.3" data-duration="4" data-track-index="1">
+      <section id="brand" class="clip" data-start="8.6" data-duration="5.1" data-track-index="1">
         <div id="lockup">
-          <svg id="mark" viewBox="0 0 48 48" aria-hidden="true">
+          <svg id="mark" class="mark" viewBox="0 0 48 48" aria-hidden="true">
             <polygon id="bow" class="s" points="15.50,12.80 24.26,17.02 26.42,26.49 20.36,34.09 10.64,34.09 4.58,26.49 6.74,17.02" />
             <path id="hub" class="f" d="M16.22 20.95 L17.44 21.53 Q18.16 21.88 18.34 22.66 L18.64 23.98 Q18.81 24.76 18.32 25.38 L17.47 26.44 Q16.98 27.06 16.18 27.06 L14.82 27.06 Q14.02 27.06 13.53 26.44 L12.68 25.38 Q12.19 24.76 12.36 23.98 L12.66 22.66 Q12.84 21.88 13.56 21.53 L14.78 20.95 Q15.50 20.60 16.22 20.95 Z" />
             <g id="blade">
@@ -144,53 +188,54 @@
           </svg>
           <span id="wordmark">kubelatch</span>
         </div>
-        <div id="signin">
-          <span id="btn-github">Sign in with GitHub</span>
-          <span id="kubeconfig" class="mono dim">→ kubeconfig · ana · klt_3fQ9… · expires in 30 d</span>
-        </div>
-      </section>
-
-      <section id="work" class="clip" data-start="12.3" data-duration="8.2" data-track-index="1">
-        <div id="term" class="panel">
-          <div class="panel-head mono"><span>ana@laptop</span><span class="dim">kubeconfig: kubelatch</span></div>
-<pre><span class="dim">$ </span><span id="cmd1" class="type">kubectl get pods -n shop</span>
-<span id="out1">NAME              READY   STATUS
-web-7f9c6d        1/1     Running
-api-5d2b88        1/1     Running
-worker-8c1a4f     1/1     Running</span>
-<span id="p2"><span class="dim">$ </span><span id="cmd2" class="type">kubectl get pods -n shop</span></span>
-<span id="out2" class="bad">error: You must be logged in to the server
-(credential revoked)</span></pre>
-        </div>
-        <div id="side">
-          <div id="creds" class="panel">
-            <div class="panel-head"><span>Credentials</span><span class="mono dim">admin</span></div>
-            <div class="rows">
-              <div class="row dim"><span>owner</span><span>name</span><span>cluster</span><span></span></div>
-              <div id="cred-row" class="row"><span>ana</span><span>laptop</span><span>prod-eu</span>
-                <span id="revoke">Revoke</span></div>
-            </div>
+        <p id="each">one credential for each</p>
+        <div id="ids">
+          <div id="id1" class="card id">
+            <div class="id-top"><div class="avatar">A</div><span class="id-name">ana</span><span class="pill neutral">person</span></div>
+            <p class="id-line mono">developer · shop</p>
+            <p class="id-foot mono muted">klt_3fQ9… · expires in 30 d</p>
           </div>
-          <div id="audit" class="panel">
-            <div class="panel-head"><span>Audit</span><span class="mono dim">every request</span></div>
-            <div class="rows">
-              <div class="row dim"><span>time</span><span>who</span><span>action</span><span>code</span></div>
-              <div id="a1" class="row"><span>12:04:31</span><span>ana</span><span>list pods</span><span class="ok">200</span></div>
-              <div id="a2" class="row"><span>12:05:02</span><span>klt_3fQ9…</span><span class="dim">rejected</span><span class="bad">401</span></div>
-            </div>
+          <div id="id2" class="card id">
+            <div class="id-top"><div class="avatar">CI</div><span class="id-name">shop-api</span><span class="pill neutral">pipeline</span></div>
+            <p class="id-line mono">developer · shop</p>
+            <p class="id-foot mono muted">klt_8Hc2… · expires in 1 h</p>
+          </div>
+          <div id="id3" class="card id">
+            <div class="id-top"><div class="avatar">AI</div><span class="id-name">ops-agent</span><span class="pill neutral">AI agent</span></div>
+            <p class="id-line mono">viewer · prod-eu</p>
+            <p class="id-foot mono muted">klt_Q7m1… · expires in 8 h</p>
           </div>
         </div>
       </section>
 
-      <section id="end" class="clip" data-start="20.5" data-duration="3.5" data-track-index="1">
-        <svg id="end-mark" viewBox="0 0 48 48" aria-hidden="true">
-          <polygon class="s" points="15.50,12.80 24.26,17.02 26.42,26.49 20.36,34.09 10.64,34.09 4.58,26.49 6.74,17.02" />
-          <path class="f" d="M16.22 20.95 L17.44 21.53 Q18.16 21.88 18.34 22.66 L18.64 23.98 Q18.81 24.76 18.32 25.38 L17.47 26.44 Q16.98 27.06 16.18 27.06 L14.82 27.06 Q14.02 27.06 13.53 26.44 L12.68 25.38 Q12.19 24.76 12.36 23.98 L12.66 22.66 Q12.84 21.88 13.56 21.53 L14.78 20.95 Q15.50 20.60 16.22 20.95 Z" />
-          <rect class="a" x="25" y="21.5" width="19.5" height="5" rx="2.5" />
-          <rect class="a" x="35" y="24" width="3.6" height="7.5" rx="1.8" />
-          <rect class="a" x="40.9" y="24" width="3.6" height="5.8" rx="1.8" />
-        </svg>
+      <section id="work" class="clip" data-start="13.7" data-duration="7.3" data-track-index="1">
+        <div id="creds" class="card">
+          <div class="card-head"><span>Credentials</span><span class="mono">admin</span></div>
+          <div class="rows">
+            <div class="row head"><span>owner</span><span>tier</span><span>expires</span><span></span></div>
+            <div class="row"><span class="name">ana</span><span class="mono">developer</span><span class="mono muted">30 d</span><span></span></div>
+            <div class="row"><span class="name">shop-api</span><span class="mono">developer</span><span class="mono muted">1 h</span><span></span></div>
+            <div id="agent-row" class="row"><span class="name">ops-agent</span><span class="mono">viewer</span><span class="mono muted">8 h</span>
+              <span class="act"><span id="revoke">Revoke</span><span id="revoked" class="pill bad">revoked</span></span></div>
+          </div>
+        </div>
+        <div id="audit" class="card">
+          <div class="card-head"><span>Audit</span><span class="mono">every request</span></div>
+          <div class="rows">
+            <div class="row head"><span>time</span><span>who</span><span>action</span><span class="cell-end">code</span></div>
+            <div id="a1" class="row"><span class="mono muted">12:04:31</span><span class="name">ana</span><span class="mono">get pods -n shop</span><span class="pill ok cell-end">200</span></div>
+            <div id="a2" class="row"><span class="mono muted">12:04:35</span><span class="name">shop-api</span><span class="mono">apply deploy/web</span><span class="pill ok cell-end">200</span></div>
+            <div id="a3" class="row"><span class="mono muted">12:04:40</span><span class="name">ops-agent</span><span class="mono">logs web-7f9c</span><span class="pill ok cell-end">200</span></div>
+            <div id="a4" class="row"><span class="mono muted">12:04:44</span><span class="name">ops-agent</span><span class="mono">delete pod web-7f9c</span><span class="pill bad cell-end">403</span></div>
+            <div id="a5" class="row"><span class="mono muted">12:06:02</span><span class="name">ops-agent</span><span class="mono">get pods -n shop</span><span class="pill bad cell-end">401</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="end" class="clip" data-start="21" data-duration="5" data-track-index="1">
+        <svg id="end-mark" class="mark" viewBox="0 0 48 48" aria-hidden="true"><use href="#k" /></svg>
         <p id="slogan">Stop messing with Kubernetes credentials</p>
+        <p id="for">for people, pipelines and AI agents</p>
         <p id="url" class="mono">kubelatch.com</p>
       </section>
     </div>
@@ -198,57 +243,56 @@ worker-8c1a4f     1/1     Running</span>
     <script>
       const tl = gsap.timeline({ paused: true });
       const out = "power3.out";
-      const typeOn = (sel, at, dur) => {
-        const n = document.querySelector(sel).textContent.length;
-        tl.fromTo(sel, { width: "0ch" }, { width: n + "ch", duration: dur, ease: "steps(" + n + ")" }, at);
-      };
+      const rise = (sel, at, y = 30, dur = 0.5) =>
+        tl.fromTo(sel, { opacity: 0, y }, { opacity: 1, y: 0, duration: dur, ease: out }, at);
+      const slideIn = (sel, at) => tl.fromTo(sel, { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.4, ease: out }, at);
+      const leave = (sel, at) => tl.to(sel, { opacity: 0, duration: 0.4, ease: "power2.in" }, at);
 
-      // 1. The shared kubeconfig (0 - 4.3)
-      tl.fromTo("#chat", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7, ease: out }, 0.2);
-      tl.fromTo("#copies", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 1.5);
-      tl.fromTo("#strike", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.inOut" }, 2.3);
-      tl.to("#chat", { opacity: 0, y: -30, duration: 0.45, ease: "power2.in" }, 3.75);
+      // 1. The shared kubeconfig (0 - 4.8): it spreads, and it is not a credential of anyone's.
+      rise("#chat", 0.2, 40, 0.7);
+      document.querySelectorAll("#copies .pill").forEach((p, i) => rise(p, 1.4 + i * 0.3, 12, 0.35));
+      tl.fromTo("#strike", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.inOut" }, 3.0);
+      tl.to("#chat", { opacity: 0, y: -30, duration: 0.45, ease: "power2.in" }, 4.25);
 
-      // 2. The questions (4.3 - 8.3)
-      ["#q1", "#q2", "#q3"].forEach((q, i) => {
-        tl.fromTo(q, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: out }, 4.45 + i * 0.6);
-      });
-      tl.fromTo("#nobody", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 6.4);
-      tl.to(["#q1", "#q2", "#q3", "#nobody"], { opacity: 0, duration: 0.4, ease: "power2.in" }, 7.8);
+      // 2. The questions (4.8 - 8.6)
+      ["#q1", "#q2", "#q3"].forEach((q, i) => rise(q, 4.95 + i * 0.6));
+      tl.fromTo("#nobody", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 6.9);
+      leave(["#q1", "#q2", "#q3", "#nobody"], 8.1);
 
-      // 3. kubelatch (8.3 - 12.3): the mark draws itself, then sign-in.
+      // 3. kubelatch (8.6 - 13.7): the mark draws itself, then one credential for each.
       const bow = document.querySelector("#bow");
       const len = bow.getTotalLength();
-      tl.fromTo(bow, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, 8.4);
-      tl.fromTo("#hub", { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 9.0);
-      tl.fromTo("#blade", { opacity: 0, x: -6 }, { opacity: 1, x: 0, duration: 0.4, ease: out }, 9.2);
-      tl.fromTo("#wordmark", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.5, ease: out }, 9.35);
-      tl.fromTo("#btn-github", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.45, ease: out }, 10.0);
-      tl.to("#btn-github", { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1 }, 10.7);
-      tl.fromTo("#kubeconfig", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.45, ease: out }, 10.95);
-      tl.to(["#lockup", "#signin"], { opacity: 0, duration: 0.4, ease: "power2.in" }, 11.85);
+      tl.fromTo(bow, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, 8.7);
+      tl.fromTo("#hub", { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 9.3);
+      tl.fromTo("#blade", { opacity: 0, x: -6 }, { opacity: 1, x: 0, duration: 0.4, ease: out }, 9.5);
+      tl.fromTo("#wordmark", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.5, ease: out }, 9.65);
+      tl.fromTo("#each", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 10.3);
+      ["#id1", "#id2", "#id3"].forEach((id, i) => rise(id, 10.7 + i * 0.35, 40));
+      leave(["#lockup", "#each", "#ids"], 13.2);
 
-      // 4. kubectl through kubelatch, audited (12.3 - 16)
-      tl.fromTo("#term", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.6, ease: out }, 12.35);
-      tl.fromTo("#side", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: out }, 12.5);
-      typeOn("#cmd1", 13.1, 1.1);
-      tl.fromTo("#out1", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 14.45);
-      tl.fromTo("#a1", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.4, ease: out }, 14.7);
+      // 4. Every request under its own name; the agent's delete is refused (13.7 - 21).
+      tl.fromTo("#creds", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.6, ease: out }, 13.75);
+      tl.fromTo("#audit", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: out }, 13.9);
+      tl.set(["#a1", "#a2", "#a3", "#a4", "#a5", "#revoked"], { opacity: 0 }, 13.7);
+      slideIn("#a1", 14.6);
+      slideIn("#a2", 15.3);
+      slideIn("#a3", 16.0);
+      slideIn("#a4", 16.8);
+      tl.fromTo("#a4", { backgroundColor: "oklch(25% 0.06 20 / 0)" }, { backgroundColor: "oklch(25% 0.06 20 / 0.6)", duration: 0.3, yoyo: true, repeat: 1 }, 17.1);
+      // Revoke the agent: the button is pressed, the row turns to "revoked", the next call gets 401.
+      tl.to("#revoke", { scale: 0.92, duration: 0.1, yoyo: true, repeat: 1 }, 17.9);
+      tl.to("#revoke", { opacity: 0, duration: 0.15 }, 18.15);
+      tl.to("#revoked", { opacity: 1, duration: 0.2 }, 18.2);
+      tl.to("#agent-row .name, #agent-row .mono", { opacity: 0.45, duration: 0.3 }, 18.2);
+      slideIn("#a5", 18.9);
+      leave(["#creds", "#audit"], 20.55);
 
-      // 5. Revoke: the next request gets 401 (16 - 20.5)
-      tl.fromTo("#revoke", { backgroundColor: "rgba(125,170,253,0)", color: "#ffffff" }, { backgroundColor: "rgba(125,170,253,1)", color: "#0b0f19", duration: 0.15 }, 16.1);
-      tl.to("#cred-row", { opacity: 0.35, duration: 0.4 }, 16.5);
-      tl.fromTo("#p2", { opacity: 0 }, { opacity: 1, duration: 0.01 }, 17.0);
-      typeOn("#cmd2", 17.05, 1.1);
-      tl.fromTo("#out2", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 18.4);
-      tl.fromTo("#a2", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.4, ease: out }, 18.6);
-      tl.to(["#term", "#side"], { opacity: 0, duration: 0.4, ease: "power2.in" }, 20.05);
-
-      // 6. Slogan (20.5 - 24), then back to the empty grid so the loop joins scene 1.
-      tl.fromTo("#end-mark", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: out }, 20.55);
-      tl.fromTo("#slogan", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: out }, 20.6);
-      tl.fromTo("#url", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 20.8);
-      tl.to(["#end-mark", "#slogan", "#url"], { opacity: 0, duration: 0.5, ease: "power2.in" }, 23.2);
+      // 5. Slogan (21 - 26), then back to the empty grid so the loop joins scene 1.
+      rise("#end-mark", 21.05, 20, 0.4);
+      rise("#slogan", 21.1);
+      tl.fromTo("#for", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 21.5);
+      tl.fromTo("#url", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 21.8);
+      leave(["#end-mark", "#slogan", "#for", "#url"], 25.2);
 
       window.__timelines["main"] = tl;
     </script>

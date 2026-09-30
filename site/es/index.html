@@ -4,24 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>kubelatch · Deja de pelearte con las credenciales de Kubernetes</title>
-<meta name="description" content="kubelatch da a cada persona y a cada pipeline de CI su propia credencial para tus clusters de Kubernetes, con permisos por niveles, caducidad y registro de cada petición.">
+<meta name="description" content="kubelatch da a cada persona, a cada pipeline de CI y a cada agente de IA su propia credencial para tus clusters de Kubernetes, con permisos por niveles, caducidad y registro de cada petición.">
 <link rel="canonical" href="https://kubelatch.com/es/">
 <link rel="alternate" hreflang="en" href="https://kubelatch.com/">
 <link rel="alternate" hreflang="es" href="https://kubelatch.com/es/">
 <link rel="alternate" hreflang="x-default" href="https://kubelatch.com/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/style.css">
-<meta name="theme-color" content="#faf9f7" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#080f1c" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#080f1c">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kubelatch.com/es/">
 <meta property="og:title" content="kubelatch · Deja de pelearte con las credenciales de Kubernetes">
-<meta property="og:description" content="Una credencial por persona y por pipeline, con permisos por niveles, caducidad y registro de cada petición.">
+<meta property="og:description" content="Una credencial por persona, por pipeline y por agente de IA, con permisos por niveles, caducidad y registro de cada petición.">
 <meta property="og:image" content="https://kubelatch.com/og-es.png">
 <meta property="og:locale" content="es_ES">
 <meta name="twitter:card" content="summary_large_image">
 </head>
-<body>
+<body class="scheme-dark">
 <svg hidden><symbol id="mark" viewBox="0 0 48 48"><polygon class="s" points="15.50,12.80 24.26,17.02 26.42,26.49 20.36,34.09 10.64,34.09 4.58,26.49 6.74,17.02"/><path class="f" d="M16.22 20.95 L17.44 21.53 Q18.16 21.88 18.34 22.66 L18.64 23.98 Q18.81 24.76 18.32 25.38 L17.47 26.44 Q16.98 27.06 16.18 27.06 L14.82 27.06 Q14.02 27.06 13.53 26.44 L12.68 25.38 Q12.19 24.76 12.36 23.98 L12.66 22.66 Q12.84 21.88 13.56 21.53 L14.78 20.95 Q15.50 20.60 16.22 20.95 Z"/><rect class="a" x="25" y="21.5" width="19.5" height="5" rx="2.5"/><rect class="a" x="35" y="24" width="3.6" height="7.5" rx="1.8"/><rect class="a" x="40.9" y="24" width="3.6" height="5.8" rx="1.8"/></symbol></svg>
 <a class="skip" href="#main">Saltar al contenido</a>
 
@@ -39,7 +38,7 @@
   <div class="wrap hero">
     <p class="eyebrow">broker de credenciales para Kubernetes</p>
     <h1 class="slogan">Deja de pelearte con las credenciales de Kubernetes</h1>
-    <p class="lead">kubelatch da a cada persona y a cada pipeline de CI su propia credencial para tus clusters, con permisos por niveles, caducidad y registro de cada petición.</p>
+    <p class="lead">kubelatch da a cada persona, a cada pipeline de CI y a cada agente de IA su propia credencial para tus clusters, con permisos por niveles, caducidad y registro de cada petición.</p>
     <div class="actions">
       <a class="btn btn-primary" href="https://docs.kubelatch.com/es/">Lee la documentación</a>
       <a class="btn btn-secondary" href="https://docs.kubelatch.com/es/getting-started/local/">Pruébalo en 15 minutos</a>
@@ -47,16 +46,16 @@
 
     <figure class="film">
       <div class="film-frame">
-        <video autoplay muted loop playsinline controls preload="metadata" poster="/media/poster-b4bac9db23.jpg" aria-describedby="film-caption">
-          <source src="/media/kubelatch-2edb8a5d46.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
+        <video autoplay muted loop playsinline controls preload="metadata" poster="/media/poster-760ea6ef28.jpg" aria-describedby="film-caption">
+          <source src="/media/kubelatch-09211430ff.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
         </video>
       </div>
-      <figcaption id="film-caption">Un kubeconfig de admin compartido, sustituido por una credencial por persona: kubectl pasa por kubelatch, cada petición queda auditada y una credencial revocada recibe 401 al instante. <a class="film-link" href="/media/kubelatch-2edb8a5d46.mp4">Ver el vídeo (24 s, MP4)</a></figcaption>
+      <figcaption id="film-caption">Un kubeconfig de admin compartido, sustituido por una credencial para cada persona, pipeline y agente de IA: cada petición queda auditada a su nombre, el borrado del agente se rechaza con 403 y, una vez revocada, su siguiente llamada recibe 401. <a class="film-link" href="/media/kubelatch-09211430ff.mp4">Ver el vídeo (26 s, MP4)</a></figcaption>
     </figure>
   </div>
 </header>
 
-<main id="main">
+<main id="main" class="scheme-light">
   <section class="wrap section" aria-labelledby="why">
     <p class="kicker">// el problema</p>
     <h2 id="why">Nadie sabe quién tiene el kubeconfig de admin.</h2>
@@ -163,6 +162,33 @@ bot:shop-api   github-actions  prod-eu   en 58 min  <span class="ok">ahora</span
     <div class="clusters">
       <span class="kicker">funciona con</span>
       <span class="chip">EKS</span><span class="chip">GKE</span><span class="chip">AKS</span><span class="chip">kubeadm</span><span class="chip">k3s</span><span class="chip">RKE2</span><span class="chip">Talos</span>
+    </div>
+  </section>
+  <section class="wrap section" aria-labelledby="agents">
+    <p class="kicker">// para agentes de IA</p>
+    <h2 id="agents">Preparado para agentes de IA.</h2>
+    <p class="intro">Un agente que ejecuta kubectl es una identidad más que gobernar. En kubelatch tiene su propia cuenta bot: el nivel que necesita, una caducidad en horas y cada petición que hace en la auditoría, a su nombre.</p>
+
+    <div class="versus agents">
+      <article class="card">
+        <div class="card-head"><h3>bot:ops-agent</h3><span class="mono">viewer · prod-eu · caduca en 8 h</span></div>
+<pre><span class="dim">hora      acción                  código</span>
+12:04:31  get pods -n shop        <span class="ok">200</span>
+12:04:33  logs web-7f9c           <span class="ok">200</span>
+12:04:40  delete pod web-7f9c     <span class="bad">403</span>
+12:06:02  get pods -n shop        <span class="bad">401</span>  <span class="dim">revocada</span></pre>
+        <ul>
+          <li>Hace lo que su nivel permite; al resto el cluster responde 403.</li>
+          <li>Su credencial caduca sola, en horas si quieres.</li>
+          <li>Cada petición que hizo está en la auditoría, con el resultado.</li>
+          <li>Revócala y su siguiente llamada recibe 401.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><h3>Servidor MCP</h3><span class="chip">próximamente</span></div>
+        <p class="body">Estamos preparando un servidor MCP de kubelatch para que los agentes trabajen con tus clusters a través del Model Context Protocol con las mismas reglas: su propia credencial, un nivel y cada petición auditada.</p>
+      </article>
     </div>
   </section>
 </main>
