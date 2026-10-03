@@ -134,6 +134,8 @@
         width: 1500px; text-align: center; font-size: 128px; font-weight: 800;
         letter-spacing: -0.045em; line-height: 1.02;
       }
+      /* The Spanish slogan is longer and takes three lines: a size down keeps the block light. */
+      html[lang="es"] #slogan { font-size: 112px; }
       #for { font-size: 40px; color: var(--secondary); margin-top: -12px; }
       #url { font-size: 32px; color: var(--muted); }
     </style>
@@ -153,26 +155,26 @@
 
       <section id="s1" class="clip" data-start="0" data-duration="4.8" data-track-index="1">
         <div id="chat" class="card">
-          <div class="card-head"><span># platform</span><span class="mono">10:42</span></div>
+          <div class="card-head"><span data-t="channel"># platform</span><span class="mono">10:42</span></div>
           <div class="body">
-            <div class="who"><div class="avatar">M</div><strong>marta</strong><span class="muted">platform team</span></div>
-            <p class="msg">here's the prod kubeconfig, don't share it</p>
+            <div class="who"><div class="avatar">M</div><strong>marta</strong><span class="muted" data-t="team">platform team</span></div>
+            <p class="msg" data-t="msg">here's the prod kubeconfig, don't share it</p>
             <div class="file mono" data-layout-allow-occlusion><span>admin.conf</span><span class="muted">cluster-admin</span><div id="strike"></div></div>
             <div id="copies">
-              <span class="pill neutral">5 laptops</span>
-              <span class="pill neutral">2 CI secrets</span>
-              <span class="pill neutral">1 wiki page</span>
-              <span class="pill neutral">1 AI agent</span>
+              <span class="pill neutral" data-t="laptops">5 laptops</span>
+              <span class="pill neutral" data-t="secrets">2 CI secrets</span>
+              <span class="pill neutral" data-t="wiki">1 wiki page</span>
+              <span class="pill neutral" data-t="agent1">1 AI agent</span>
             </div>
           </div>
         </div>
       </section>
 
       <section id="questions" class="clip" data-start="4.8" data-duration="3.8" data-track-index="1">
-        <p id="q1" class="q">who has it?</p>
-        <p id="q2" class="q">until when?</p>
-        <p id="q3" class="q">what did they run?</p>
-        <p id="nobody" class="mono muted">the API server only sees kubernetes-admin</p>
+        <p id="q1" class="q" data-t="q1">who has it?</p>
+        <p id="q2" class="q" data-t="q2">until when?</p>
+        <p id="q3" class="q" data-t="q3">what did they run?</p>
+        <p id="nobody" class="mono muted" data-t="nobody">the API server only sees kubernetes-admin</p>
       </section>
 
       <section id="brand" class="clip" data-start="8.6" data-duration="5.1" data-track-index="1">
@@ -188,41 +190,41 @@
           </svg>
           <span id="wordmark">kubelatch</span>
         </div>
-        <p id="each">one credential for each</p>
+        <p id="each" data-t="each">one credential for each</p>
         <div id="ids">
           <div id="id1" class="card id">
-            <div class="id-top"><div class="avatar">A</div><span class="id-name">ana</span><span class="pill neutral">person</span></div>
+            <div class="id-top"><div class="avatar">A</div><span class="id-name">ana</span><span class="pill neutral" data-t="person">person</span></div>
             <p class="id-line mono">developer · shop</p>
-            <p class="id-foot mono muted">klt_3fQ9… · expires in 30 d</p>
+            <p class="id-foot mono muted">klt_3fQ9… · <span data-t="expiresIn">expires in</span> 30 d</p>
           </div>
           <div id="id2" class="card id">
-            <div class="id-top"><div class="avatar">CI</div><span class="id-name">shop-api</span><span class="pill neutral">pipeline</span></div>
+            <div class="id-top"><div class="avatar">CI</div><span class="id-name">shop-api</span><span class="pill neutral" data-t="pipeline">pipeline</span></div>
             <p class="id-line mono">developer · shop</p>
-            <p class="id-foot mono muted">klt_8Hc2… · expires in 1 h</p>
+            <p class="id-foot mono muted">klt_8Hc2… · <span data-t="expiresIn">expires in</span> 1 h</p>
           </div>
           <div id="id3" class="card id">
-            <div class="id-top"><div class="avatar">AI</div><span class="id-name">ops-agent</span><span class="pill neutral">AI agent</span></div>
+            <div class="id-top"><div class="avatar">AI</div><span class="id-name">ops-agent</span><span class="pill neutral" data-t="agent">AI agent</span></div>
             <p class="id-line mono">viewer · prod-eu</p>
-            <p class="id-foot mono muted">klt_Q7m1… · expires in 8 h</p>
+            <p class="id-foot mono muted">klt_Q7m1… · <span data-t="expiresIn">expires in</span> 8 h</p>
           </div>
         </div>
       </section>
 
       <section id="work" class="clip" data-start="13.7" data-duration="7.3" data-track-index="1">
         <div id="creds" class="card">
-          <div class="card-head"><span>Credentials</span><span class="mono">admin</span></div>
+          <div class="card-head"><span data-t="credentials">Credentials</span><span class="mono">admin</span></div>
           <div class="rows">
-            <div class="row head"><span>owner</span><span>tier</span><span>expires</span><span></span></div>
+            <div class="row head"><span data-t="owner">owner</span><span data-t="tier">tier</span><span data-t="expires">expires</span><span></span></div>
             <div class="row"><span class="name">ana</span><span class="mono">developer</span><span class="mono muted">30 d</span><span></span></div>
             <div class="row"><span class="name">shop-api</span><span class="mono">developer</span><span class="mono muted">1 h</span><span></span></div>
             <div id="agent-row" class="row"><span class="name">ops-agent</span><span class="mono">viewer</span><span class="mono muted">8 h</span>
-              <span class="act"><span id="revoke">Revoke</span><span id="revoked" class="pill bad">revoked</span></span></div>
+              <span class="act"><span id="revoke" data-t="revoke">Revoke</span><span id="revoked" class="pill bad" data-t="revoked">revoked</span></span></div>
           </div>
         </div>
         <div id="audit" class="card">
-          <div class="card-head"><span>Audit</span><span class="mono">every request</span></div>
+          <div class="card-head"><span data-t="audit">Audit</span><span class="mono" data-t="every">every request</span></div>
           <div class="rows">
-            <div class="row head"><span>time</span><span>who</span><span>action</span><span class="cell-end">code</span></div>
+            <div class="row head"><span data-t="time">time</span><span data-t="who">who</span><span data-t="action">action</span><span class="cell-end" data-t="code">code</span></div>
             <div id="a1" class="row"><span class="mono muted">12:04:31</span><span class="name">ana</span><span class="mono">get pods -n shop</span><span class="pill ok cell-end">200</span></div>
             <div id="a2" class="row"><span class="mono muted">12:04:35</span><span class="name">shop-api</span><span class="mono">apply deploy/web</span><span class="pill ok cell-end">200</span></div>
             <div id="a3" class="row"><span class="mono muted">12:04:40</span><span class="name">ops-agent</span><span class="mono">logs web-7f9c</span><span class="pill ok cell-end">200</span></div>
@@ -234,12 +236,39 @@
 
       <section id="end" class="clip" data-start="21" data-duration="5" data-track-index="1">
         <svg id="end-mark" class="mark" viewBox="0 0 48 48" aria-hidden="true"><use href="#k" /></svg>
-        <p id="slogan">Stop messing with Kubernetes credentials</p>
-        <p id="for">for people, pipelines and AI agents</p>
+        <p id="slogan" data-t="slogan">Stop messing with Kubernetes credentials</p>
+        <p id="for" data-t="for">for people, pipelines and AI agents</p>
         <p id="url" class="mono">kubelatch.com</p>
       </section>
     </div>
 
+    <script>
+      // The render's language comes from <html lang> (render.sh renders both);
+      // commands, logins and codes stay as kubectl and kubelatch print them.
+      const T = {
+        en: null,
+        es: {
+          channel: "# plataforma", team: "equipo de plataforma",
+          msg: "aquí tienes el kubeconfig de prod, no lo compartas",
+          laptops: "5 portátiles", secrets: "2 secretos de CI", wiki: "1 página de la wiki", agent1: "1 agente de IA",
+          q1: "¿quién lo tiene?", q2: "¿hasta cuándo?", q3: "¿qué ejecutaron?",
+          nobody: "el API server solo ve a kubernetes-admin",
+          each: "una credencial para cada uno",
+          person: "persona", pipeline: "pipeline", agent: "agente de IA", expiresIn: "caduca en",
+          credentials: "Credenciales", owner: "titular", tier: "nivel", expires: "caduca",
+          revoke: "Revocar", revoked: "revocada",
+          audit: "Auditoría", every: "cada petición", time: "hora", who: "quién", action: "acción", code: "código",
+          slogan: "Deja de pelearte con las credenciales de Kubernetes",
+          for: "para personas, pipelines y agentes de IA",
+        },
+      }[document.documentElement.lang];
+      if (T) {
+        for (const el of document.querySelectorAll("[data-t]")) {
+          if (T[el.dataset.t] === undefined) throw new Error(`no string for ${el.dataset.t}`);
+          el.textContent = T[el.dataset.t];
+        }
+      }
+    </script>
     <script>
       const tl = gsap.timeline({ paused: true });
       const out = "power3.out";
