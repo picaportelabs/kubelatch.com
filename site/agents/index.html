@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI agents · kubelatch</title>
+<meta name="description" content="Let Claude Code, Cursor or any MCP client work on your Kubernetes clusters through kubelatch: as a bot, or on your behalf with only the permissions you choose, with write approvals and every call audited.">
+<link rel="canonical" href="https://kubelatch.com/agents/">
+<link rel="alternate" hreflang="en" href="https://kubelatch.com/agents/">
+<link rel="alternate" hreflang="es" href="https://kubelatch.com/es/agents/">
+<link rel="alternate" hreflang="x-default" href="https://kubelatch.com/agents/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/style.css">
+<meta name="theme-color" content="#080f1c">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kubelatch.com/agents/">
+<meta property="og:title" content="AI agents on Kubernetes, within limits you set · kubelatch">
+<meta property="og:description" content="Your agent works as you, read-only by default; its writes wait for your approval; you cut it off in one click.">
+<meta property="og:image" content="https://kubelatch.com/og-agents.png">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body class="scheme-dark">
+<svg hidden><symbol id="mark" viewBox="0 0 48 48"><polygon class="s" points="15.50,12.80 24.26,17.02 26.42,26.49 20.36,34.09 10.64,34.09 4.58,26.49 6.74,17.02"/><path class="f" d="M16.22 20.95 L17.44 21.53 Q18.16 21.88 18.34 22.66 L18.64 23.98 Q18.81 24.76 18.32 25.38 L17.47 26.44 Q16.98 27.06 16.18 27.06 L14.82 27.06 Q14.02 27.06 13.53 26.44 L12.68 25.38 Q12.19 24.76 12.36 23.98 L12.66 22.66 Q12.84 21.88 13.56 21.53 L14.78 20.95 Q15.50 20.60 16.22 20.95 Z"/><rect class="a" x="25" y="21.5" width="19.5" height="5" rx="2.5"/><rect class="a" x="35" y="24" width="3.6" height="7.5" rx="1.8"/><rect class="a" x="40.9" y="24" width="3.6" height="5.8" rx="1.8"/></symbol></svg>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="band">
+  <div class="topbar">
+    <nav class="wrap nav" aria-label="Main">
+      <a class="lockup" href="/"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg>kubelatch</a>
+      <ul>
+        <li><a href="https://docs.kubelatch.com/use/ai-agents/">Docs</a></li>
+        <li class="lang"><a href="/agents/" aria-current="page" hreflang="en" lang="en">EN</a><span aria-hidden="true">·</span><a href="/es/agents/" hreflang="es" lang="es">ES</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="wrap hero">
+    <p class="eyebrow">AI agents</p>
+    <h1 class="slogan">Your agent on your clusters, without your kubeconfig</h1>
+    <p class="lead">Connect Claude Code, Cursor or any MCP client to kubelatch. It acts as you with only the permissions you choose, for a few hours; its writes can wait for your approval; every call is in the audit; and you cut it off with one click.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="https://docs.kubelatch.com/use/ai-agents/">Connect your agent</a>
+      <a class="btn btn-secondary" href="https://docs.kubelatch.com/concepts/agents/">How it works</a>
+    </div>
+
+    <figure class="film">
+      <div class="film-frame">
+        <video autoplay muted loop playsinline controls preload="metadata" poster="/media/agents-384ffa72d2.jpg" aria-describedby="film-caption">
+          <source src="/media/agents-18fc0020ca.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
+        </video>
+      </div>
+      <figcaption id="film-caption">The same order, “clean up the failed pods in staging”, twice. With the admin kubeconfig, the agent deletes pods across every namespace of production. With kubelatch, its delete waits: a person sees the diff, denies it and cuts the session. <a class="film-link" href="/media/agents-18fc0020ca.mp4">Watch the video (25 s, MP4)</a></figcaption>
+    </figure>
+  </div>
+</header>
+
+<main id="main" class="scheme-light">
+  <section class="wrap section" aria-labelledby="problem">
+    <p class="kicker">// the problem</p>
+    <h2 id="problem">Two bad options.</h2>
+    <p class="intro">You're <code>developer</code> on <code>shop</code> and you ask your agent “find out why the <code>web</code> pod is failing”. Give it your kubeconfig, and it can do everything you can while the audit shows only you. Or ask an administrator for a bot and wait, which nobody does for a ten-minute task.</p>
+  </section>
+
+  <section class="wrap section" aria-labelledby="steps">
+    <p class="kicker">// delegated, in six steps</p>
+    <h2 id="steps">Like “Sign in with Google”, for your clusters.</h2>
+    <p class="intro">You don't hand over your password: you give a limited permission you can take back.</p>
+    <ol class="steps steps-six">
+      <li><h3>Add kubelatch once</h3><p><code>claude mcp add --transport http kubelatch https://kubelatch.example.com/mcp</code></p></li>
+      <li><h3>Your browser opens</h3><p>The first time the agent uses it, on kubelatch, where you're already signed in.</p></li>
+      <li><h3>You choose, and authorize</h3><p>“Claude Code wants to access your clusters”: your permissions, read-only, for 8 hours.</p></li>
+      <li><h3>It reads, it doesn't break</h3><p>Pods, logs, events. If it tries to delete, the cluster answers 403, even though you could.</p></li>
+      <li><h3>Changes wait for you</h3><p>If it needs to restart a deployment, it asks, and you approve it seeing what will change.</p></li>
+      <li><h3>It ends by itself</h3><p>After 8 hours. Before that, <strong>Cut</strong>.</p></li>
+    </ol>
+  </section>
+
+  <section class="wrap section" aria-labelledby="ways">
+    <p class="kicker">// three ways</p>
+    <h2 id="ways">Three ways to give an agent access.</h2>
+    <div class="ways-wrap">
+      <table class="ways">
+        <caption>Three ways to give an agent access</caption>
+        <thead>
+          <tr><th scope="col"><span class="sr">Question</span></th><th scope="col">Your kubeconfig to the agent</th><th scope="col">Bot</th><th scope="col">Delegated</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Who sets it up</th><td>You, at once</td><td>An administrator</td><td>You, at once</td></tr>
+          <tr><th scope="row">What the agent can do</th><td>Everything you can</td><td>What the administrator decides</td><td>What you can, cut down; read-only by default</td></tr>
+          <tr><th scope="row">What the audit shows</th><td>You</td><td>The bot</td><td>You, through the agent</td></tr>
+          <tr><th scope="row">How long it lasts</th><td>As long as your credential</td><td>Up to 90 days</td><td>Hours</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="wrap section" aria-labelledby="modes">
+    <p class="kicker">// bot or delegated</p>
+    <h2 id="modes">Two identities that never mix.</h2>
+    <p class="intro">You're <code>developer</code> on <code>shop</code>. Your Claude Code, delegated, works as you, read-only. Meanwhile the on-call agent that reviews alerts at night uses the bot <code>ops-agent</code>, <code>viewer</code> on every namespace because an administrator granted it.</p>
+    <div class="ways-wrap">
+      <table class="ways">
+        <caption>Bot or delegated</caption>
+        <thead><tr><th scope="col"><span class="sr">Question</span></th><th scope="col">Bot</th><th scope="col">Delegated</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Who the agent is on the cluster</th><td><code>bot:ops-agent</code></td><td><code>user:sergio</code></td></tr>
+          <tr><th scope="row">Where its permissions come from</th><td>Those an administrator granted the bot</td><td>Yours, cut down by you</td></tr>
+          <tr><th scope="row">Who decides how much it can do</th><td>An administrator</td><td>You, up to your own limit</td></tr>
+          <tr><th scope="row">If a permission of yours is taken away</th><td>It doesn't affect it</td><td>The agent loses it at once</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="wrap section" aria-labelledby="bother">
+    <p class="kicker">// how much it bothers you</p>
+    <h2 id="bother">Once per session, and only when it writes.</h2>
+    <ul class="plain">
+      <li>The browser opens once per session, like <code>kubelatch login</code>.</li>
+      <li>Read-only work asks nothing.</li>
+      <li>For a task with several changes, one approval of “developer on shop, 30 minutes” instead of one per change.</li>
+    </ul>
+    <p class="more">kubelatch states its limits: what an agent does through another way into the cluster, and what it does with what it reads. <a href="https://docs.kubelatch.com/concepts/agents/#what-it-does-not-cover">What it does not cover</a></p>
+  </section>
+</main>
+
+<section class="band closing" aria-labelledby="closing">
+  <div class="wrap">
+    <svg class="mark" aria-hidden="true"><use href="#mark"/></svg>
+    <h2 id="closing">Stop messing with Kubernetes credentials.</h2>
+    <div class="actions">
+      <a class="btn btn-primary" href="https://docs.kubelatch.com/">Read the docs</a>
+      <a class="btn btn-secondary" href="https://docs.kubelatch.com/getting-started/local/">Try it in 15 minutes</a>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap footer">
+  <a class="lockup" href="/"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg>kubelatch</a>
+  <ul>
+    <li><a href="https://docs.kubelatch.com/">Documentation</a></li>
+    <li><a href="https://docs.kubelatch.com/concepts/architecture/">Architecture</a></li>
+    <li><a href="https://docs.kubelatch.com/concepts/security/">Security model</a></li>
+    <li><a href="/agents/" aria-current="page">AI agents</a></li>
+    <li><a href="/es/agents/" hreflang="es" lang="es">Español</a></li>
+  </ul>
+</footer>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agentes de IA · kubelatch</title>
+<meta name="description" content="Deja que Claude Code, Cursor o cualquier cliente MCP trabaje en tus clusters de Kubernetes a través de kubelatch: como bot, o en tu nombre con solo los permisos que elijas, con aprobación de escrituras y cada llamada auditada.">
+<link rel="canonical" href="https://kubelatch.com/es/agents/">
+<link rel="alternate" hreflang="en" href="https://kubelatch.com/agents/">
+<link rel="alternate" hreflang="es" href="https://kubelatch.com/es/agents/">
+<link rel="alternate" hreflang="x-default" href="https://kubelatch.com/agents/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/style.css">
+<meta name="theme-color" content="#080f1c">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kubelatch.com/es/agents/">
+<meta property="og:title" content="Agentes de IA en Kubernetes, con los límites que tú pones · kubelatch">
+<meta property="og:description" content="Tu agente trabaja como tú, en solo lectura por defecto; sus escrituras esperan tu aprobación; le cortas el acceso con un clic.">
+<meta property="og:image" content="https://kubelatch.com/og-agents-es.png">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body class="scheme-dark">
+<svg hidden><symbol id="mark" viewBox="0 0 48 48"><polygon class="s" points="15.50,12.80 24.26,17.02 26.42,26.49 20.36,34.09 10.64,34.09 4.58,26.49 6.74,17.02"/><path class="f" d="M16.22 20.95 L17.44 21.53 Q18.16 21.88 18.34 22.66 L18.64 23.98 Q18.81 24.76 18.32 25.38 L17.47 26.44 Q16.98 27.06 16.18 27.06 L14.82 27.06 Q14.02 27.06 13.53 26.44 L12.68 25.38 Q12.19 24.76 12.36 23.98 L12.66 22.66 Q12.84 21.88 13.56 21.53 L14.78 20.95 Q15.50 20.60 16.22 20.95 Z"/><rect class="a" x="25" y="21.5" width="19.5" height="5" rx="2.5"/><rect class="a" x="35" y="24" width="3.6" height="7.5" rx="1.8"/><rect class="a" x="40.9" y="24" width="3.6" height="5.8" rx="1.8"/></symbol></svg>
+<a class="skip" href="#main">Saltar al contenido</a>
+
+<header class="band">
+  <div class="topbar">
+    <nav class="wrap nav" aria-label="Principal">
+      <a class="lockup" href="/es/"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg>kubelatch</a>
+      <ul>
+        <li><a href="https://docs.kubelatch.com/es/use/ai-agents/">Documentación</a></li>
+        <li class="lang"><a href="/agents/" hreflang="en" lang="en">EN</a><span aria-hidden="true">·</span><a href="/es/agents/" aria-current="page" hreflang="es" lang="es">ES</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="wrap hero">
+    <p class="eyebrow">Agentes de IA</p>
+    <h1 class="slogan">Tu agente en tus clusters, sin tu kubeconfig</h1>
+    <p class="lead">Conecta Claude Code, Cursor o cualquier cliente MCP a kubelatch. Actúa como tú solo con los permisos que elijas, durante unas horas; sus escrituras pueden esperar tu aprobación; cada llamada queda en la auditoría; y le cortas el acceso con un clic.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="https://docs.kubelatch.com/es/use/ai-agents/">Conecta tu agente</a>
+      <a class="btn btn-secondary" href="https://docs.kubelatch.com/es/concepts/agents/">Cómo funciona</a>
+    </div>
+
+    <figure class="film">
+      <div class="film-frame">
+        <video autoplay muted loop playsinline controls preload="metadata" poster="/media/agents-1d6ea652f7.jpg" aria-describedby="film-caption">
+          <source src="/media/agents-cf324fed04.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
+        </video>
+      </div>
+      <figcaption id="film-caption">La misma orden, «limpia los pods fallidos de staging», dos veces. Con el kubeconfig de admin, el agente borra pods en todos los namespaces de producción. Con kubelatch, su borrado espera: una persona ve el diff, lo deniega y corta la sesión. <a class="film-link" href="/media/agents-cf324fed04.mp4">Ver el vídeo (25 s, MP4)</a></figcaption>
+    </figure>
+  </div>
+</header>
+
+<main id="main" class="scheme-light">
+  <section class="wrap section" aria-labelledby="problem">
+    <p class="kicker">// el problema</p>
+    <h2 id="problem">Dos opciones malas.</h2>
+    <p class="intro">Eres <code>developer</code> en <code>shop</code> y le pides a tu agente “mira por qué falla el pod <code>web</code>”. Si le das tu kubeconfig, puede todo lo que puedes tú y en la auditoría solo apareces tú. Si pides un bot a un administrador, esperas, cosa que nadie hace para una tarea de diez minutos.</p>
+  </section>
+
+  <section class="wrap section" aria-labelledby="steps">
+    <p class="kicker">// el modo delegado, en seis pasos</p>
+    <h2 id="steps">Como “Iniciar sesión con Google”, para tus clusters.</h2>
+    <p class="intro">No das tu contraseña: das un permiso limitado que puedes retirar.</p>
+    <ol class="steps steps-six">
+      <li><h3>Añade kubelatch una vez</h3><p><code>claude mcp add --transport http kubelatch https://kubelatch.example.com/mcp</code></p></li>
+      <li><h3>Se abre tu navegador</h3><p>La primera vez que lo usa el agente, en kubelatch, donde ya tienes sesión.</p></li>
+      <li><h3>Eliges y autorizas</h3><p>“Claude Code quiere acceder a tus clusters”: tus permisos, en solo lectura, durante 8 horas.</p></li>
+      <li><h3>Lee, no rompe</h3><p>Pods, logs, eventos. Si intenta borrar, el cluster responde 403, aunque tú sí podrías.</p></li>
+      <li><h3>Los cambios te esperan</h3><p>Si necesita reiniciar un deployment, te lo pide y tú apruebas viendo qué va a cambiar.</p></li>
+      <li><h3>Termina solo</h3><p>A las 8 horas. Antes, <strong>Cortar</strong>.</p></li>
+    </ol>
+  </section>
+
+  <section class="wrap section" aria-labelledby="ways">
+    <p class="kicker">// tres formas</p>
+    <h2 id="ways">Tres formas de dar acceso a un agente.</h2>
+    <div class="ways-wrap">
+      <table class="ways">
+        <caption>Tres formas de dar acceso a un agente</caption>
+        <thead>
+          <tr><th scope="col"><span class="sr">Pregunta</span></th><th scope="col">Tu kubeconfig al agente</th><th scope="col">Bot</th><th scope="col">Delegado</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Quién lo monta</th><td>Tú, al instante</td><td>Un administrador</td><td>Tú, al instante</td></tr>
+          <tr><th scope="row">Qué puede hacer el agente</th><td>Todo lo tuyo</td><td>Lo que diga el administrador</td><td>Lo tuyo recortado; solo lectura por defecto</td></tr>
+          <tr><th scope="row">Qué aparece en la auditoría</th><td>Tú</td><td>El bot</td><td>Tú, a través del agente</td></tr>
+          <tr><th scope="row">Cuánto dura</th><td>Lo que tu credencial</td><td>Hasta 90 días</td><td>Horas</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="wrap section" aria-labelledby="modes">
+    <p class="kicker">// bot o delegado</p>
+    <h2 id="modes">Dos identidades que no se tocan.</h2>
+    <p class="intro">Eres <code>developer</code> en <code>shop</code>. Tu Claude Code, en modo delegado, entra como tú en solo lectura. Aparte, el agente de guardia que revisa alertas por la noche usa el bot <code>ops-agent</code>, que es <code>viewer</code> en todos los namespaces porque un administrador se lo dio.</p>
+    <div class="ways-wrap">
+      <table class="ways">
+        <caption>Bot o delegado</caption>
+        <thead><tr><th scope="col"><span class="sr">Pregunta</span></th><th scope="col">Bot</th><th scope="col">Delegado</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Quién es el agente en el cluster</th><td><code>bot:ops-agent</code></td><td><code>user:sergio</code></td></tr>
+          <tr><th scope="row">De dónde salen sus permisos</th><td>De los que un administrador concedió al bot</td><td>De los tuyos, recortados por ti</td></tr>
+          <tr><th scope="row">Quién decide cuánto puede hacer</th><td>Un administrador</td><td>Tú, hasta tu propio límite</td></tr>
+          <tr><th scope="row">Si te quitan a ti un permiso</th><td>No le afecta</td><td>El agente lo pierde al momento</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="wrap section" aria-labelledby="bother">
+    <p class="kicker">// cuánto molesta</p>
+    <h2 id="bother">Una vez por sesión, y solo cuando escribe.</h2>
+    <ul class="plain">
+      <li>El navegador se abre una vez por sesión, como <code>kubelatch login</code>.</li>
+      <li>En solo lectura no hay ninguna confirmación.</li>
+      <li>Para una tarea con varios cambios, una aprobación de “developer en shop, 30 minutos” en lugar de una por cambio.</li>
+    </ul>
+    <p class="more">kubelatch declara sus límites: lo que un agente hace por otra vía hacia el cluster, y lo que hace con lo que lee. <a href="https://docs.kubelatch.com/es/concepts/agents/#lo-que-no-cubre">Lo que no cubre</a></p>
+  </section>
+</main>
+
+<section class="band closing" aria-labelledby="closing">
+  <div class="wrap">
+    <svg class="mark" aria-hidden="true"><use href="#mark"/></svg>
+    <h2 id="closing">Deja de pelearte con las credenciales de Kubernetes.</h2>
+    <div class="actions">
+      <a class="btn btn-primary" href="https://docs.kubelatch.com/es/">Lee la documentación</a>
+      <a class="btn btn-secondary" href="https://docs.kubelatch.com/es/getting-started/local/">Pruébalo en 15 minutos</a>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap footer">
+  <a class="lockup" href="/es/"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg>kubelatch</a>
+  <ul>
+    <li><a href="https://docs.kubelatch.com/es/">Documentación</a></li>
+    <li><a href="https://docs.kubelatch.com/es/concepts/architecture/">Arquitectura</a></li>
+    <li><a href="https://docs.kubelatch.com/es/concepts/security/">Modelo de seguridad</a></li>
+    <li><a href="/es/agents/" aria-current="page">Agentes de IA</a></li>
+    <li><a href="/agents/" hreflang="en" lang="en">English</a></li>
+  </ul>
+</footer>
+</body>
+</html>

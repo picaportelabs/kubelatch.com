@@ -3,12 +3,17 @@
 #   landing/check.sh http://127.0.0.1:3001
 #   landing/check.sh https://kubelatch.com
 # Checks status codes, languages, custom 404s, security headers on every kind
-# of response, that every link and asset of both pages answers 200 (docs
+# of response, that every link and asset of the four pages answers 200 (docs
 # links included) and that the stylesheet's font is served from the site.
+# DOCS_URL=http://127.0.0.1:3002 checks the docs links against a local docs
+# image (make docs-image) instead of docs.kubelatch.com, for pages not
+# deployed yet.
 set -eu
 
 base=${1:?usage: landing/check.sh BASE_URL}
 base=${base%/}
+docs=${DOCS_URL:-}
+docs=${docs%/}
 fail=0
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
@@ -33,6 +38,18 @@ page() {
 
 page / en
 page /es/ es
+page /agents/ en
+page /es/agents/ es
+
+# /agents without the slash is a redirect to the page, not a 404.
+for p in /agents /es/agents; do
+    loc=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "$base$p" || true)
+    case $loc in
+    "301 $base$p/"|"301 $p/") ;;
+    *) bad "$p answered '$loc', want 301 to $p/" ;;
+    esac
+done
+ok "/agents redirects to /agents/"
 
 for pair in "/nope en" "/es/nope es"; do
     set -- $pair
@@ -45,9 +62,11 @@ ok "custom 404 pages"
 # Every kind of response carries the same headers: nginx drops the
 # server-level add_header in any location that declares its own.
 csp="default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
-poster=$(grep -oE 'poster="[^"]*"' "$tmp/_.html" | sed -E 's/^poster="//; s/"$//')
+# Both posters of the home page: the cover and the agents video. Unquoted
+# below, so each is checked on its own.
+posters=$(grep -oE 'poster="[^"]*"' "$tmp/_.html" | sed -E 's/^poster="//; s/"$//')
 font=/fonts/InterVariable.woff2
-for p in / /es/ /nope /style.css "$poster" "$font"; do
+for p in / /es/ /agents/ /nope /style.css $posters "$font"; do
     curl -s -o /dev/null -D "$tmp/h" "$base$p" || true
     for want in 'x-content-type-options: nosniff' 'referrer-policy: strict-origin-when-cross-origin' \
         'x-frame-options: DENY' 'strict-transport-security: max-age=31536000'; do
@@ -59,13 +78,13 @@ for p in / /es/ /nope /style.css "$poster" "$font"; do
 done
 ok "security headers"
 
-# Every href/src/poster/content target in both pages. Relative ones resolve
+# Every href/src/poster/content target in the four pages. Relative ones resolve
 # against the page; absolute ones must be kubelatch.com or docs.kubelatch.com.
 links() {
     grep -oE '(href|src|poster|content)="[^"]*"' "$1" | sed -E 's/^[a-z]+="//; s/"$//' |
         grep -vE '^(#|mailto:|data:)' | grep -E '^(/|\.|[a-z0-9_-]+(/|\.)|https?://)' || true
 }
-for pair in "/ _.html" "/es/ _es_.html"; do
+for pair in "/ _.html" "/es/ _es_.html" "/agents/ _agents_.html" "/es/agents/ _es_agents_.html"; do
     set -- $pair
     for l in $(links "$tmp/$2" | sort -u); do
         case $l in
@@ -74,12 +93,26 @@ for pair in "/ _.html" "/es/ _es_.html"; do
         /*) url=$base$l ;;
         *) url=$base$1$l ;;
         esac
+        if [ -n "$docs" ]; then
+            case $url in https://docs.kubelatch.com/*) url=$docs/${url#https://docs.kubelatch.com/} ;; esac
+        fi
         case $url in
         https://docs.kubelatch.com/*|"$base"/*) ;;
+        "$docs"/*) [ -n "$docs" ] || { bad "$1 links outside kubelatch: $l"; continue; } ;;
         *) bad "$1 links outside kubelatch: $l"; continue ;;
         esac
-        code=$(status "$url")
-        [ "$code" = 200 ] || bad "$1 -> $l answered $code"
+        case $url in
+        *#*)
+            # A link to a heading: the page answers and holds that id.
+            code=$(curl -s -o "$tmp/target" -w '%{http_code}' "${url%%#*}" || true)
+            [ "$code" = 200 ] || { bad "$1 -> $l answered $code"; continue; }
+            grep -q "id=\"${url#*#}\"" "$tmp/target" || bad "$1 -> $l: no such anchor"
+            ;;
+        *)
+            code=$(status "$url")
+            [ "$code" = 200 ] || bad "$1 -> $l answered $code"
+            ;;
+        esac
     done
 done
 ok "links and assets"
