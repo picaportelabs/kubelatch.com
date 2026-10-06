@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>kubelatch · AI agents</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js" integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2" crossorigin="anonymous"></script>
+    <style>
+      /* The cover video's tokens (landing/video/index.html): the web UI's dark
+         scheme at twice its size, Inter and JetBrains Mono bundled by
+         Hyperframes, tinted pills that always carry their word. */
+      :root {
+        --paper: oklch(13% 0.028 261.692);
+        --sheet: oklch(21% 0.034 264.665);
+        --line: oklch(30% 0.03 260);
+        --line-strong: oklch(56% 0.02 260);
+        --ink: oklch(98.5% 0.002 247.839);
+        --secondary: oklch(87.2% 0.01 258.338);
+        --muted: oklch(70.7% 0.022 261.325);
+        --wash: oklch(27.8% 0.033 256.848);
+        --brand: oklch(74% 0.13 262);
+        --success-tint: oklch(25% 0.05 155);
+        --success-ink: oklch(88% 0.15 155);
+        --warning-tint: oklch(27% 0.06 75);
+        --warning-ink: oklch(88% 0.12 85);
+        --danger: oklch(70.4% 0.191 22.216);
+        --danger-tint: oklch(25% 0.06 20);
+        --danger-ink: oklch(88% 0.08 20);
+        --on-danger: oklch(13% 0.028 261.692);
+        --shadow: 0 2px 4px rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.4);
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--paper); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; color: var(--ink); font-family: "Inter", sans-serif; }
+      #grid {
+        position: absolute; inset: 0;
+        background-image:
+          linear-gradient(oklch(100% 0 0 / 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, oklch(100% 0 0 / 0.05) 1px, transparent 1px);
+        background-size: 48px 48px; background-position: center center;
+        mask-image: radial-gradient(ellipse 75% 70% at 50% 50%, #000 35%, transparent 100%);
+      }
+      .clip { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+      .mono { font-family: "JetBrains Mono", monospace; }
+      /* JetBrains Mono's ligatures would print != as one glyph: commands show as typed. */
+      .mono, .half .body, .diff { font-variant-ligatures: none; }
+      .muted { color: var(--muted); }
+      .card { background: var(--sheet); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); overflow: hidden; }
+      .card-head { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 24px 32px; border-bottom: 2px solid var(--line); font-size: 30px; font-weight: 600; }
+      .pill { display: inline-block; border-radius: 999px; padding: 4px 16px; font-size: 22px; font-weight: 600; line-height: 1.4; white-space: nowrap; }
+      .pill.ok { background: var(--success-tint); color: var(--success-ink); }
+      .pill.warn { background: var(--warning-tint); color: var(--warning-ink); }
+      .pill.bad { background: var(--danger-tint); color: var(--danger-ink); }
+      .pill.neutral { background: var(--wash); color: var(--secondary); }
+      /* The mark's shapes by class, so the <use> copies of the symbol get them too. */
+      .s { fill: none; stroke: var(--ink); stroke-width: 4.2; stroke-linejoin: round; }
+      .f { fill: var(--ink); }
+      .a { fill: var(--brand); }
+
+      /* 1. The order */
+      #ask { width: 1180px; padding: 40px 48px; display: flex; flex-direction: column; gap: 22px; }
+      #ask .who { font-size: 28px; color: var(--muted); }
+      #order { font-size: 58px; font-weight: 700; letter-spacing: -0.02em; }
+      .typed { display: inline-block; overflow: hidden; vertical-align: bottom; white-space: pre; }
+
+      /* 2. Split screen */
+      #split { gap: 40px; padding: 72px 64px; align-items: stretch; }
+      .half { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+      .half .body { flex: 1; padding: 24px 32px; font-family: "JetBrains Mono", monospace; font-size: 23px; line-height: 1.55; color: var(--secondary); display: flex; flex-direction: column; gap: 6px; position: relative; }
+      .cmd { color: var(--ink); }
+      .cmd::before { content: "$ "; color: var(--brand); }
+      .tool { color: var(--ink); }
+      .tool::before { content: "› "; color: var(--success-ink); }
+      .tab { white-space: pre; }
+      .gone { color: var(--danger-ink); }
+      .cont { padding-left: 2.6em; }
+      #nss { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; font-family: "Inter", sans-serif; }
+      #sees { margin-top: auto; border-radius: 16px; padding: 16px 20px; background: var(--danger-tint); color: var(--danger-ink); font-size: 23px; }
+      .ns { border: 2px solid var(--line); border-radius: 16px; padding: 16px 18px; font-size: 24px; display: flex; flex-direction: column; gap: 6px; }
+      .ns b { font-family: "JetBrains Mono", monospace; font-weight: 600; color: var(--ink); }
+      .ns span { font-size: 20px; color: var(--muted); }
+      #req { position: absolute; left: 24px; right: 24px; bottom: 24px; background: var(--paper); border: 2px solid var(--line-strong); border-radius: 20px; padding: 22px 26px; font-family: "Inter", sans-serif; display: flex; flex-direction: column; gap: 12px; }
+      #req h4 { font-size: 28px; font-weight: 650; display: flex; justify-content: space-between; align-items: center; }
+      #req .what { font-family: "JetBrains Mono", monospace; font-size: 22px; color: var(--secondary); }
+      .diff { font-family: "JetBrains Mono", monospace; font-size: 21px; line-height: 1.5; background: var(--danger-tint); color: var(--danger-ink); border-radius: 12px; padding: 10px 16px; white-space: pre; }
+      .btns { display: flex; gap: 14px; align-items: center; }
+      .btn { border-radius: 12px; padding: 10px 22px; font-size: 24px; font-weight: 600; border: 2px solid var(--line-strong); }
+      .btn.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+      .act { display: grid; justify-items: end; } .act > * { grid-area: 1 / 1; }
+
+      /* 3. The end */
+      #end { flex-direction: column; gap: 40px; }
+      #end-mark { width: 120px; height: 120px; }
+      #line1 { width: 1560px; text-align: center; font-size: 92px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.04; }
+      #url { font-size: 32px; color: var(--muted); }
+    </style>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <symbol id="k" viewBox="0 0 48 48">
+        <polygon class="s" points="15.50,12.80 24.26,17.02 26.42,26.49 20.36,34.09 10.64,34.09 4.58,26.49 6.74,17.02" />
+        <path class="f" d="M16.22 20.95 L17.44 21.53 Q18.16 21.88 18.34 22.66 L18.64 23.98 Q18.81 24.76 18.32 25.38 L17.47 26.44 Q16.98 27.06 16.18 27.06 L14.82 27.06 Q14.02 27.06 13.53 26.44 L12.68 25.38 Q12.19 24.76 12.36 23.98 L12.66 22.66 Q12.84 21.88 13.56 21.53 L14.78 20.95 Q15.50 20.60 16.22 20.95 Z" />
+        <rect class="a" x="25" y="21.5" width="19.5" height="5" rx="2.5" />
+        <rect class="a" x="35" y="24" width="3.6" height="7.5" rx="1.8" />
+        <rect class="a" x="40.9" y="24" width="3.6" height="5.8" rx="1.8" />
+      </symbol>
+    </svg>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="25" data-fps="30" data-width="1920" data-height="1080">
+      <div id="grid"></div>
+
+      <section id="s1" class="clip" data-start="0" data-duration="3.6" data-track-index="1">
+        <div id="ask" class="card">
+          <p class="who" data-t="you">you, to your agent</p>
+          <p id="order"><span id="typed" class="typed" data-t="order">clean up the failed pods in staging</span></p>
+        </div>
+      </section>
+
+      <section id="split" class="clip" data-start="3.2" data-duration="18.2" data-track-index="1">
+        <div id="left" class="card half">
+          <div class="card-head"><span data-t="leftTitle">With the admin kubeconfig</span><span class="pill bad">context: prod-eu</span></div>
+          <div class="body">
+            <p id="L1" class="cmd">kubectl config current-context</p>
+            <p id="L2">prod-eu</p>
+            <p id="L3" class="cmd">kubectl delete pods -A \<br /><span class="cont">--field-selector=status.phase!=Running</span></p>
+            <div id="nss">
+              <p class="ns"><b>shop</b><span data-t="deleted">pods deleted</span></p>
+              <p class="ns"><b>payments</b><span data-t="deleted">pods deleted</span></p>
+              <p class="ns"><b>checkout</b><span data-t="deleted">pods deleted</span></p>
+              <p class="ns"><b>search</b><span data-t="deleted">pods deleted</span></p>
+              <p class="ns"><b>auth</b><span data-t="deleted">pods deleted</span></p>
+              <p class="ns"><b>web</b><span data-t="deleted">pods deleted</span></p>
+            </div>
+            <p id="sees" data-t="sees">the API server only sees kubernetes-admin</p>
+          </div>
+        </div>
+        <div id="right" class="card half">
+          <div class="card-head"><span data-t="rightTitle">With kubelatch</span><span id="sess" class="act"><span id="sessOn" class="pill ok">sergio · developer · staging</span><span id="sessCut" class="pill bad" data-t="cut">session cut</span></span></div>
+          <div class="body">
+            <p id="R1" class="tool">whoami</p>
+            <p id="R2" class="muted">identity: user:sergio<br />writes_need_approval: true</p>
+            <p id="R3" class="tool">list_resources pods -n shop status.phase=Failed</p>
+            <p id="R4" class="tab">NAME            READY  STATUS  RESTARTS  AGE
+web-7f9c-x2kq   0/1    Error   5         2h
+web-7f9c-p81zd  0/1    Error   5         2h</p>
+            <p id="R5" class="tool">delete_resource deployment/web -n shop</p>
+            <p id="R6"><span class="pill warn">agent.approval_pending</span></p>
+            <p id="R7" class="gone">401 invalid token: this agent session was revoked</p>
+            <div id="req">
+              <h4><span data-t="reqTitle">Write request</span><span class="act"><span id="reqPending" class="pill warn" data-t="pending">Pending</span><span id="reqDenied" class="pill bad" data-t="denied">Denied</span></span></h4>
+              <p class="what" data-t="what">DELETE deployments.apps/web in shop · staging</p>
+              <div class="diff">- apiVersion: apps/v1
+- kind: Deployment
+- metadata:
+-   name: web
+- spec:
+-   replicas: 3</div>
+              <div class="btns"><span class="btn" data-t="approve">Approve</span><span id="deny" class="btn primary" data-t="deny">Deny</span><span id="cutBtn" class="btn" data-t="cutBtn">Cut</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="end" class="clip" data-start="21.2" data-duration="3.8" data-track-index="1">
+        <svg id="end-mark" viewBox="0 0 48 48" aria-hidden="true"><use href="#k" /></svg>
+        <p id="line1" data-t="line1">The same order. An agent with the limits you set.</p>
+        <p id="url" class="mono">kubelatch.com/agents</p>
+      </section>
+    </div>
+
+    <script>
+      // The render's language comes from <html lang> (render.sh renders both);
+      // commands, logins, tool names, codes and kubelatch's answers stay as
+      // kubectl and kubelatch print them (internal/mcp, internal/apierr).
+      const T = {
+        en: null,
+        es: {
+          you: "tú, a tu agente",
+          order: "limpia los pods fallidos de staging",
+          leftTitle: "Con el kubeconfig de admin",
+          deleted: "pods borrados",
+          sees: "el API server solo ve a kubernetes-admin",
+          rightTitle: "Con kubelatch",
+          cut: "sesión cortada",
+          reqTitle: "Solicitud de escritura",
+          pending: "Pendiente",
+          denied: "Denegada",
+          what: "DELETE deployments.apps/web en shop · staging",
+          approve: "Aprobar",
+          deny: "Denegar",
+          cutBtn: "Cortar",
+          line1: "La misma orden. Un agente con los límites que tú pones.",
+        },
+      }[document.documentElement.lang];
+      if (T) {
+        for (const el of document.querySelectorAll("[data-t]")) {
+          if (T[el.dataset.t] === undefined) throw new Error(`no string for ${el.dataset.t}`);
+          el.textContent = T[el.dataset.t];
+        }
+      }
+    </script>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const out = "power3.out";
+      const rise = (sel, at, y = 24, dur = 0.45) => tl.fromTo(sel, { opacity: 0, y }, { opacity: 1, y: 0, duration: dur, ease: out }, at);
+      const show = (sel, at, dur = 0.3) => tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: dur }, at);
+      const leave = (sel, at, dur = 0.4) => tl.to(sel, { opacity: 0, duration: dur, ease: "power2.in" }, at);
+      const press = (sel, at) => tl.to(sel, { scale: 0.92, duration: 0.1, yoyo: true, repeat: 1 }, at);
+      const red = "oklch(25% 0.06 20)";
+
+      tl.set(["#L1", "#L2", "#L3", ".ns", "#sees", "#R1", "#R2", "#R3", "#R4", "#R5", "#R6", "#R7", "#req", "#sessCut", "#reqDenied"], { opacity: 0 }, 0);
+
+      // 1. The order is typed (0 - 3.6); the typed span widens by whole characters.
+      rise("#ask", 0.15, 30, 0.6);
+      const typed = document.querySelector("#typed");
+      const n = typed.textContent.length;
+      tl.fromTo(typed, { width: "0ch" }, { width: `${n}ch`, duration: n / 18, ease: `steps(${n})` }, 0.7);
+      leave("#ask", 3.1, 0.35);
+
+      // 2. Split screen (3.2 - 21.4)
+      tl.fromTo("#left", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.55, ease: out }, 3.3);
+      tl.fromTo("#right", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.55, ease: out }, 3.45);
+      // Left: the admin context is production, and the namespaces go red one by one.
+      show("#L1", 4.1); show("#L2", 4.7); show("#L3", 5.4);
+      document.querySelectorAll(".ns").forEach((el, i) => {
+        show(el, 6.2 + i * 0.12, 0.2);
+        tl.to(el, { backgroundColor: red, borderColor: "oklch(70.4% 0.191 22.216)", duration: 0.35 }, 7.4 + i * 0.6);
+      });
+      rise("#sees", 11.2, 16, 0.4);
+      // Right: whoami, the failed pods, then a delete that waits for a person.
+      show("#R1", 4.3); show("#R2", 4.8); show("#R3", 5.8); show("#R4", 6.4);
+      show("#R5", 7.6); show("#R6", 8.2);
+      rise("#req", 9.0, 30, 0.5);
+      tl.to("#req .diff", { opacity: 0.6, duration: 0.25, yoyo: true, repeat: 3 }, 10.0);
+      // The person denies it (poster frame at 16.5 s shows both sides before this), then cuts the session.
+      press("#deny", 17.1);
+      tl.to("#reqPending", { opacity: 0, duration: 0.15 }, 17.35);
+      show("#reqDenied", 17.4, 0.2);
+      press("#cutBtn", 18.1);
+      tl.to("#sessOn", { opacity: 0, duration: 0.15 }, 18.35);
+      show("#sessCut", 18.4, 0.2);
+      leave("#req", 18.9, 0.35);
+      show("#R7", 19.5);
+      leave(["#left", "#right"], 20.9, 0.45);
+
+      // 3. The end (21.2 - 25), back to the empty grid so the loop joins scene 1.
+      rise("#end-mark", 21.3, 20, 0.4);
+      rise("#line1", 21.4);
+      show("#url", 21.9);
+      leave(["#end-mark", "#line1", "#url"], 24.3, 0.5);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
