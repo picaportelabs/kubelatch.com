@@ -76,6 +76,60 @@
     </ol>
   </section>
 
+  <section class="wrap section" aria-labelledby="sees">
+    <p class="kicker">// what the agent sees</p>
+    <h2 id="sees">What it sees, and what waits for you.</h2>
+    <div class="versus agents">
+      <article class="card">
+        <div class="card-head"><h3>What the agent sees</h3><span class="mono">kubelatch MCP tools</span></div>
+<pre><span class="dim">› whoami</span>
+identity: user:sergio
+session:
+  id: 0199c1d0…
+  mode: delegated
+  expires_at: 2026-10-06T20:04:31Z
+on_behalf_of: user:sergio
+credential_expires_at: 2026-10-06T13:04:31Z
+writes_need_approval: true
+permissions:
+  - cluster: prod-eu
+    role: developer
+    scope: shop
+    expires_at: 2026-10-06T20:04:31Z
+  - cluster: prod-eu
+    role: secrets-reader
+    scope: shop
+    expires_at: 2026-10-06T20:04:31Z
+scope "*" is the whole cluster; any other scope is one namespace.
+<span class="dim">› get_resource secret/db-credentials -n shop</span>
+apiVersion: v1
+data:
+  password: <span class="ok">&lt;redacted, 24 bytes&gt;</span>
+  username: <span class="ok">&lt;redacted, 8 bytes&gt;</span>
+kind: Secret
+<span class="dim">…</span>
+<span class="dim">› delete_resource pod/web-7f9c-x2kq -n shop</span>
+<span class="warn">agent.approval_pending</span>: this write waits for a person's approval at
+https://kubelatch.example.com/agents/requests/0199c1d2…; once approved,
+call the tool again with the same arguments and approval_id 0199c1d2….
+It expires at 2026-10-06T12:19:31Z
+<span class="dim">› approved by sergio, the same call with its approval_id</span>
+delete_resource: <span class="ok">200 OK</span> (audit id 0199c1d3…)</pre>
+        <ul>
+          <li>It works as you, with only what you gave it: read-only unless you chose more.</li>
+          <li>Secret values stay hidden until it asks for them, and each read is recorded.</li>
+          <li>A change waits for a person, who sees the diff before it runs, once.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><h3>Connect it in one line</h3></div>
+<pre class="connect">claude mcp add --transport http kubelatch https://kubelatch.example.com/mcp</pre>
+        <p class="body">The first time it uses kubelatch, your browser asks what it may do: your permissions, read-only by default, for 8 hours. Cursor and any MCP client connect the same way, and Claude Code has a plugin that also stops it reaching for <code>kubectl</code>.</p>
+      </article>
+    </div>
+  </section>
+
   <section class="wrap section" aria-labelledby="ways">
     <p class="kicker">// three ways</p>
     <h2 id="ways">Three ways to give an agent access.</h2>

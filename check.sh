@@ -62,9 +62,9 @@ ok "custom 404 pages"
 # Every kind of response carries the same headers: nginx drops the
 # server-level add_header in any location that declares its own.
 csp="default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
-# Both posters of the home page: the cover and the agents video. Unquoted
-# below, so each is checked on its own.
-posters=$(grep -oE 'poster="[^"]*"' "$tmp/_.html" | sed -E 's/^poster="//; s/"$//')
+# The posters of the home page (the cover) and of /agents/ (the agents
+# video). Unquoted below, so each is checked on its own.
+posters=$(grep -ohE 'poster="[^"]*"' "$tmp/_.html" "$tmp/_agents_.html" | sed -E 's/^poster="//; s/"$//')
 font=/fonts/InterVariable.woff2
 for p in / /es/ /agents/ /nope /style.css $posters "$font"; do
     curl -s -o /dev/null -D "$tmp/h" "$base$p" || true

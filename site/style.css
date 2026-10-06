@@ -298,7 +298,6 @@ img, video, svg { display: block; max-width: 100%; }
 @media (min-width: 900px) { .versus.agents { grid-template-columns: 1.5fr 1fr; align-items: start; } }
 .card .warn { color: var(--warning); }
 .card pre.connect { white-space: pre-wrap; overflow-wrap: anywhere; }
-.film-agents { margin: 3rem 0 0; max-width: 60rem; }
 .ways-wrap { margin-top: 3rem; overflow-x: auto; }
 .ways { width: 100%; min-width: 40rem; border-collapse: collapse; font-size: 0.9375rem; line-height: 1.5; }
 .ways caption { text-align: left; font: 0.8125rem/1.25rem var(--mono); color: var(--muted); padding-bottom: 0.75rem; }
