@@ -26,7 +26,6 @@
         --danger: oklch(70.4% 0.191 22.216);
         --danger-tint: oklch(25% 0.06 20);
         --danger-ink: oklch(88% 0.08 20);
-        --on-danger: oklch(13% 0.028 261.692);
         --shadow: 0 2px 4px rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.4);
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -43,11 +42,10 @@
       .clip { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
       .mono { font-family: "JetBrains Mono", monospace; }
       /* JetBrains Mono's ligatures would print != as one glyph: commands show as typed. */
-      .mono, .half .body, .diff { font-variant-ligatures: none; }
+      .mono, .term .body, .diff { font-variant-ligatures: none; }
       .muted { color: var(--muted); }
       .card { background: var(--sheet); border: 2px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); overflow: hidden; }
-      .card-head { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 24px 32px; border-bottom: 2px solid var(--line); font-size: 30px; font-weight: 600; }
-      .pill { display: inline-block; border-radius: 999px; padding: 4px 16px; font-size: 22px; font-weight: 600; line-height: 1.4; white-space: nowrap; }
+      .pill { display: inline-block; border-radius: 999px; padding: 4px 16px; font-size: 22px; font-weight: 600; line-height: 1.4; white-space: nowrap; font-family: "Inter", sans-serif; }
       .pill.ok { background: var(--success-tint); color: var(--success-ink); }
       .pill.warn { background: var(--warning-tint); color: var(--warning-ink); }
       .pill.bad { background: var(--danger-tint); color: var(--danger-ink); }
@@ -63,23 +61,35 @@
       #order { font-size: 58px; font-weight: 700; letter-spacing: -0.02em; }
       .typed { display: inline-block; overflow: hidden; vertical-align: bottom; white-space: pre; }
 
-      /* 2. Split screen */
-      #split { gap: 40px; padding: 72px 64px; align-items: stretch; }
-      .half { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-      .half .body { flex: 1; padding: 24px 32px; font-family: "JetBrains Mono", monospace; font-size: 23px; line-height: 1.55; color: var(--secondary); display: flex; flex-direction: column; gap: 6px; position: relative; }
-      .cmd { color: var(--ink); }
-      .cmd::before { content: "$ "; color: var(--brand); }
-      .tool { color: var(--ink); }
-      .tool::before { content: "› "; color: var(--success-ink); }
-      .tab { white-space: pre; }
-      .gone { color: var(--danger-ink); }
-      .cont { padding-left: 2.6em; }
-      #nss { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; font-family: "Inter", sans-serif; }
-      #sees { margin-top: auto; border-radius: 16px; padding: 16px 20px; background: var(--danger-tint); color: var(--danger-ink); font-size: 23px; }
-      .ns { border: 2px solid var(--line); border-radius: 16px; padding: 16px 18px; font-size: 24px; display: flex; flex-direction: column; gap: 6px; }
-      .ns b { font-family: "JetBrains Mono", monospace; font-weight: 600; color: var(--ink); }
-      .ns span { font-size: 20px; color: var(--muted); }
-      #req { position: absolute; left: 24px; right: 24px; bottom: 24px; background: var(--paper); border: 2px solid var(--line-strong); border-radius: 20px; padding: 22px 26px; font-family: "Inter", sans-serif; display: flex; flex-direction: column; gap: 12px; }
+      /* 2. Split screen: the same coding agent's terminal twice. A tool row is
+         a dot plus the tool's name and its arguments; its result hangs under it
+         behind a hairline, the way agent terminals print them. */
+      #split { gap: 40px; padding: 40px 64px 48px; align-items: stretch; }
+      .half { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+      .half .label { font-size: 26px; font-weight: 600; color: var(--muted); padding-left: 8px; }
+      .term { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+      .term-head { display: flex; align-items: center; gap: 18px; padding: 18px 28px; border-bottom: 2px solid var(--line); background: var(--paper); }
+      .dots { display: flex; gap: 8px; }
+      .dots i { width: 14px; height: 14px; border-radius: 50%; background: var(--wash); }
+      .term-head .title { flex: 1; font-family: "JetBrains Mono", monospace; font-size: 22px; color: var(--muted); }
+      .term .body { flex: 1; padding: 22px 30px; font-family: "JetBrains Mono", monospace; font-size: 20px; line-height: 1.4; color: var(--secondary); display: flex; flex-direction: column; gap: 6px; }
+      .prompt { color: var(--ink); font-weight: 600; }
+      .prompt::before { content: "› "; color: var(--brand); }
+      .say { font-family: "Inter", sans-serif; font-size: 22px; color: var(--secondary); padding-left: 32px; }
+      /* A wrapped tool row keeps its text aligned under the first line, past the dot. */
+      .tool { color: var(--ink); padding-left: 32px; text-indent: -32px; }
+      .tool::before { content: ""; display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: var(--brand); margin-right: 18px; vertical-align: -1px; }
+      .tool.mcp::before { background: var(--success-ink); }
+      .tool b { font-weight: 600; }
+      .tool .args { color: var(--secondary); }
+      .tag { font-family: "Inter", sans-serif; font-size: 16px; font-weight: 600; letter-spacing: 0.04em; border-radius: 6px; padding: 1px 8px; margin-left: 10px; background: var(--success-tint); color: var(--success-ink); vertical-align: 2px; }
+      .out { margin-left: 7px; padding-left: 24px; border-left: 2px solid var(--line-strong); color: var(--secondary); white-space: pre; }
+      .out.bad { color: var(--danger-ink); }
+      .alert { margin-top: 6px; border-radius: 16px; padding: 14px 20px; font-family: "Inter", sans-serif; font-size: 22px; display: flex; gap: 16px; align-items: center; }
+      .alert.bad { background: var(--danger-tint); color: var(--danger-ink); }
+      .alert b { font-family: "JetBrains Mono", monospace; font-weight: 600; color: var(--ink); }
+      /* The held write, as the Agents page shows it, sits in the flow where the agent waits. */
+      #req { margin: 6px 0 4px 7px; background: var(--paper); border: 2px solid var(--line-strong); border-radius: 20px; padding: 18px 26px; font-family: "Inter", sans-serif; display: flex; flex-direction: column; gap: 10px; }
       #req h4 { font-size: 28px; font-weight: 650; display: flex; justify-content: space-between; align-items: center; }
       #req .what { font-family: "JetBrains Mono", monospace; font-size: 22px; color: var(--secondary); }
       .diff { font-family: "JetBrains Mono", monospace; font-size: 21px; line-height: 1.5; background: var(--danger-tint); color: var(--danger-ink); border-radius: 12px; padding: 10px 16px; white-space: pre; }
@@ -105,62 +115,73 @@
         <rect class="a" x="40.9" y="24" width="3.6" height="5.8" rx="1.8" />
       </symbol>
     </svg>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="25" data-fps="30" data-width="1920" data-height="1080">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="26" data-fps="30" data-width="1920" data-height="1080">
       <div id="grid"></div>
 
       <section id="s1" class="clip" data-start="0" data-duration="3.6" data-track-index="1">
         <div id="ask" class="card">
-          <p class="who" data-t="you">you, to your agent</p>
+          <p class="who" data-t="you">you, to your coding agent</p>
           <p id="order"><span id="typed" class="typed" data-t="order">clean up the failed pods in staging</span></p>
         </div>
       </section>
 
-      <section id="split" class="clip" data-start="3.2" data-duration="18.2" data-track-index="1">
-        <div id="left" class="card half">
-          <div class="card-head"><span data-t="leftTitle">With the admin kubeconfig</span><span class="pill bad">context: prod-eu</span></div>
-          <div class="body">
-            <p id="L1" class="cmd">kubectl config current-context</p>
-            <p id="L2">prod-eu</p>
-            <p id="L3" class="cmd">kubectl delete pods -A \<br /><span class="cont">--field-selector=status.phase!=Running</span></p>
-            <div id="nss">
-              <p class="ns"><b>shop</b><span data-t="deleted">pods deleted</span></p>
-              <p class="ns"><b>payments</b><span data-t="deleted">pods deleted</span></p>
-              <p class="ns"><b>checkout</b><span data-t="deleted">pods deleted</span></p>
-              <p class="ns"><b>search</b><span data-t="deleted">pods deleted</span></p>
-              <p class="ns"><b>auth</b><span data-t="deleted">pods deleted</span></p>
-              <p class="ns"><b>web</b><span data-t="deleted">pods deleted</span></p>
-            </div>
-            <p id="sees" data-t="sees">the API server only sees kubernetes-admin</p>
-          </div>
-        </div>
-        <div id="right" class="card half">
-          <div class="card-head"><span data-t="rightTitle">With kubelatch</span><span id="sess" class="act"><span id="sessOn" class="pill ok">sergio · developer · staging</span><span id="sessCut" class="pill bad" data-t="cut">session cut</span></span></div>
-          <div class="body">
-            <p id="R1" class="tool">whoami</p>
-            <p id="R2" class="muted">identity: user:sergio<br />writes_need_approval: true</p>
-            <p id="R3" class="tool">list_resources pods -n shop status.phase=Failed</p>
-            <p id="R4" class="tab">NAME            READY  STATUS  RESTARTS  AGE
+      <section id="split" class="clip" data-start="3.2" data-duration="19.4" data-track-index="1">
+        <div id="left" class="half">
+          <p class="label" data-t="leftTitle">With your admin kubeconfig</p>
+          <div class="card term">
+            <div class="term-head"><span class="dots"><i></i><i></i><i></i></span><span class="title">agent · ~/shop</span><span class="pill bad" data-t="leftPill">kubeconfig: admin · context prod-eu</span></div>
+            <div class="body">
+              <p class="prompt" data-t="order">clean up the failed pods in staging</p>
+              <p id="L1" class="say" data-t="l1">Looking for failed pods in the shop namespace.</p>
+              <p id="L2" class="tool"><b>Bash</b><span class="args">(kubectl get pods -n shop --field-selector status.phase=Failed)</span></p>
+              <p id="L3" class="out">NAME            READY  STATUS  RESTARTS  AGE
 web-7f9c-x2kq   0/1    Error   5         2h
 web-7f9c-p81zd  0/1    Error   5         2h</p>
-            <p id="R5" class="tool">delete_resource deployment/web -n shop</p>
-            <p id="R6"><span class="pill warn">agent.approval_pending</span></p>
-            <p id="R7" class="gone">401 invalid token: this agent session was revoked</p>
-            <div id="req">
-              <h4><span data-t="reqTitle">Write request</span><span class="act"><span id="reqPending" class="pill warn" data-t="pending">Pending</span><span id="reqDenied" class="pill bad" data-t="denied">Denied</span></span></h4>
-              <p class="what" data-t="what">DELETE deployments.apps/web in shop · staging</p>
-              <div class="diff">- apiVersion: apps/v1
-- kind: Deployment
+              <p id="L4" class="tool"><b>Bash</b><span class="args">(kubectl delete pods -n shop --field-selector status.phase=Failed)</span></p>
+              <p id="L5" class="out">pod "web-7f9c-x2kq" deleted
+pod "web-7f9c-p81zd" deleted</p>
+              <p id="L6" class="say" data-t="l6">They keep crashing. I'll delete the deployment so the rollout recreates it clean.</p>
+              <p id="L7" class="tool"><b>Bash</b><span class="args">(kubectl delete deployment web -n shop)</span></p>
+              <p id="L8" class="out">deployment.apps "web" deleted</p>
+              <div id="outage" class="alert bad"><b>prod-eu · shop</b><span data-t="outage">web 0/3 ready · shop.example.com answers 503</span></div>
+              <p id="L9" class="say" data-t="l9">Done. The failed pods in staging are cleaned up.</p>
+            </div>
+          </div>
+        </div>
+        <div id="right" class="half">
+          <p class="label" data-t="rightTitle">With kubelatch's MCP server</p>
+          <div class="card term">
+            <div class="term-head"><span class="dots"><i></i><i></i><i></i></span><span class="title">agent · ~/shop</span><span class="pill ok" data-t="rightPill">MCP: kubelatch · sergio</span></div>
+            <div class="body">
+              <p class="prompt" data-t="order">clean up the failed pods in staging</p>
+              <p id="R1" class="tool mcp"><b>kubelatch</b> <span class="args">· whoami</span><span class="tag">MCP</span></p>
+              <p id="R2" class="out">identity: user:sergio · session: delegated
+prod-eu/shop: viewer · staging/shop: developer, approval</p>
+              <p id="R3" class="tool mcp"><b>kubelatch</b> <span class="args">· delete_resource pod/web-7f9c-x2kq · prod-eu/shop</span><span class="tag">MCP</span></p>
+              <p id="R4" class="out bad">403 Forbidden: User "user:sergio" cannot delete
+resource "pods" in the namespace "shop"</p>
+              <p id="R5" class="say" data-t="r5">prod-eu is read-only for me. Staging, then.</p>
+              <p id="R6" class="tool mcp"><b>kubelatch</b> <span class="args">· list_resources pods · staging/shop · status.phase=Failed</span><span class="tag">MCP</span></p>
+              <p id="R7" class="out">NAME            READY  STATUS  RESTARTS  AGE
+web-7f9c-x2kq   0/1    Error   5         2h</p>
+              <p id="R8" class="tool mcp"><b>kubelatch</b> <span class="args">· delete_resource pod/web-7f9c-x2kq · staging/shop</span><span class="tag">MCP</span></p>
+              <p id="R9" class="out"><span class="pill warn">agent.approval_pending</span></p>
+              <p id="R10" class="out">pod "web-7f9c-x2kq" deleted</p>
+              <p id="R11" class="say" data-t="r11">Done. One failed pod removed in staging; prod-eu untouched.</p>
+              <div id="req">
+                <h4><span data-t="reqTitle">Write request</span><span class="act"><span id="reqPending" class="pill warn" data-t="pending">Pending</span><span id="reqApproved" class="pill ok" data-t="approved">Approved</span></span></h4>
+                <p class="what" data-t="what">DELETE pods/web-7f9c-x2kq in shop · staging</p>
+                <div class="diff">- kind: Pod
 - metadata:
--   name: web
-- spec:
--   replicas: 3</div>
-              <div class="btns"><span class="btn" data-t="approve">Approve</span><span id="deny" class="btn primary" data-t="deny">Deny</span><span id="cutBtn" class="btn" data-t="cutBtn">Cut</span></div>
+-   name: web-7f9c-x2kq</div>
+                <div class="btns"><span id="approve" class="btn primary" data-t="approve">Approve</span><span class="btn" data-t="deny">Deny</span><span class="btn" data-t="cutBtn">Cut</span></div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="end" class="clip" data-start="21.2" data-duration="3.8" data-track-index="1">
+      <section id="end" class="clip" data-start="22.2" data-duration="3.8" data-track-index="1">
         <svg id="end-mark" viewBox="0 0 48 48" aria-hidden="true"><use href="#k" /></svg>
         <p id="line1" data-t="line1">The same order. An agent with the limits you set.</p>
         <p id="url" class="mono">kubelatch.com/agents</p>
@@ -174,17 +195,22 @@ web-7f9c-p81zd  0/1    Error   5         2h</p>
       const T = {
         en: null,
         es: {
-          you: "tú, a tu agente",
+          you: "tú, a tu agente de programación",
           order: "limpia los pods fallidos de staging",
-          leftTitle: "Con el kubeconfig de admin",
-          deleted: "pods borrados",
-          sees: "el API server solo ve a kubernetes-admin",
-          rightTitle: "Con kubelatch",
-          cut: "sesión cortada",
+          leftTitle: "Con tu kubeconfig de admin",
+          leftPill: "kubeconfig: admin · contexto prod-eu",
+          l1: "Busco pods fallidos en el namespace shop.",
+          l6: "Siguen fallando. Borro el deployment para que el rollout lo recree limpio.",
+          outage: "web 0/3 listos · shop.example.com responde 503",
+          l9: "Hecho. Los pods fallidos de staging están limpios.",
+          rightTitle: "Con el servidor MCP de kubelatch",
+          rightPill: "MCP: kubelatch · sergio",
+          r5: "prod-eu es solo lectura para mí. Entonces, staging.",
+          r11: "Hecho. Un pod fallido borrado en staging; prod-eu intacto.",
           reqTitle: "Solicitud de escritura",
           pending: "Pendiente",
-          denied: "Denegada",
-          what: "DELETE deployments.apps/web en shop · staging",
+          approved: "Aprobada",
+          what: "DELETE pods/web-7f9c-x2kq en shop · staging",
           approve: "Aprobar",
           deny: "Denegar",
           cutBtn: "Cortar",
@@ -205,9 +231,12 @@ web-7f9c-p81zd  0/1    Error   5         2h</p>
       const show = (sel, at, dur = 0.3) => tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: dur }, at);
       const leave = (sel, at, dur = 0.4) => tl.to(sel, { opacity: 0, duration: dur, ease: "power2.in" }, at);
       const press = (sel, at) => tl.to(sel, { scale: 0.92, duration: 0.1, yoyo: true, repeat: 1 }, at);
-      const red = "oklch(25% 0.06 20)";
 
-      tl.set(["#L1", "#L2", "#L3", ".ns", "#sees", "#R1", "#R2", "#R3", "#R4", "#R5", "#R6", "#R7", "#req", "#sessCut", "#reqDenied"], { opacity: 0 }, 0);
+      tl.set(["#L1", "#L2", "#L3", "#L4", "#L5", "#L6", "#L7", "#L8", "#L9", "#outage",
+        "#R1", "#R2", "#R3", "#R4", "#R5", "#R6", "#R7", "#R8", "#R9", "#R10", "#R11", "#req", "#reqApproved"], { opacity: 0 }, 0);
+      // The card and the rows after it take no room until their turn, so the
+      // terminal grows the way one does.
+      tl.set(["#R10", "#R11", "#req"], { display: "none" }, 0);
 
       // 1. The order is typed (0 - 3.6); the typed span widens by whole characters.
       rise("#ask", 0.15, 30, 0.6);
@@ -216,37 +245,38 @@ web-7f9c-p81zd  0/1    Error   5         2h</p>
       tl.fromTo(typed, { width: "0ch" }, { width: `${n}ch`, duration: n / 18, ease: `steps(${n})` }, 0.7);
       leave("#ask", 3.1, 0.35);
 
-      // 2. Split screen (3.2 - 21.4)
+      // 2. Split screen (3.2 - 22.6): the same agent, the same order, twice.
       tl.fromTo("#left", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.55, ease: out }, 3.3);
       tl.fromTo("#right", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.55, ease: out }, 3.45);
-      // Left: the admin context is production, and the namespaces go red one by one.
-      show("#L1", 4.1); show("#L2", 4.7); show("#L3", 5.4);
-      document.querySelectorAll(".ns").forEach((el, i) => {
-        show(el, 6.2 + i * 0.12, 0.2);
-        tl.to(el, { backgroundColor: red, borderColor: "oklch(70.4% 0.191 22.216)", duration: 0.35 }, 7.4 + i * 0.6);
-      });
-      rise("#sees", 11.2, 16, 0.4);
-      // Right: whoami, the failed pods, then a delete that waits for a person.
-      show("#R1", 4.3); show("#R2", 4.8); show("#R3", 5.8); show("#R4", 6.4);
-      show("#R5", 7.6); show("#R6", 8.2);
-      rise("#req", 9.0, 30, 0.5);
-      tl.to("#req .diff", { opacity: 0.6, duration: 0.25, yoyo: true, repeat: 3 }, 10.0);
-      // The person denies it (poster frame at 16.5 s shows both sides before this), then cuts the session.
-      press("#deny", 17.1);
+      // Left: kubectl never looks at the context; "staging" in the order,
+      // prod-eu in the kubeconfig, and the agent cleans up all the way to the
+      // deployment, then reports success.
+      show("#L1", 4.3); show("#L2", 4.8); show("#L3", 5.4); show("#L4", 6.4); show("#L5", 7.0);
+      show("#L6", 8.0); show("#L7", 9.0); show("#L8", 9.6);
+      rise("#outage", 10.6, 16, 0.4);
+      tl.to("#outage", { opacity: 0.55, duration: 0.25, yoyo: true, repeat: 3 }, 11.1);
+      show("#L9", 12.0);
+      // Right: the same mistake meets the role (403 on prod-eu), then the
+      // right delete waits for a person; the poster frame at 16.5 s shows both.
+      show("#R1", 4.4); show("#R2", 4.9); show("#R3", 6.0); show("#R4", 6.6);
+      show("#R5", 7.6); show("#R6", 8.4); show("#R7", 9.0); show("#R8", 10.0); show("#R9", 10.6);
+      tl.set("#req", { display: "flex" }, 11.4);
+      rise("#req", 11.4, 20, 0.5);
+      tl.to("#req .diff", { opacity: 0.6, duration: 0.25, yoyo: true, repeat: 3 }, 12.4);
+      press("#approve", 17.1);
       tl.to("#reqPending", { opacity: 0, duration: 0.15 }, 17.35);
-      show("#reqDenied", 17.4, 0.2);
-      press("#cutBtn", 18.1);
-      tl.to("#sessOn", { opacity: 0, duration: 0.15 }, 18.35);
-      show("#sessCut", 18.4, 0.2);
-      leave("#req", 18.9, 0.35);
-      show("#R7", 19.5);
-      leave(["#left", "#right"], 20.9, 0.45);
+      show("#reqApproved", 17.4, 0.2);
+      leave("#req", 18.3, 0.35);
+      tl.set("#req", { display: "none" }, 18.65);
+      tl.set(["#R10", "#R11"], { display: "block" }, 18.65);
+      show("#R10", 18.7); show("#R11", 19.4);
+      leave(["#left", "#right"], 21.9, 0.45);
 
-      // 3. The end (21.2 - 25), back to the empty grid so the loop joins scene 1.
-      rise("#end-mark", 21.3, 20, 0.4);
-      rise("#line1", 21.4);
-      show("#url", 21.9);
-      leave(["#end-mark", "#line1", "#url"], 24.3, 0.5);
+      // 3. The end (22.2 - 26), back to the empty grid so the loop joins scene 1.
+      rise("#end-mark", 22.3, 20, 0.4);
+      rise("#line1", 22.4);
+      show("#url", 22.9);
+      leave(["#end-mark", "#line1", "#url"], 25.3, 0.5);
 
       window.__timelines["main"] = tl;
     </script>

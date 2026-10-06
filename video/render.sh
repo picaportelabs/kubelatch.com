@@ -34,7 +34,7 @@ for v in $videos; do
         src=index.html; at=19.5; frames=2,6,11,17,19.5,23; mp4=kubelatch; jpg=poster; shots=snapshots
         pages_en="$site/index.html"; pages_es="$site/es/index.html" ;;
     agents)
-        src=agents.html; at=16.5; frames=1.5,5,9,12.5,16.5,18.6,22.5; mp4=agents; jpg=agents; shots=snapshots/agents
+        src=agents.html; at=16.5; frames=1.5,5,9,12.5,16.5,19.5,23.5; mp4=agents; jpg=agents; shots=snapshots/agents
         pages_en="$site/index.html $site/agents/index.html"; pages_es="$site/es/index.html $site/es/agents/index.html" ;;
     *) echo "no such video: $v (kubelatch or agents)" >&2; exit 2 ;;
     esac

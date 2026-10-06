@@ -63,11 +63,11 @@
 
     <figure class="film film-agents">
       <div class="film-frame">
-        <video autoplay muted loop playsinline controls preload="metadata" poster="/media/agents-384ffa72d2.jpg" aria-describedby="agents-caption">
-          <source src="/media/agents-18fc0020ca.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
+        <video autoplay muted loop playsinline controls preload="metadata" poster="/media/agents-66f2dce846.jpg" aria-describedby="agents-caption">
+          <source src="/media/agents-e451880d65.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
         </video>
       </div>
-      <figcaption id="agents-caption">The same order, “clean up the failed pods in staging”, twice. With the admin kubeconfig, the agent deletes pods across every namespace of production. With kubelatch, its delete waits: a person sees the diff, denies it and cuts the session. <a class="film-link" href="/media/agents-18fc0020ca.mp4">Watch the video (25 s, MP4)</a></figcaption>
+      <figcaption id="agents-caption">The same order, “clean up the failed pods in staging”, in the same coding agent, twice. With the admin kubeconfig, the agent never looks at the context: it deletes the pods and then the deployment in production, and reports success. Through kubelatch’s MCP server, the same mistake gets a 403 from production, and the delete in staging waits for a person to approve it. <a class="film-link" href="/media/agents-e451880d65.mp4">Watch the video (26 s, MP4)</a></figcaption>
     </figure>
 
     <div class="versus agents">
@@ -85,6 +85,10 @@ writes_need_approval: true
 permissions:
   - cluster: prod-eu
     role: developer
+    scope: shop
+    expires_at: 2026-10-06T20:04:31Z
+  - cluster: prod-eu
+    role: secrets-reader
     scope: shop
     expires_at: 2026-10-06T20:04:31Z
 scope "*" is the whole cluster; any other scope is one namespace.

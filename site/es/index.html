@@ -63,11 +63,11 @@
 
     <figure class="film film-agents">
       <div class="film-frame">
-        <video autoplay muted loop playsinline controls preload="metadata" poster="/media/agents-1d6ea652f7.jpg" aria-describedby="agents-caption">
-          <source src="/media/agents-cf324fed04.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
+        <video autoplay muted loop playsinline controls preload="metadata" poster="/media/agents-ab75aeb719.jpg" aria-describedby="agents-caption">
+          <source src="/media/agents-5485f21c45.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
         </video>
       </div>
-      <figcaption id="agents-caption">La misma orden, «limpia los pods fallidos de staging», dos veces. Con el kubeconfig de admin, el agente borra pods en todos los namespaces de producción. Con kubelatch, su borrado espera: una persona ve el diff, lo deniega y corta la sesión. <a class="film-link" href="/media/agents-cf324fed04.mp4">Ver el vídeo (25 s, MP4)</a></figcaption>
+      <figcaption id="agents-caption">La misma orden, «limpia los pods fallidos de staging», en el mismo agente de programación, dos veces. Con el kubeconfig de admin, el agente no mira el contexto: borra los pods y luego el deployment en producción, y da la tarea por hecha. Con el servidor MCP de kubelatch, el mismo error recibe un 403 de producción, y el borrado en staging espera a que una persona lo apruebe. <a class="film-link" href="/media/agents-5485f21c45.mp4">Ver el vídeo (26 s, MP4)</a></figcaption>
     </figure>
 
     <div class="versus agents">
@@ -85,6 +85,10 @@ writes_need_approval: true
 permissions:
   - cluster: prod-eu
     role: developer
+    scope: shop
+    expires_at: 2026-10-06T20:04:31Z
+  - cluster: prod-eu
+    role: secrets-reader
     scope: shop
     expires_at: 2026-10-06T20:04:31Z
 scope "*" is the whole cluster; any other scope is one namespace.
