@@ -302,16 +302,23 @@ img, video, svg { display: block; max-width: 100%; }
    dark interlude with the summary and the video's poster as the link to
    /agents/. Inside <main> it carries .scheme-dark itself. */
 .band.agents-band { border-top: 1px solid var(--line); }
-.agents-band .wrap { padding-top: 5rem; padding-bottom: 5rem; display: grid; gap: 2.5rem; align-items: center; }
-@media (min-width: 900px) { .agents-band .wrap { grid-template-columns: 1fr 1fr; gap: 4rem; padding-top: 6rem; padding-bottom: 6rem; } }
+.agents-band .wrap { padding-top: 5rem; padding-bottom: 5rem; }
+@media (min-width: 768px) { .agents-band .wrap { padding-top: 7rem; padding-bottom: 7rem; } }
 .agents-band .intro { margin: 1.25rem 0 0; max-width: 40rem; color: var(--secondary); font-size: 1.125rem; line-height: 1.6; }
 .agents-band .actions { margin-top: 2rem; }
-.agents-band .still {
+/* Two screenshots of the web interface under the copy: the Agents page and
+   the authorization page, each a link to /agents/ with a caption. */
+.shots { margin-top: 3.5rem; display: grid; gap: 2rem; align-items: start; }
+@media (min-width: 900px) { .shots { grid-template-columns: 1.55fr 1fr; gap: 2.5rem; } }
+.shot { margin: 0; }
+.shot .still {
   display: block; border: 1px solid var(--line); border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-sm); overflow: hidden; background: var(--wash); aspect-ratio: 16 / 9;
+  box-shadow: var(--shadow-sm); overflow: hidden; background: var(--wash);
 }
-.agents-band .still img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.agents-band .still:hover { border-color: var(--line-strong); }
+.shot .still:hover { border-color: var(--line-strong); }
+.shot img { display: block; width: 100%; height: auto; }
+.shot figcaption { margin-top: 0.875rem; font: 0.8125rem/1.25rem var(--mono); color: var(--muted); }
+.shot figcaption b { font-weight: 600; color: var(--secondary); }
 .ways-wrap { margin-top: 3rem; overflow-x: auto; }
 .ways { width: 100%; min-width: 40rem; border-collapse: collapse; font-size: 0.9375rem; line-height: 1.5; }
 .ways caption { text-align: left; font: 0.8125rem/1.25rem var(--mono); color: var(--muted); padding-bottom: 0.75rem; }
