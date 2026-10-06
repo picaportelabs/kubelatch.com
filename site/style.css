@@ -255,7 +255,7 @@ img, video, svg { display: block; max-width: 100%; }
 .section + .section { border-top: 1px solid var(--line); }
 
 .kicker { margin: 0; font: 0.8125rem/1.25rem var(--mono); color: var(--muted); }
-.section h2 {
+.section h2, .agents-band h2 {
   margin: 0.75rem 0 0; max-width: 22ch;
   font-size: clamp(1.875rem, 1.3rem + 2.4vw, 3rem); line-height: 1.1; letter-spacing: -0.03em; font-weight: 700;
   text-wrap: balance;
@@ -298,6 +298,20 @@ img, video, svg { display: block; max-width: 100%; }
 @media (min-width: 900px) { .versus.agents { grid-template-columns: 1.5fr 1fr; align-items: start; } }
 .card .warn { color: var(--warning); }
 .card pre.connect { white-space: pre-wrap; overflow-wrap: anywhere; }
+/* The AI agents band of the home, between what you get and how it works: a
+   dark interlude with the summary and the video's poster as the link to
+   /agents/. Inside <main> it carries .scheme-dark itself. */
+.band.agents-band { border-top: 1px solid var(--line); }
+.agents-band .wrap { padding-top: 5rem; padding-bottom: 5rem; display: grid; gap: 2.5rem; align-items: center; }
+@media (min-width: 900px) { .agents-band .wrap { grid-template-columns: 1fr 1fr; gap: 4rem; padding-top: 6rem; padding-bottom: 6rem; } }
+.agents-band .intro { margin: 1.25rem 0 0; max-width: 40rem; color: var(--secondary); font-size: 1.125rem; line-height: 1.6; }
+.agents-band .actions { margin-top: 2rem; }
+.agents-band .still {
+  display: block; border: 1px solid var(--line); border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm); overflow: hidden; background: var(--wash); aspect-ratio: 16 / 9;
+}
+.agents-band .still img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.agents-band .still:hover { border-color: var(--line-strong); }
 .ways-wrap { margin-top: 3rem; overflow-x: auto; }
 .ways { width: 100%; min-width: 40rem; border-collapse: collapse; font-size: 0.9375rem; line-height: 1.5; }
 .ways caption { text-align: left; font: 0.8125rem/1.25rem var(--mono); color: var(--muted); padding-bottom: 0.75rem; }

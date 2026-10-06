@@ -3,7 +3,8 @@
 # npx: no dependency in the repo), in English and in Spanish: each
 # composition holds both and picks its strings from <html lang>.
 #   kubelatch  index.html   the cover, in the header of / and /es/
-#   agents     agents.html  on /agents/ and /es/agents/ (the home only links there)
+#   agents     agents.html  on /agents/ and /es/agents/; its poster is the
+#                           still of the agents band of / and /es/
 # Each language gets files named by a hash of their content so nginx can
 # cache /media/ for a year:
 #   landing/site/media/kubelatch-<hash>.mp4, poster-<hash>.jpg (frame at 19.5 s)
@@ -34,7 +35,7 @@ for v in $videos; do
         pages_en="$site/index.html"; pages_es="$site/es/index.html" ;;
     agents)
         src=agents.html; at=16.5; frames=1.5,5,9,12.5,16.5,19.5,23.5; mp4=agents; jpg=agents; shots=snapshots/agents
-        pages_en="$site/agents/index.html"; pages_es="$site/es/agents/index.html" ;;
+        pages_en="$site/index.html $site/agents/index.html"; pages_es="$site/es/index.html $site/es/agents/index.html" ;;
     *) echo "no such video: $v (kubelatch or agents)" >&2; exit 2 ;;
     esac
     for lang in en es; do
