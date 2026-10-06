@@ -134,18 +134,31 @@ bot:shop-api   github-actions  prod-eu   in 58 min  <span class="ok">just now</s
 
   <section class="band scheme-dark agents-band" aria-labelledby="agents">
     <div class="wrap">
-      <div class="agents-copy">
-        <p class="kicker">// for AI agents</p>
-        <h2 id="agents">Let AI agents in, within limits you set.</h2>
-        <p class="intro">Claude Code, Cursor or any MCP client works on your clusters through kubelatch’s MCP server, as you and with only the permissions you choose. Its writes can wait for your approval, every call is in the audit, and you cut it off with one click.</p>
-        <div class="actions actions-start">
-          <a class="btn btn-primary" href="/agents/">How agents work in kubelatch</a>
-          <a class="btn btn-secondary" href="https://docs.kubelatch.com/use/ai-agents/">Connect yours</a>
+      <div class="duo">
+        <div class="duo-copy">
+          <p class="kicker">// for AI agents</p>
+          <h2 id="agents">Let AI agents in, within limits you set.</h2>
+          <p class="intro">Claude Code, Cursor or any MCP client works on your clusters through kubelatch’s MCP server, as you and with only the permissions you choose. Its writes can wait for your approval, every call is in the audit, and you cut it off with one click.</p>
+          <div class="actions actions-start">
+            <a class="btn btn-primary" href="/agents/">How it works</a>
+            <a class="btn btn-secondary" href="https://docs.kubelatch.com/use/ai-agents/">Connect yours</a>
+          </div>
         </div>
+        <a class="duo-shot" href="/agents/"><img src="/media/agents-sessions-91f47e7f12.png" width="1600" height="880" loading="lazy" alt="The Agents page of kubelatch: six active sessions of Claude Code, Cursor and Codex CLI, on behalf of luis, marta and ana or as bots, each with its permissions, its expiry and its last use; one pending request."></a>
       </div>
-      <div class="shots">
-        <figure class="shot"><a class="still" href="/agents/"><img src="/media/agents-sessions-91f47e7f12.png" width="1600" height="880" loading="lazy" alt="The Agents page of kubelatch: six active sessions of Claude Code, Cursor and Codex CLI, on behalf of luis, marta and ana or as bots, each with its permissions, its expiry and its last use; one pending request."></a><figcaption><b>Agents</b>: every session, on whose behalf, what it may do, until when, and what it asks you to decide.</figcaption></figure>
-        <figure class="shot"><a class="still" href="/agents/"><img src="/media/agents-consent-e7b2bf7500.png" width="1000" height="1206" loading="lazy" alt="The authorization page: “Claude Code wants to access your clusters”, with a choice per permission of ana (same role, read only or leave out), a duration of 8 hours and “Writes need my approval” on."></a><figcaption><b>The authorization</b>: what the agent gets from each of your permissions, for how long, and whether its writes wait for you.</figcaption></figure>
+      <div class="duo duo-flip">
+        <a class="duo-shot" href="/agents/"><img src="/media/agents-consent-e7b2bf7500.png" width="1000" height="1206" loading="lazy" alt="The authorization page: “Claude Code wants to access your clusters”, with a choice per permission of ana (same role, read only or leave out), a duration of 8 hours and “Writes need my approval” on."></a>
+        <div class="duo-copy">
+          <p class="kicker">// the authorization</p>
+          <h3>Like “Sign in with Google”, for your clusters.</h3>
+          <p class="intro">The first time the agent uses kubelatch, your browser opens this page, where you’re already signed in. You don’t hand over your password: you give a limited permission you can take back.</p>
+          <ul class="plain">
+          <li>For each permission of yours, what it gets: the same role, read only, or nothing.</li>
+          <li>For a few hours. Before that, <strong>Cut</strong>.</li>
+          <li>With <strong>Writes need my approval</strong>, every change waits until you’ve seen it.</li>
+          </ul>
+          <p class="more"><a href="/agents/">The six steps, and the three ways to give an agent access</a></p>
+        </div>
       </div>
     </div>
   </section>
