@@ -56,6 +56,83 @@
 </header>
 
 <main id="main" class="scheme-light">
+  <section class="wrap section" aria-labelledby="agents">
+    <p class="kicker">// for AI agents</p>
+    <h2 id="agents">Let AI agents in, within limits you set.</h2>
+    <p class="intro">Claude Code, Cursor or any MCP client works on your clusters through kubelatch's MCP server: as a bot an administrator sets up, or on your behalf with only the permissions you choose. Its writes can wait for your approval, every call is in the audit, and you cut it off with one click. It's the gesture of “Sign in with Google”: you don't hand over your password, you give a limited permission you can take back.</p>
+
+    <figure class="film film-agents">
+      <div class="film-frame">
+        <video autoplay muted loop playsinline controls preload="metadata" poster="/media/agents-384ffa72d2.jpg" aria-describedby="agents-caption">
+          <source src="/media/agents-18fc0020ca.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
+        </video>
+      </div>
+      <figcaption id="agents-caption">The same order, “clean up the failed pods in staging”, twice. With the admin kubeconfig, the agent deletes pods across every namespace of production. With kubelatch, its delete waits: a person sees the diff, denies it and cuts the session. <a class="film-link" href="/media/agents-18fc0020ca.mp4">Watch the video (25 s, MP4)</a></figcaption>
+    </figure>
+
+    <div class="versus agents">
+      <article class="card">
+        <div class="card-head"><h3>What the agent sees</h3><span class="mono">kubelatch MCP tools</span></div>
+<pre><span class="dim">› whoami</span>
+identity: user:sergio
+session:
+  id: 0199c1d0…
+  mode: delegated
+  expires_at: 2026-10-06T20:04:31Z
+on_behalf_of: user:sergio
+credential_expires_at: 2026-10-06T13:04:31Z
+writes_need_approval: true
+permissions:
+  - cluster: prod-eu
+    role: developer
+    scope: shop
+    expires_at: 2026-10-06T20:04:31Z
+scope "*" is the whole cluster; any other scope is one namespace.
+<span class="dim">› get_resource secret/db-credentials -n shop</span>
+apiVersion: v1
+data:
+  password: <span class="ok">&lt;redacted, 24 bytes&gt;</span>
+  username: <span class="ok">&lt;redacted, 8 bytes&gt;</span>
+kind: Secret
+<span class="dim">…</span>
+<span class="dim">› delete_resource pod/web-7f9c-x2kq -n shop</span>
+<span class="warn">agent.approval_pending</span>: this write waits for a person's approval at
+https://kubelatch.example.com/agents/requests/0199c1d2…; once approved,
+call the tool again with the same arguments and approval_id 0199c1d2….
+It expires at 2026-10-06T12:19:31Z
+<span class="dim">› approved by sergio, the same call with its approval_id</span>
+delete_resource: <span class="ok">200 OK</span> (audit id 0199c1d3…)</pre>
+        <ul>
+          <li>It works as you, with only what you gave it: read-only unless you chose more.</li>
+          <li>Secret values stay hidden until it asks for them, and each read is recorded.</li>
+          <li>A change waits for a person, who sees the diff before it runs, once.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="card-head"><h3>Connect it in one line</h3></div>
+<pre class="connect">claude mcp add --transport http kubelatch https://kubelatch.example.com/mcp</pre>
+        <p class="body">The first time it uses kubelatch, your browser asks what it may do: your permissions, read-only by default, for 8 hours. Cursor and any MCP client connect the same way, and Claude Code has a plugin that also stops it reaching for <code>kubectl</code>.</p>
+      </article>
+    </div>
+
+    <div class="ways-wrap">
+      <table class="ways">
+        <caption>Three ways to give an agent access</caption>
+        <thead>
+          <tr><th scope="col"><span class="sr">Question</span></th><th scope="col">Your kubeconfig to the agent</th><th scope="col">Bot</th><th scope="col">Delegated</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Who sets it up</th><td>You, at once</td><td>An administrator</td><td>You, at once</td></tr>
+          <tr><th scope="row">What the agent can do</th><td>Everything you can</td><td>What the administrator decides</td><td>What you can, cut down; read-only by default</td></tr>
+          <tr><th scope="row">What the audit shows</th><td>You</td><td>The bot</td><td>You, through the agent</td></tr>
+          <tr><th scope="row">How long it lasts</th><td>As long as your credential</td><td>Up to 90 days</td><td>Hours</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="more"><a href="/agents/">How agents work in kubelatch</a> · <a href="https://docs.kubelatch.com/use/ai-agents/">Connect yours</a> · <a href="https://docs.kubelatch.com/concepts/agents/#what-it-does-not-cover">What it does not cover</a></p>
+  </section>
   <section class="wrap section" aria-labelledby="why">
     <p class="kicker">// the problem</p>
     <h2 id="why">Nobody knows who holds the admin kubeconfig.</h2>
@@ -164,33 +241,6 @@ bot:shop-api   github-actions  prod-eu   in 58 min  <span class="ok">just now</s
       <span class="chip">EKS</span><span class="chip">GKE</span><span class="chip">AKS</span><span class="chip">kubeadm</span><span class="chip">k3s</span><span class="chip">RKE2</span><span class="chip">Talos</span>
     </div>
   </section>
-  <section class="wrap section" aria-labelledby="agents">
-    <p class="kicker">// for AI agents</p>
-    <h2 id="agents">Ready for AI agents.</h2>
-    <p class="intro">An agent that runs kubectl is one more identity to govern. In kubelatch it gets a bot account of its own: the tier it needs, an expiry in hours, and every request it makes in the audit, under its name. <a href="https://docs.kubelatch.com/use/ai-agents/">How to set it up</a></p>
-
-    <div class="versus agents">
-      <article class="card">
-        <div class="card-head"><h3>bot:ops-agent</h3><span class="mono">viewer · prod-eu · expires in 8 h</span></div>
-<pre><span class="dim">time      action                  code</span>
-12:04:31  get pods -n shop        <span class="ok">200</span>
-12:04:33  logs web-7f9c           <span class="ok">200</span>
-12:04:40  delete pod web-7f9c     <span class="bad">403</span>
-12:06:02  get pods -n shop        <span class="bad">401</span>  <span class="dim">revoked</span></pre>
-        <ul>
-          <li>It does what its tier allows; the cluster answers 403 to the rest.</li>
-          <li>Its credential expires on its own, in hours if you want.</li>
-          <li>Every request it made is in the audit, with the result.</li>
-          <li>Revoke it and its next call gets 401.</li>
-        </ul>
-      </article>
-
-      <article class="card">
-        <div class="card-head"><h3>MCP server</h3><span class="chip">coming soon</span></div>
-        <p class="body">A kubelatch MCP server is on the way, so agents can work with your clusters through the Model Context Protocol under the same rules: a credential of their own, a tier and every request audited.</p>
-      </article>
-    </div>
-  </section>
 </main>
 
 <section class="band closing" aria-labelledby="closing">
@@ -210,6 +260,7 @@ bot:shop-api   github-actions  prod-eu   in 58 min  <span class="ok">just now</s
     <li><a href="https://docs.kubelatch.com/">Documentation</a></li>
     <li><a href="https://docs.kubelatch.com/concepts/architecture/">Architecture</a></li>
     <li><a href="https://docs.kubelatch.com/concepts/security/">Security model</a></li>
+    <li><a href="/agents/">AI agents</a></li>
     <li><a href="/es/" hreflang="es" lang="es">Español</a></li>
   </ul>
 </footer>

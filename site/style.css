@@ -38,6 +38,8 @@
   --wash: oklch(95% 0.005 80);
   --success: oklch(52.7% 0.154 150.069);
   --danger: oklch(50.5% 0.213 27.518);
+  /* The web UI's warning-ink: an agent's write that waits for a person. */
+  --warning: oklch(40% 0.11 55);
 
   /* Cobalt: action and position. */
   --brand: oklch(42% 0.17 262);
@@ -77,6 +79,7 @@
   --wash: oklch(27.8% 0.033 256.848);
   --success: oklch(79.2% 0.209 151.711);
   --danger: oklch(70.4% 0.191 22.216);
+  --warning: oklch(90% 0.08 85);
   --brand: oklch(74% 0.13 262);
   --brand-hover: oklch(80% 0.11 262);
   --on-brand: oklch(13% 0.028 261.692);
@@ -290,8 +293,27 @@ img, video, svg { display: block; max-width: 100%; }
 .card > .body { margin: 0; padding: 1.25rem 1.5rem 1.5rem; color: var(--secondary); }
 .card-head .chip { color: var(--secondary); }
 .card.without pre { text-decoration: none; }
-/* AI agents: the agent's audit, wider, beside the MCP note. */
-@media (min-width: 900px) { .versus.agents { grid-template-columns: 1.6fr 1fr; align-items: start; } }
+/* AI agents: what the agent sees, wider, beside the connect line; then the
+   three ways as a table, which scrolls sideways on its own on a phone. */
+@media (min-width: 900px) { .versus.agents { grid-template-columns: 1.5fr 1fr; align-items: start; } }
+.card .warn { color: var(--warning); }
+.card pre.connect { white-space: pre-wrap; overflow-wrap: anywhere; }
+.film-agents { margin: 3rem 0 0; max-width: 60rem; }
+.ways-wrap { margin-top: 3rem; overflow-x: auto; }
+.ways { width: 100%; min-width: 40rem; border-collapse: collapse; font-size: 0.9375rem; line-height: 1.5; }
+.ways caption { text-align: left; font: 0.8125rem/1.25rem var(--mono); color: var(--muted); padding-bottom: 0.75rem; }
+.ways th, .ways td { text-align: left; vertical-align: top; padding: 0.75rem 1rem; border-bottom: 1px solid var(--line); }
+.ways thead th { font-weight: 600; color: var(--ink); }
+.ways tbody th { font-weight: 500; color: var(--secondary); }
+.ways td { color: var(--secondary); }
+.ways td:last-child, .ways thead th:last-child { color: var(--ink); background: var(--wash); }
+.section .more { margin: 2rem 0 0; color: var(--muted); }
+/* The /agents/ page: six steps in two rows of three, and a plain list. */
+@media (min-width: 900px) { .steps.steps-six { grid-template-columns: repeat(3, 1fr); row-gap: 3rem; } }
+.steps p code { overflow-wrap: anywhere; }
+.plain { margin: 2rem 0 0; padding-left: 1.25rem; display: grid; gap: 0.5rem; color: var(--secondary); max-width: 40rem; }
+/* Read by screen readers only: the empty corner of a table's header row. */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .card.without .card-head h3 { color: var(--secondary); }
 
 /* Features */
