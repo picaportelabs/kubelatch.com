@@ -304,14 +304,13 @@ img, video, svg { display: block; max-width: 100%; }
 .band.agents-band { border-top: 1px solid var(--line); }
 .agents-band .wrap { padding-top: 5rem; padding-bottom: 5rem; display: grid; gap: 5rem; }
 @media (min-width: 768px) { .agents-band .wrap { padding-top: 7rem; padding-bottom: 7rem; gap: 7rem; } }
-/* Two rows in a zigzag: the copy beside the Agents page, then the
-   authorization page (a portrait card) beside its explanation. */
+/* The copy beside the video's poster, which links to /agents/. */
 .duo { display: grid; gap: 2.5rem; align-items: center; }
-@media (min-width: 900px) {
-  .duo { grid-template-columns: 0.9fr 1.45fr; gap: 4rem; }
-  .duo-flip { grid-template-columns: 0.85fr 1fr; gap: 5rem; }
-}
-@media (max-width: 899px) { .duo-flip .duo-shot { order: 2; } }
+@media (min-width: 900px) { .duo { grid-template-columns: 0.9fr 1.45fr; gap: 4rem; } }
+.duo-copy .intro { margin: 1.25rem 0 0; max-width: 36rem; color: var(--secondary); font-size: 1.125rem; line-height: 1.6; }
+.duo-copy .actions { margin-top: 2rem; }
+.duo-copy h2 { max-width: none; }
+.duo-shot { order: 2; } }
 .duo-copy .intro { margin: 1.25rem 0 0; max-width: 36rem; color: var(--secondary); font-size: 1.125rem; line-height: 1.6; }
 .duo-copy h3 {
   margin: 0.75rem 0 0; max-width: 20ch;
@@ -328,6 +327,13 @@ img, video, svg { display: block; max-width: 100%; }
 }
 .duo-shot:hover { border-color: var(--line-strong); }
 .duo-shot img { display: block; width: 100%; height: auto; }
+/* Screenshots of the web interface on /agents/: the card as the app draws
+   it, so no frame of its own, only the corners clipped and a shadow. */
+.shot-figure { margin: 3.5rem auto 0; max-width: 60rem; }
+.shot-figure.narrow { max-width: 40rem; }
+.shot-figure .frame { display: block; border-radius: 0.75rem; overflow: hidden; box-shadow: var(--shadow-sm); }
+.shot-figure img { display: block; width: 100%; height: auto; }
+.shot-figure figcaption { margin-top: 0.875rem; font: 0.8125rem/1.25rem var(--mono); color: var(--muted); }
 .ways-wrap { margin-top: 3rem; overflow-x: auto; }
 .ways { width: 100%; min-width: 40rem; border-collapse: collapse; font-size: 0.9375rem; line-height: 1.5; }
 .ways caption { text-align: left; font: 0.8125rem/1.25rem var(--mono); color: var(--muted); padding-bottom: 0.75rem; }
