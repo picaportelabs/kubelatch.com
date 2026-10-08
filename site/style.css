@@ -531,6 +531,19 @@ img, video, svg { display: block; max-width: 100%; }
 .faq h3 { margin: 0; font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; letter-spacing: -0.01em; }
 .faq p { margin: 0.5rem 0 0; max-width: 36rem; color: var(--secondary); }
 
+/* The Pro status pages (/pro/thanks/, /pro/key/, /pro/key/sent/): a centred
+   title and lead; the steps and the form sit under it on their own width. */
+.status { text-align: center; }
+.section.status h1 { margin-left: auto; margin-right: auto; text-wrap: balance; }
+.status .intro, .status .more { margin-left: auto; margin-right: auto; text-wrap: pretty; }
+.status .steps { text-align: left; max-width: 60rem; margin-left: auto; margin-right: auto; }
+.status .key-form {
+  margin: 2.5rem auto 0; max-width: 28rem; text-align: left; align-items: stretch;
+  padding: 1.5rem; background: var(--sheet); border: 1px solid var(--line); border-radius: var(--radius-xl); box-shadow: var(--shadow-sm);
+}
+.status .key-form .btn { justify-content: center; }
+.status .key-form ~ .more { max-width: 28rem; }
+
 /* /pro/thanks/: the three steps carry h2s under the page's h1. */
 .section .steps h2 {
   margin: 1rem 0 0; max-width: none;
