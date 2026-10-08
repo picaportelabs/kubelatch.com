@@ -68,10 +68,24 @@ for pair in "/pro/buy/ https://buy.stripe.com/" "/pro/trial/ https://buy.stripe.
     "302 $2"*) ;;
     *) bad "$1 answered '$loc', want 302 to $2…" ;;
     esac
+    echo "$loc" >"$tmp/loc$(echo "$1" | tr '/' '_')"
 done
+# Buying and the trial are two different Payment Links.
+cmp -s "$tmp/loc_pro_buy_" "$tmp/loc_pro_trial_" && bad "/pro/buy/ and /pro/trial/ redirect to the same link"
 ok "/pro/buy/, /pro/trial/ and /pro/portal/ redirect to Stripe"
 
-for pair in "/nope en" "/es/nope es" "/es/pro/key/nope es"; do
+# The key resend form posts the address and the page's language to the
+# licensing service.
+for pair in "/pro/key/ en" "/es/pro/key/ es"; do
+    set -- $pair
+    for want in 'action="https://licensing.kubelatch.com/keys/resend"' 'method="post"' 'name="email"' \
+        "<input type=\"hidden\" name=\"lang\" value=\"$2\">"; do
+        grep -qF "$want" "$(saved "$1")" || bad "$1: the form lacks $want"
+    done
+done
+ok "the key resend forms"
+
+for pair in "/nope en" "/es/nope es" "/es/pro/key/nope es" "/pro/ en" "/es/pro/ es"; do
     set -- $pair
     code=$(curl -s -o "$tmp/404" -w '%{http_code}' "$base$1" || true)
     [ "$code" = 404 ] || bad "$1 answered $code, want 404"
@@ -83,7 +97,7 @@ ok "custom 404 pages"
 # server-level add_header in any location that declares its own. The pages
 # with the key resend form allow posting it to the licensing service.
 csp="default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
-csp_form="default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; media-src 'self'; base-uri 'none'; form-action https://licensing.kubelatch.com; frame-ancestors 'none'"
+csp_form="default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; media-src 'self'; base-uri 'none'; form-action 'self' https://licensing.kubelatch.com; frame-ancestors 'none'"
 # The posters of the home page (the cover) and of /agents/ (the agents
 # video). Unquoted below, so each is checked on its own.
 posters=$(grep -ohE 'poster="[^"]*"' "$(saved /)" "$(saved /agents/)" | sed -E 's/^poster="//; s/"$//')

@@ -176,9 +176,12 @@ img, video, svg { display: block; max-width: 100%; }
 
 /* The bar across the top: 56px, a hairline under it, as the shell's header. */
 .topbar { background: var(--band); border-bottom: 1px solid var(--line); }
+/* With Pricing in it, the Spanish bar is about 385px wide: on a phone
+   narrower than that its links wrap under the lockup instead of overflowing
+   the page. */
 .nav {
-  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-  min-height: 3.5rem;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.25rem 1rem;
+  min-height: 3.5rem; padding-top: 0.5rem; padding-bottom: 0.5rem;
 }
 .nav ul { display: flex; align-items: center; gap: 1.25rem; margin: 0; padding: 0; list-style: none; font-size: 0.875rem; }
 .nav ul a { color: var(--secondary); text-decoration: none; border-radius: var(--radius-sm); }
@@ -522,9 +525,6 @@ img, video, svg { display: block; max-width: 100%; }
 }
 .key-form .btn { margin-top: 0.25rem; font-family: inherit; cursor: pointer; }
 
-/* With Pricing in it, the Spanish bar is about 385px wide: on a narrower
-   phone its links drop under the lockup instead of overflowing the page. */
-.nav { flex-wrap: wrap; row-gap: 0.25rem; padding-top: 0.5rem; padding-bottom: 0.5rem; }
 /* The notes under the resend form, at a reading measure. */
 .key-form ~ .more { max-width: 40rem; }
 .key-form ~ .more + .more { margin-top: 1rem; }
