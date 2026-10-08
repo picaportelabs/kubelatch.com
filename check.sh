@@ -59,20 +59,21 @@ for p in /agents /es/agents /pricing /es/pricing /terms /es/terms /privacy /es/p
 done
 ok "pages without the slash redirect to the page"
 
-# Buying, the trial and the customer portal are redirects to Stripe.
+# Buying, the trial and the customer portal are redirects to Stripe, or to a
+# mail to pro@kubelatch.com until the Stripe links exist.
 for pair in "/pro/buy/ https://buy.stripe.com/" "/pro/trial/ https://buy.stripe.com/" \
     "/pro/portal/ https://billing.stripe.com/"; do
     set -- $pair
     loc=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "$base$1" || true)
     case $loc in
-    "302 $2"*) ;;
-    *) bad "$1 answered '$loc', want 302 to $2…" ;;
+    "302 $2"* | "302 mailto:pro@kubelatch.com"*) ;;
+    *) bad "$1 answered '$loc', want 302 to $2… or to mailto:pro@kubelatch.com" ;;
     esac
     echo "$loc" >"$tmp/loc$(echo "$1" | tr '/' '_')"
 done
 # Buying and the trial are two different Payment Links.
 cmp -s "$tmp/loc_pro_buy_" "$tmp/loc_pro_trial_" && bad "/pro/buy/ and /pro/trial/ redirect to the same link"
-ok "/pro/buy/, /pro/trial/ and /pro/portal/ redirect to Stripe"
+ok "/pro/buy/, /pro/trial/ and /pro/portal/ redirect to Stripe or to pro@"
 
 # The key resend form posts the address and the page's language to the
 # licensing service.
