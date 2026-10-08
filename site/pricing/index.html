@@ -21,7 +21,7 @@
 <meta name="twitter:card" content="summary_large_image">
 </head>
 <body class="scheme-dark">
-<svg hidden><symbol id="mark" viewBox="0 0 48 48"><polygon class="s" points="15.50,12.80 24.26,17.02 26.42,26.49 20.36,34.09 10.64,34.09 4.58,26.49 6.74,17.02"/><path class="f" d="M16.22 20.95 L17.44 21.53 Q18.16 21.88 18.34 22.66 L18.64 23.98 Q18.81 24.76 18.32 25.38 L17.47 26.44 Q16.98 27.06 16.18 27.06 L14.82 27.06 Q14.02 27.06 13.53 26.44 L12.68 25.38 Q12.19 24.76 12.36 23.98 L12.66 22.66 Q12.84 21.88 13.56 21.53 L14.78 20.95 Q15.50 20.60 16.22 20.95 Z"/><rect class="a" x="25" y="21.5" width="19.5" height="5" rx="2.5"/><rect class="a" x="35" y="24" width="3.6" height="7.5" rx="1.8"/><rect class="a" x="40.9" y="24" width="3.6" height="5.8" rx="1.8"/></symbol></svg>
+<svg hidden><symbol id="mark" viewBox="0 0 48 48"><polygon class="s" points="15.50,12.80 24.26,17.02 26.42,26.49 20.36,34.09 10.64,34.09 4.58,26.49 6.74,17.02"/><path class="f" d="M16.22 20.95 L17.44 21.53 Q18.16 21.88 18.34 22.66 L18.64 23.98 Q18.81 24.76 18.32 25.38 L17.47 26.44 Q16.98 27.06 16.18 27.06 L14.82 27.06 Q14.02 27.06 13.53 26.44 L12.68 25.38 Q12.19 24.76 12.36 23.98 L12.66 22.66 Q12.84 21.88 13.56 21.53 L14.78 20.95 Q15.50 20.60 16.22 20.95 Z"/><rect class="a" x="25" y="21.5" width="19.5" height="5" rx="2.5"/><rect class="a" x="35" y="24" width="3.6" height="7.5" rx="1.8"/><rect class="a" x="40.9" y="24" width="3.6" height="5.8" rx="1.8"/></symbol><symbol id="check" viewBox="0 0 20 20"><path d="M4.5 10.5l3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol></svg>
 <a class="skip" href="#main">Skip to content</a>
 
 <header>
@@ -38,51 +38,55 @@
 </header>
 
 <main id="main" class="scheme-light">
-  <section class="wrap section" aria-labelledby="title">
-    <p class="kicker">// pricing</p>
+  <section class="wrap section pricing" aria-labelledby="title">
     <h1 id="title">Free for a small team. Pro when it grows.</h1>
     <p class="intro">Both editions are the same product: the proxy, the six system roles, the audit of every request, CI without secrets and AI agents. Free has limits; Pro lifts them, priced by seat, and adds custom roles.</p>
 
     <div class="plans">
-      <article class="card plan" aria-labelledby="free">
-        <div class="card-head"><h2 id="free">Free</h2><span class="mono">no key</span></div>
+      <article class="plan" aria-labelledby="free">
+        <h2 id="free">Free</h2>
+        <p class="tagline">For a small team, with no key.</p>
         <p class="price"><strong>€0</strong></p>
         <p class="price-note">No sign-up and no time limit.</p>
-        <ul>
-          <li>2 clusters</li>
-          <li>5 people</li>
-          <li>Audit of the last 24 hours</li>
-          <li>The six system roles</li>
-          <li>Everything else unlimited: bots, CI rules, AI agents, grants, credentials</li>
-        </ul>
-        <div class="actions">
-          <a class="btn btn-secondary" href="https://docs.kubelatch.com/operate/install/">Install</a>
+        <div class="plan-actions">
+          <a class="btn btn-secondary btn-block" href="https://docs.kubelatch.com/operate/install/">Install</a>
         </div>
+        <p class="includes">What is included</p>
+        <ul class="checks">
+          <li><svg class="check" aria-hidden="true"><use href="#check"/></svg>2 clusters</li>
+          <li><svg class="check" aria-hidden="true"><use href="#check"/></svg>5 people</li>
+          <li><svg class="check" aria-hidden="true"><use href="#check"/></svg>Audit of the last 24 hours</li>
+          <li><svg class="check" aria-hidden="true"><use href="#check"/></svg>The six system roles</li>
+          <li><svg class="check" aria-hidden="true"><use href="#check"/></svg>Bots, CI rules, AI agents, grants and credentials, unlimited</li>
+          <li><svg class="check" aria-hidden="true"><use href="#check"/></svg>Community support on GitHub Discussions</li>
+        </ul>
       </article>
 
-      <article class="card plan" aria-labelledby="pro">
-        <div class="card-head"><h2 id="pro">Pro</h2><span class="mono">per seat</span></div>
+      <article class="plan featured" aria-labelledby="pro">
+        <p class="badge">For growing teams</p>
+        <h2 id="pro">Pro</h2>
+        <p class="tagline">Per seat, billed yearly.</p>
         <p class="price"><strong>€15</strong> <span>per person per month</span></p>
-        <p class="price-note">Billed yearly: €180 per person per year, taxes excluded, minimum 5 people.</p>
-        <ul>
-          <li>Unlimited clusters</li>
-          <li>As many people as seats</li>
-          <li>Audit kept as long as you configure</li>
-          <li>Custom roles, on top of the six system roles</li>
-          <li>A license key verified offline, no telemetry</li>
-          <li>E-mail support in business hours, and guided upgrades</li>
-        </ul>
-        <div class="actions">
-          <a class="btn btn-primary" href="/pro/buy/">Buy Pro</a>
-          <a class="btn btn-secondary" href="/pro/trial/">Start a 30-day trial</a>
+        <p class="price-note">€180 per person per year, taxes excluded, minimum 5 people.</p>
+        <div class="plan-actions">
+          <a class="btn btn-primary btn-block" href="/pro/buy/">Buy Pro</a>
+          <a class="btn btn-secondary btn-block" href="/pro/trial/">Start a 30-day trial</a>
         </div>
         <p class="fine">No card. The trial ends on its own.</p>
+        <p class="includes">Everything in Free, plus</p>
+        <ul class="checks">
+          <li><svg class="check" aria-hidden="true"><use href="#check"/></svg>Unlimited clusters</li>
+          <li><svg class="check" aria-hidden="true"><use href="#check"/></svg>As many people as seats</li>
+          <li><svg class="check" aria-hidden="true"><use href="#check"/></svg>Audit kept as long as you configure</li>
+          <li><svg class="check" aria-hidden="true"><use href="#check"/></svg>Custom roles, on top of the six system roles</li>
+          <li><svg class="check" aria-hidden="true"><use href="#check"/></svg>A license key verified offline, no telemetry</li>
+          <li><svg class="check" aria-hidden="true"><use href="#check"/></svg>E-mail support in business hours, and guided upgrades</li>
+        </ul>
       </article>
     </div>
   </section>
 
   <section class="wrap section" aria-labelledby="compare">
-    <p class="kicker">// side by side</p>
     <h2 id="compare">What Pro changes, and what it does not.</h2>
     <div class="ways-wrap">
       <table class="ways">
@@ -104,8 +108,7 @@
   </section>
 
   <section class="wrap section" aria-labelledby="questions">
-    <p class="kicker">// questions</p>
-    <h2 id="questions">Before you buy.</h2>
+    <h2 id="questions">Questions before you buy.</h2>
     <div class="faq">
       <div>
         <h3>What counts as a person?</h3>
@@ -132,10 +135,6 @@
         <p>The first ten teams get 50% off their first year. Write to <a href="mailto:pro@kubelatch.com">pro@kubelatch.com</a> for the code.</p>
       </div>
       <div>
-        <h3>Purchase order, SLA, or more than 200 people?</h3>
-        <p>Write to <a href="mailto:pro@kubelatch.com">pro@kubelatch.com</a> and we will work it out with you.</p>
-      </div>
-      <div>
         <h3>Lost your key?</h3>
         <p><a href="/pro/key/">Have it sent again</a> to the address you bought with.</p>
       </div>
@@ -146,6 +145,17 @@
     </div>
   </section>
 </main>
+
+<section class="band closing" aria-labelledby="closing">
+  <div class="wrap">
+    <svg class="mark" aria-hidden="true"><use href="#mark"/></svg>
+    <h2 id="closing">Purchase order, SLA, or more than 200 people?</h2>
+    <p class="closing-copy">Write to us and we will work it out with you.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="mailto:pro@kubelatch.com">Write to pro@kubelatch.com</a>
+    </div>
+  </div>
+</section>
 
 <footer class="wrap footer">
   <a class="lockup" href="/"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg>kubelatch</a>

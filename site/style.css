@@ -484,23 +484,46 @@ img, video, svg { display: block; max-width: 100%; }
   text-wrap: pretty;
 }
 
-/* /pricing/: the two plans as cards side by side, each a head, the price, a
-   list that takes the slack, and its buttons at the foot. */
-.plans { display: grid; gap: 1.5rem; margin-top: 3rem; }
-@media (min-width: 900px) { .plans { grid-template-columns: 1fr 1fr; } }
-.section .plan .card-head h2 {
-  margin: 0; max-width: none;
-  font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; letter-spacing: -0.01em;
+/* /pricing/: a centred title, the two plans as equal cards (Pro ringed in
+   cobalt with a badge), the price and its buttons first, then the list with
+   drawn check marks. */
+.pricing { text-align: center; }
+.section.pricing h1 { margin-left: auto; margin-right: auto; text-wrap: balance; }
+.pricing .intro { margin-left: auto; margin-right: auto; text-wrap: pretty; }
+.plans { display: grid; gap: 1.5rem; margin: 3.5rem auto 0; max-width: 54rem; text-align: left; }
+@media (min-width: 820px) { .plans { grid-template-columns: 1fr 1fr; gap: 2rem; } }
+.plan {
+  position: relative; display: flex; flex-direction: column;
+  padding: 2rem; min-width: 0;
+  background: var(--sheet); border: 1px solid var(--line); border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
 }
-.price { margin: 0; padding: 1.5rem 1.5rem 0; color: var(--secondary); }
-.price strong {
-  margin-right: 0.25rem; color: var(--ink);
-  font-size: clamp(2.25rem, 1.9rem + 1.2vw, 2.75rem); line-height: 1.1; letter-spacing: -0.04em; font-weight: 800;
+.plan.featured { border-color: var(--brand); box-shadow: 0 0 0 1px var(--brand), var(--shadow-sm); }
+.plan .badge {
+  position: absolute; top: 0; left: 2rem; transform: translateY(-50%);
+  margin: 0; padding: 0.125rem 0.75rem; border-radius: 999px;
+  background: var(--brand); color: var(--on-brand);
+  font-size: 0.75rem; line-height: 1.25rem; font-weight: 600; letter-spacing: 0.01em;
 }
-.price-note { margin: 0.5rem 0 0; padding: 0 1.5rem; font-size: 0.875rem; color: var(--muted); }
-.plan ul { flex: 1; align-content: start; }
-.plan .actions { margin: 0; padding: 0 1.5rem 1.5rem; justify-content: flex-start; }
-.plan .fine { margin: -0.75rem 0 0; padding: 0 1.5rem 1.5rem; font-size: 0.875rem; color: var(--muted); }
+.section .plan h2 { margin: 0; max-width: none; font-size: 1.5rem; line-height: 2rem; font-weight: 600; letter-spacing: -0.01em; }
+.plan .tagline { margin: 0.25rem 0 0; color: var(--secondary); font-size: 0.9375rem; line-height: 1.5rem; }
+.plan .price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 0.5rem; margin: 1.5rem 0 0; padding: 0; color: var(--secondary); }
+.plan .price strong {
+  margin: 0; color: var(--ink); font-variant-numeric: tabular-nums;
+  font-size: clamp(2.5rem, 2rem + 1.5vw, 3rem); line-height: 1.1; letter-spacing: -0.04em; font-weight: 800;
+}
+.plan .price-note { margin: 0.5rem 0 0; padding: 0; min-height: 2.625rem; font-size: 0.875rem; line-height: 1.3125rem; color: var(--muted); text-wrap: pretty; }
+.plan-actions { display: grid; gap: 0.625rem; margin-top: 1.5rem; }
+.btn-block { justify-content: center; width: 100%; box-sizing: border-box; }
+.plan .fine { margin: 0.625rem 0 0; padding: 0; font-size: 0.8125rem; line-height: 1.25rem; color: var(--muted); text-align: center; }
+.plan .includes {
+  margin: 1.75rem 0 0; padding-top: 1.5rem; border-top: 1px solid var(--line);
+  font-size: 0.75rem; line-height: 1.25rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted);
+}
+.checks { margin: 0.875rem 0 0; padding: 0; list-style: none; display: grid; gap: 0.625rem; color: var(--secondary); line-height: 1.5rem; }
+.checks li { display: flex; align-items: flex-start; gap: 0.625rem; }
+.check { flex: none; width: 1.25rem; height: 1.25rem; margin-top: 0.125rem; color: var(--success); }
+.closing-copy { margin: 1rem auto 0; max-width: 36rem; color: var(--secondary); font-size: 1.125rem; line-height: 1.6; }
 
 /* The questions: heading and answer pairs, two columns on a wide screen. */
 .faq { display: grid; gap: 2rem; margin-top: 3rem; }
