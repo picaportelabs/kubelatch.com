@@ -512,7 +512,7 @@ img, video, svg { display: block; max-width: 100%; }
   margin: 0; color: var(--ink); font-variant-numeric: tabular-nums;
   font-size: clamp(2.5rem, 2rem + 1.5vw, 3rem); line-height: 1.1; letter-spacing: -0.04em; font-weight: 800;
 }
-.plan .price-note { margin: 0.5rem 0 0; padding: 0; min-height: 2.625rem; font-size: 0.875rem; line-height: 1.3125rem; color: var(--muted); text-wrap: pretty; }
+.plan .price-note { margin: 0.5rem 0 0; padding: 0; min-height: 3.9375rem; font-size: 0.875rem; line-height: 1.3125rem; color: var(--muted); text-wrap: pretty; }
 .plan-actions { display: grid; gap: 0.625rem; margin-top: 1.5rem; }
 .btn-block { justify-content: center; width: 100%; box-sizing: border-box; }
 .plan .fine { margin: 0.625rem 0 0; padding: 0; font-size: 0.8125rem; line-height: 1.25rem; color: var(--muted); text-align: center; }
