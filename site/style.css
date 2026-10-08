@@ -470,3 +470,61 @@ img, video, svg { display: block; max-width: 100%; }
    poster; this link lets those visitors open the video on purpose. */
 .film-link { display: none; }
 @media (prefers-reduced-motion: reduce) { .film-link { display: inline; } }
+
+/* ---- Commercial pages ----------------------------------------------------- */
+
+/* The home's line under the hero's buttons: the Free limits and the way to
+   /pricing/, quieter than the lead. */
+.free-line {
+  margin: 1rem auto 0; max-width: 40rem;
+  font-size: 0.9375rem; line-height: 1.5rem; color: var(--secondary);
+  text-wrap: pretty;
+}
+
+/* /pricing/: the two plans as cards side by side, each a head, the price, a
+   list that takes the slack, and its buttons at the foot. */
+.plans { display: grid; gap: 1.5rem; margin-top: 3rem; }
+@media (min-width: 900px) { .plans { grid-template-columns: 1fr 1fr; } }
+.section .plan .card-head h2 {
+  margin: 0; max-width: none;
+  font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; letter-spacing: -0.01em;
+}
+.price { margin: 0; padding: 1.5rem 1.5rem 0; color: var(--secondary); }
+.price strong {
+  margin-right: 0.25rem; color: var(--ink);
+  font-size: clamp(2.25rem, 1.9rem + 1.2vw, 2.75rem); line-height: 1.1; letter-spacing: -0.04em; font-weight: 800;
+}
+.price-note { margin: 0.5rem 0 0; padding: 0 1.5rem; font-size: 0.875rem; color: var(--muted); }
+.plan ul { flex: 1; align-content: start; }
+.plan .actions { margin: 0; padding: 0 1.5rem 1.5rem; justify-content: flex-start; }
+.plan .fine { margin: -0.75rem 0 0; padding: 0 1.5rem 1.5rem; font-size: 0.875rem; color: var(--muted); }
+
+/* The questions: heading and answer pairs, two columns on a wide screen. */
+.faq { display: grid; gap: 2rem; margin-top: 3rem; }
+@media (min-width: 900px) { .faq { grid-template-columns: 1fr 1fr; gap: 2.5rem 4rem; } }
+.faq h3 { margin: 0; font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; letter-spacing: -0.01em; }
+.faq p { margin: 0.5rem 0 0; max-width: 36rem; color: var(--secondary); }
+
+/* /pro/thanks/: the three steps carry h2s under the page's h1. */
+.section .steps h2 {
+  margin: 1rem 0 0; max-width: none;
+  font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; letter-spacing: -0.01em;
+}
+
+/* /pro/key/: the resend form, a single column. */
+.key-form { display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; max-width: 28rem; margin-top: 2.5rem; }
+.key-form label { font-weight: 500; }
+.key-form input[type="email"] {
+  width: 100%;
+  border: 1px solid var(--line-strong); border-radius: 0.5rem;
+  padding: 0.625rem 0.75rem; font: inherit;
+  background: var(--paper); color: inherit;
+}
+.key-form .btn { margin-top: 0.25rem; font-family: inherit; cursor: pointer; }
+
+/* With Pricing in it, the Spanish bar is about 385px wide: on a narrower
+   phone its links drop under the lockup instead of overflowing the page. */
+.nav { flex-wrap: wrap; row-gap: 0.25rem; padding-top: 0.5rem; padding-bottom: 0.5rem; }
+/* The notes under the resend form, at a reading measure. */
+.key-form ~ .more { max-width: 40rem; }
+.key-form ~ .more + .more { margin-top: 1rem; }

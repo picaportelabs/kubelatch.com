@@ -2,9 +2,10 @@
 # Smoke test of the landing site as served (local image or production):
 #   landing/check.sh http://127.0.0.1:3001
 #   landing/check.sh https://kubelatch.com
-# Checks status codes, languages, custom 404s, security headers on every kind
-# of response, that every link and asset of the four pages answers 200 (docs
-# links included) and that the stylesheet's font is served from the site.
+# Checks status codes, languages, custom 404s, redirects, security headers on
+# every kind of response, that every link and asset of the pages answers 200
+# (docs links included) and that the stylesheet's font is served from the
+# site.
 # DOCS_URL=http://127.0.0.1:3002 checks the docs links against a local docs
 # image (make docs-image) instead of docs.kubelatch.com, for pages not
 # deployed yet.
@@ -21,13 +22,20 @@ trap 'rm -rf "$tmp"' EXIT
 bad() { echo "FAIL: $*"; fail=1; }
 ok() { echo "ok:   $*"; }
 
+# Every page of the site, "PATH LANG", one per |.
+pages="/ en|/es/ es|/agents/ en|/es/agents/ es|/pricing/ en|/es/pricing/ es|/pro/thanks/ en|/es/pro/thanks/ es|/pro/key/ en|/es/pro/key/ es|/pro/key/sent/ en|/es/pro/key/sent/ es|/terms/ en|/es/terms/ es|/privacy/ en|/es/privacy/ es|/security/ en|/es/security/ es"
+echo "$pages" | tr '|' '\n' >"$tmp/pages"
+
+# Where page PATH is saved: / is _.html, /es/agents/ is _es_agents_.html.
+saved() { echo "$tmp/$(echo "$1" | tr '/' '_').html"; }
+
 # A refused connection or a DNS failure reads as status 000, never as a
 # silent exit through set -e.
 status() { curl -s -o /dev/null -w '%{http_code}' "$1" || true; }
 
 # page PATH LANG: 200, HTML, the right lang, saved for the link check.
 page() {
-    out="$tmp/$(echo "$1" | tr '/' '_').html"
+    out=$(saved "$1")
     code=$(curl -s -o "$out" -D "$out.h" -w '%{http_code}' "$base$1" || true)
     [ "$code" = 200 ] || { bad "$1 answered $code"; return; }
     grep -qi '^content-type: text/html' "$out.h" || bad "$1 is not text/html"
@@ -36,22 +44,34 @@ page() {
     ok "$1 ($2)"
 }
 
-page / en
-page /es/ es
-page /agents/ en
-page /es/agents/ es
+while read -r p lang <&3; do
+    page "$p" "$lang"
+done 3<"$tmp/pages"
 
-# /agents without the slash is a redirect to the page, not a 404.
-for p in /agents /es/agents; do
+# A page without the slash is a redirect to the page, not a 404.
+for p in /agents /es/agents /pricing /es/pricing /terms /es/terms /privacy /es/privacy \
+    /security /es/security /pro/key /es/pro/key; do
     loc=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "$base$p" || true)
     case $loc in
     "301 $base$p/"|"301 $p/") ;;
     *) bad "$p answered '$loc', want 301 to $p/" ;;
     esac
 done
-ok "/agents redirects to /agents/"
+ok "pages without the slash redirect to the page"
 
-for pair in "/nope en" "/es/nope es"; do
+# Buying, the trial and the customer portal are redirects to Stripe.
+for pair in "/pro/buy/ https://buy.stripe.com/" "/pro/trial/ https://buy.stripe.com/" \
+    "/pro/portal/ https://billing.stripe.com/"; do
+    set -- $pair
+    loc=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "$base$1" || true)
+    case $loc in
+    "302 $2"*) ;;
+    *) bad "$1 answered '$loc', want 302 to $2…" ;;
+    esac
+done
+ok "/pro/buy/, /pro/trial/ and /pro/portal/ redirect to Stripe"
+
+for pair in "/nope en" "/es/nope es" "/es/pro/key/nope es"; do
     set -- $pair
     code=$(curl -s -o "$tmp/404" -w '%{http_code}' "$base$1" || true)
     [ "$code" = 404 ] || bad "$1 answered $code, want 404"
@@ -60,34 +80,46 @@ done
 ok "custom 404 pages"
 
 # Every kind of response carries the same headers: nginx drops the
-# server-level add_header in any location that declares its own.
+# server-level add_header in any location that declares its own. The pages
+# with the key resend form allow posting it to the licensing service.
 csp="default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+csp_form="default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; media-src 'self'; base-uri 'none'; form-action https://licensing.kubelatch.com; frame-ancestors 'none'"
 # The posters of the home page (the cover) and of /agents/ (the agents
 # video). Unquoted below, so each is checked on its own.
-posters=$(grep -ohE 'poster="[^"]*"' "$tmp/_.html" "$tmp/_agents_.html" | sed -E 's/^poster="//; s/"$//')
+posters=$(grep -ohE 'poster="[^"]*"' "$(saved /)" "$(saved /agents/)" | sed -E 's/^poster="//; s/"$//')
 font=/fonts/InterVariable.woff2
-for p in / /es/ /agents/ /nope /style.css $posters "$font"; do
+for p in $(cut -d' ' -f1 "$tmp/pages") /nope /pro/buy/ /style.css $posters "$font"; do
     curl -s -o /dev/null -D "$tmp/h" "$base$p" || true
     for want in 'x-content-type-options: nosniff' 'referrer-policy: strict-origin-when-cross-origin' \
         'x-frame-options: DENY' 'strict-transport-security: max-age=31536000'; do
         grep -qi "^$want" "$tmp/h" || bad "$p: missing header $want"
     done
+    case $p in
+    /pro/key/|/es/pro/key/) want=$csp_form ;;
+    *) want=$csp ;;
+    esac
     got=$(grep -i '^content-security-policy:' "$tmp/h" | sed -E 's/^[^:]*: //' | tr -d '\r')
-    [ "$got" = "$csp" ] || bad "$p: content-security-policy is '$got'"
+    [ "$got" = "$want" ] || bad "$p: content-security-policy is '$got'"
     [ "$(grep -ci '^cache-control:' "$tmp/h")" -le 1 ] || bad "$p: more than one Cache-Control header"
 done
 ok "security headers"
 
-# Every href/src/poster/content target in the four pages. Relative ones resolve
-# against the page; absolute ones must be kubelatch.com or docs.kubelatch.com.
+# Every href/src/poster/content target in the pages. Relative ones resolve
+# against the page; absolute ones must be kubelatch.com or docs.kubelatch.com,
+# except the source repository and Stripe, allowed without being fetched. A
+# form's action= is none of these attributes, so it is not followed.
 links() {
     grep -oE '(href|src|poster|content)="[^"]*"' "$1" | sed -E 's/^[a-z]+="//; s/"$//' |
         grep -vE '^(#|mailto:|data:)' | grep -E '^(/|\.|[a-z0-9_-]+(/|\.)|https?://)' || true
 }
-for pair in "/ _.html" "/es/ _es_.html" "/agents/ _agents_.html" "/es/agents/ _es_agents_.html"; do
-    set -- $pair
-    for l in $(links "$tmp/$2" | sort -u); do
+while read -r p lang <&3; do
+    set -- "$p"
+    for l in $(links "$(saved "$1")" | sort -u); do
         case $l in
+        https://github.com/picaportelabs/kubelatch|https://github.com/picaportelabs/kubelatch/*) continue ;;
+        https://buy.stripe.com/*|https://billing.stripe.com/*) continue ;;
+        # The redirects to Stripe, checked above.
+        /pro/buy/|/pro/trial/|/pro/portal/) continue ;;
         https://kubelatch.com/*) url=$base${l#https://kubelatch.com} ;;
         http*://*) url=$l ;;
         /*) url=$base$l ;;
@@ -114,7 +146,7 @@ for pair in "/ _.html" "/es/ _es_.html" "/agents/ _agents_.html" "/es/agents/ _e
             ;;
         esac
     done
-done
+done 3<"$tmp/pages"
 ok "links and assets"
 
 # The stylesheet loads nothing from another origin, and every file it names
