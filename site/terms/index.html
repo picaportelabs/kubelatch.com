@@ -58,7 +58,7 @@
         <li><strong>“Free edition”</strong> means the Software used without a valid License Key, within the limits set out in section 2(b).</li>
         <li><strong>“Pro edition”</strong> means the Software used with a valid License Key, which lifts the limits of the Free edition for the Seats and the term that the License Key states.</li>
         <li><strong>“License Key”</strong> means a token signed by the Licensor that identifies the Licensee and states its number of Seats, its expiry date and whether it is a trial.</li>
-        <li><strong>“Seats”</strong> means the number of people that a License Key allows to be enabled at the same time, counted as distinct people across all the Instances in which the License Key is installed. Every enabled person counts, administrators and break-glass accounts included; automated identities (bots) do not.</li>
+        <li><strong>“Seats”</strong> means the number of people that a License Key allows to be enabled at the same time, counted as distinct people across all the Instances in which the same License Key is installed. Every enabled person counts, administrators and break-glass accounts included; automated identities (bots) do not.</li>
         <li><strong>“Licensee”</strong> means the natural or legal person that accepts this Agreement. Where the Licensee is an organisation, its employees and contractors may use the Software on its behalf, and the Licensee is responsible for their compliance with this Agreement.</li>
         <li><strong>“Instance”</strong> means one deployment of the kubelatch server, with its own database, together with the Kubernetes clusters registered in it.</li>
         <li><strong>“Pro Subscription Terms”</strong> means the terms that section 5 refers to.</li>
@@ -77,7 +77,7 @@
         <li>host the Software, or offer access to it, as a service for third parties;</li>
         <li>reverse engineer, decompile or disassemble the Software, or attempt to derive its source code, except to the extent that applicable law expressly allows it despite this restriction;</li>
         <li>remove, alter or obscure any notice of copyright, trademark or license in the Software;</li>
-        <li>circumvent, disable or modify the limits of the Free edition or the verification of License Keys, including by modifying the Software or by splitting the same people or clusters across several Instances in order to exceed those limits;</li>
+        <li>circumvent, disable or modify the limits of the Free edition or the verification of License Keys, including by modifying the Software;</li>
         <li>share a License Key with any third party, or install it in any Instance other than the Licensee’s own;</li>
         <li>use the Software in breach of applicable law.</li>
       </ol>
@@ -85,7 +85,7 @@
       <ol class="plain" type="a">
         <li>The Software verifies a License Key offline, against public keys built into it. The verification calls no service of the Licensor and sends no data.</li>
         <li>A License Key carries the Licensee’s name and e-mail address, an identifier, the number of Seats, the expiry date and whether it is a trial. A trial License Key gives the Pro edition for 30 days, without a limit on Seats and without a grace period after it expires.</li>
-        <li>If more people are enabled than the Seats allow, the Licensee shall, within 30 days, extend its Seats or disable people. After those 30 days, the Software stops new people from being added until the enabled people fit the Seats again.</li>
+        <li>The Software enforces the Seats in each Instance: if more people are enabled in an Instance than the Seats allow, then after 30 days of grace the Software stops new people from being added in that Instance until the enabled people fit the Seats again. The Licensee shall keep within the Seats the total number of distinct people enabled across all its Instances in which the same License Key is installed and, when it needs more, shall add Seats through the customer portal that the Pro Subscription Terms describe.</li>
         <li>When a paid License Key expires, the Pro edition continues for a grace period of 30 days.</li>
         <li>After the grace period, or when a trial ends, the Instance returns to the limits of the Free edition for new registrations only. Nothing that exists is removed or cut: access through the proxy, grants, credentials, clusters, people and the custom roles already created keep working, and custom roles can only be deleted. Audit records older than 24 hours are kept according to the Licensee’s configured retention, but are not served until a valid License Key is installed again.</li>
         <li>The Licensor commits to the Licensee that:
@@ -152,7 +152,7 @@
     <h2 id="pro">Pro subscription terms</h2>
     <p class="updated">Version 1.0, October 2026</p>
     <div class="legal">
-      <p>These Pro Subscription Terms govern subscriptions to the Pro edition of kubelatch that the Customer buys from Picaporte Labs, Spain (“Picaporte Labs”). They form part of the End User License Agreement above, whose defined terms they use. The “Customer” is the Licensee that buys a subscription.</p>
+      <p>These Pro Subscription Terms govern subscriptions to the Pro edition of kubelatch, and trials of it, that the Customer obtains from Picaporte Labs, Spain (“Picaporte Labs”). They form part of the End User License Agreement above, whose defined terms they use. The “Customer” is the Licensee that buys a subscription or starts a trial.</p>
       <h3 id="pro-1">1. Business customers only</h3>
       <p>Pro subscriptions are sold only to businesses, professionals and public bodies, for the purposes of their trade or activity, and not to consumers. By buying one, the Customer confirms that it does not act as a consumer. For that reason, the right of withdrawal that consumer law grants does not apply.</p>
       <h3 id="pro-2">2. Subscription and price</h3>

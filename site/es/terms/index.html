@@ -59,7 +59,7 @@
         <li><strong>«Edición Free»</strong>: el Software usado sin una Clave de Licencia válida, dentro de los límites del apartado 2(b).</li>
         <li><strong>«Edición Pro»</strong>: el Software usado con una Clave de Licencia válida, que levanta los límites de la Edición Free para las Plazas y el plazo que la Clave de Licencia indica.</li>
         <li><strong>«Clave de Licencia»</strong>: un token firmado por el Licenciante que identifica al Licenciatario e indica su número de Plazas, su fecha de caducidad y si es de prueba.</li>
-        <li><strong>«Plazas»</strong>: el número de personas que una Clave de Licencia permite tener habilitadas a la vez, contadas como personas distintas en el conjunto de las Instancias en las que la Clave de Licencia está instalada. Cuenta cada persona habilitada, incluidos los administradores y las cuentas de emergencia (break-glass); las identidades automatizadas (bots) no cuentan.</li>
+        <li><strong>«Plazas»</strong>: el número de personas que una Clave de Licencia permite tener habilitadas a la vez, contadas como personas distintas en el conjunto de las Instancias en las que está instalada la misma Clave de Licencia. Cuenta cada persona habilitada, incluidos los administradores y las cuentas de emergencia (break-glass); las identidades automatizadas (bots) no cuentan.</li>
         <li><strong>«Licenciatario»</strong>: la persona física o jurídica que acepta este Acuerdo. Cuando el Licenciatario es una organización, sus empleados y colaboradores pueden usar el Software en su nombre, y el Licenciatario responde de que cumplan este Acuerdo.</li>
         <li><strong>«Instancia»</strong>: un despliegue del servidor de kubelatch, con su propia base de datos, junto con los clusters de Kubernetes registrados en él.</li>
         <li><strong>«Condiciones de la Suscripción Pro»</strong>: las condiciones a las que se refiere el apartado 5.</li>
@@ -78,7 +78,7 @@
         <li>alojar el Software, u ofrecer acceso a él, como servicio para terceros;</li>
         <li>aplicar ingeniería inversa, descompilar o desensamblar el Software, ni intentar obtener su código fuente, salvo en la medida en que la ley aplicable lo permita expresamente pese a esta restricción;</li>
         <li>eliminar, alterar u ocultar ningún aviso de derechos de autor, marca o licencia del Software;</li>
-        <li>eludir, desactivar o modificar los límites de la Edición Free o la verificación de las Claves de Licencia, incluso modificando el Software o repartiendo las mismas personas o clusters entre varias Instancias para superar esos límites;</li>
+        <li>eludir, desactivar o modificar los límites de la Edición Free o la verificación de las Claves de Licencia, incluso modificando el Software;</li>
         <li>compartir una Clave de Licencia con terceros, ni instalarla en una Instancia que no sea del propio Licenciatario;</li>
         <li>usar el Software infringiendo la ley aplicable.</li>
       </ol>
@@ -86,7 +86,7 @@
       <ol class="plain" type="a">
         <li>El Software verifica una Clave de Licencia sin conexión, contra claves públicas incluidas en él. La verificación no llama a ningún servicio del Licenciante ni envía ningún dato.</li>
         <li>Una Clave de Licencia contiene el nombre y la dirección de correo electrónico del Licenciatario, un identificador, el número de Plazas, la fecha de caducidad y si es de prueba. Una Clave de Licencia de prueba da la Edición Pro durante 30 días, sin límite de Plazas y sin periodo de gracia al caducar.</li>
-        <li>Si hay más personas habilitadas de las que permiten las Plazas, el Licenciatario deberá, en un plazo de 30 días, ampliar sus Plazas o deshabilitar personas. Pasados esos 30 días, el Software impide añadir personas nuevas hasta que las personas habilitadas vuelvan a caber en las Plazas.</li>
+        <li>El Software aplica las Plazas en cada Instancia: si en una Instancia hay más personas habilitadas de las que permiten las Plazas, pasados 30 días de gracia el Software impide añadir personas nuevas en esa Instancia hasta que las personas habilitadas vuelvan a caber en las Plazas. El Licenciatario deberá mantener dentro de las Plazas el número total de personas distintas habilitadas en el conjunto de sus Instancias en las que está instalada la misma Clave de Licencia y, cuando necesite más, ampliar sus Plazas desde el portal de cliente que describen las Condiciones de la Suscripción Pro.</li>
         <li>Cuando caduca una Clave de Licencia de pago, la Edición Pro continúa durante un periodo de gracia de 30 días.</li>
         <li>Tras el periodo de gracia, o al acabar una prueba, la Instancia vuelve a los límites de la Edición Free solo para las altas nuevas. Nada de lo que existe se elimina ni se corta: el acceso a través del proxy, los permisos, las credenciales, los clusters, las personas y los roles personalizados ya creados siguen funcionando, y los roles personalizados solo pueden borrarse. Los registros de auditoría de más de 24 horas se conservan según la retención configurada por el Licenciatario, pero no se sirven hasta que se vuelva a instalar una Clave de Licencia válida.</li>
         <li>El Licenciante se compromete con el Licenciatario a que:
@@ -153,7 +153,7 @@
     <h2 id="pro">Condiciones de la suscripción Pro</h2>
     <p class="updated">Versión 1.0, octubre de 2026</p>
     <div class="legal">
-      <p>Estas Condiciones de la Suscripción Pro rigen las suscripciones a la edición Pro de kubelatch que el Cliente compra a Picaporte Labs, España («Picaporte Labs»). Forman parte del Acuerdo de Licencia de Usuario Final anterior, cuyos términos definidos usan. El «Cliente» es el Licenciatario que compra una suscripción.</p>
+      <p>Estas Condiciones de la Suscripción Pro rigen las suscripciones a la edición Pro de kubelatch, y sus pruebas, que el Cliente obtiene de Picaporte Labs, España («Picaporte Labs»). Forman parte del Acuerdo de Licencia de Usuario Final anterior, cuyos términos definidos usan. El «Cliente» es el Licenciatario que compra una suscripción o empieza una prueba.</p>
       <h3 id="pro-1">1. Solo clientes profesionales</h3>
       <p>Las suscripciones Pro se venden solo a empresas, profesionales y organismos públicos, para los fines de su actividad empresarial o profesional, y no a consumidores. Al comprar una, el Cliente confirma que no actúa como consumidor. Por eso no se aplica el derecho de desistimiento que la normativa de consumo concede.</p>
       <h3 id="pro-2">2. Suscripción y precio</h3>
