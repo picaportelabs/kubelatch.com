@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seguridad · kubelatch</title>
+<meta name="description" content="Cómo informar de una vulnerabilidad en kubelatch, qué está en el alcance, cómo está hecho kubelatch para ser seguro y cómo se puede revisar su código.">
+<link rel="canonical" href="https://kubelatch.com/es/security/">
+<link rel="alternate" hreflang="en" href="https://kubelatch.com/security/">
+<link rel="alternate" hreflang="es" href="https://kubelatch.com/es/security/">
+<link rel="alternate" hreflang="x-default" href="https://kubelatch.com/security/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/style.css">
+<meta name="theme-color" content="#080f1c">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kubelatch.com/es/security/">
+<meta property="og:title" content="Seguridad · kubelatch">
+<meta property="og:description" content="Informa de una vulnerabilidad a security@kubelatch.com: acuse de recibo en 3 días laborables y divulgación coordinada contigo.">
+<meta property="og:locale" content="es_ES">
+</head>
+<body class="scheme-dark">
+<svg hidden><symbol id="mark" viewBox="0 0 48 48"><polygon class="s" points="15.50,12.80 24.26,17.02 26.42,26.49 20.36,34.09 10.64,34.09 4.58,26.49 6.74,17.02"/><path class="f" d="M16.22 20.95 L17.44 21.53 Q18.16 21.88 18.34 22.66 L18.64 23.98 Q18.81 24.76 18.32 25.38 L17.47 26.44 Q16.98 27.06 16.18 27.06 L14.82 27.06 Q14.02 27.06 13.53 26.44 L12.68 25.38 Q12.19 24.76 12.36 23.98 L12.66 22.66 Q12.84 21.88 13.56 21.53 L14.78 20.95 Q15.50 20.60 16.22 20.95 Z"/><rect class="a" x="25" y="21.5" width="19.5" height="5" rx="2.5"/><rect class="a" x="35" y="24" width="3.6" height="7.5" rx="1.8"/><rect class="a" x="40.9" y="24" width="3.6" height="5.8" rx="1.8"/></symbol></svg>
+<a class="skip" href="#main">Saltar al contenido</a>
+
+<header>
+  <div class="topbar">
+    <nav class="wrap nav" aria-label="Principal">
+      <a class="lockup" href="/es/"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg>kubelatch</a>
+      <ul>
+        <li><a href="https://docs.kubelatch.com/es/concepts/security/">Documentación</a></li>
+        <li class="lang"><a href="/security/" hreflang="en" lang="en">EN</a><span aria-hidden="true">·</span><a href="/es/security/" aria-current="page" hreflang="es" lang="es">ES</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="scheme-light">
+  <section class="wrap section" aria-labelledby="title">
+    <p class="kicker">// seguridad</p>
+    <h1 id="title">Seguridad</h1>
+    <p class="updated">Última actualización: octubre de 2026</p>
+    <p class="intro">kubelatch está entre las personas y sus clusters, así que un fallo en él suele ser un fallo de seguridad. Si encuentras uno, avísanos primero; lo arreglaremos y lo diremos en público, mencionándote.</p>
+    <div class="legal">
+      <h2 id="report">Informa de una vulnerabilidad</h2>
+      <p>Escribe a <a href="mailto:security@kubelatch.com">security@kubelatch.com</a>, y no en una issue ni en una discusión públicas. Incluye:</p>
+      <ul class="plain">
+        <li>la versión de kubelatch, o la dirección del sitio, afectada;</li>
+        <li>en qué consiste la vulnerabilidad y qué podría hacer con ella un atacante;</li>
+        <li>los pasos para reproducirla, y una prueba de concepto si la tienes;</li>
+        <li>cómo quieres que te mencionemos, si quieres.</li>
+      </ul>
+      <p>No envíes datos personales reales ni credenciales de nadie más. Si necesitas un canal cifrado, dilo en tu primer correo y acordaremos uno.</p>
+      <h2 id="process">Qué pasa después</h2>
+      <ul class="plain">
+        <li>Acusamos recibo de tu informe en un plazo de 3 días laborables.</li>
+        <li>Confirmamos el problema, te decimos qué gravedad le vemos y te mantenemos al tanto mientras lo arreglamos.</li>
+        <li>El arreglo sale en una versión nueva, con una nota en sus notas de versión, y te mencionamos en ella si quieres.</li>
+        <li>Te pedimos que mantengas los detalles en privado hasta que se publique el arreglo o pasen 90 días desde tu informe, lo que ocurra antes. Si necesitamos más tiempo, te diremos por qué y acordaremos contigo una fecha.</li>
+      </ul>
+      <p>Hoy no hay un programa de recompensas (bug bounty) de pago.</p>
+      <h2 id="safe-harbour">Investigación de buena fe</h2>
+      <p>No emprenderemos acciones legales contra una investigación que siga esta política: pruebas dentro del alcance de abajo, sin acceder ni cambiar datos de otras personas más allá de lo que demuestra el problema, sin degradar ningún servicio, y con un aviso rápido a nosotros. Si dudas de si algo está en el alcance, pregúntanos antes.</p>
+      <h2 id="scope">Alcance</h2>
+      <ul class="plain">
+        <li>El software de kubelatch: el servidor, el cliente de línea de comandos, la imagen de contenedor, el chart de Helm y los plugins.</li>
+        <li>kubelatch.com, docs.kubelatch.com y licensing.kubelatch.com.</li>
+      </ul>
+      <p>Fuera del alcance:</p>
+      <ul class="plain">
+        <li>denegación de servicio y pruebas de carga;</li>
+        <li>ingeniería social, phishing o ataques físicos contra personas de Picaporte Labs o de nuestros clientes;</li>
+        <li>las instancias de kubelatch de nuestros clientes: prueba tu propia instalación. Una vulnerabilidad del software que encuentres en tu propia instancia sí está en el alcance.</li>
+      </ul>
+      <h2 id="design">Cómo está hecho kubelatch para ser seguro</h2>
+      <p>El <a href="https://docs.kubelatch.com/es/concepts/security/">modelo de seguridad</a> de la documentación dice qué garantiza kubelatch, qué no y en qué se apoya cada garantía. En resumen:</p>
+      <ul class="plain">
+        <li>Un único proxy que suplanta identidades: las personas, el CI y los agentes de IA llegan a los clusters a través de kubelatch, cada uno con su propia credencial, que caduca y se puede revocar al momento, y el cluster ve a la persona real.</li>
+        <li>Cada petición queda auditada, con una fila escrita antes de que llegue al cluster.</li>
+        <li>La clave de licencia se verifica sin conexión, y kubelatch no llama a ningún servicio de Picaporte Labs: no hay telemetría.</li>
+        <li>La imagen es distroless y se ejecuta con un usuario sin privilegios de root, sin shell y sin nada más que el binario.</li>
+      </ul>
+      <h2 id="review">Revisión externa</h2>
+      <p>Un cliente actual o potencial puede revisar el código fuente bajo un acuerdo de confidencialidad; escribe a <a href="mailto:pro@kubelatch.com">pro@kubelatch.com</a>. Está prevista una prueba de penetración externa, y su resumen se publicará en esta página.</p>
+      <h2 id="versions">Versiones con soporte</h2>
+      <p>Los arreglos de seguridad salen en la última versión de kubelatch, y solo la última versión tiene soporte. Mantén tu instalación al día.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap footer">
+  <a class="lockup" href="/es/"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg>kubelatch</a>
+  <ul>
+    <li><a href="https://docs.kubelatch.com/es/">Documentación</a></li>
+    <li><a href="https://docs.kubelatch.com/es/concepts/architecture/">Arquitectura</a></li>
+    <li><a href="https://docs.kubelatch.com/es/concepts/security/">Modelo de seguridad</a></li>
+    <li><a href="/es/agents/">Agentes de IA</a></li>
+    <li><a href="/security/" hreflang="en" lang="en">English</a></li>
+  </ul>
+</footer>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terms · kubelatch</title>
+<meta name="description" content="The kubelatch End User License Agreement, and the terms of a Pro subscription: price, Seats, renewal, trial and cancellation.">
+<link rel="canonical" href="https://kubelatch.com/terms/">
+<link rel="alternate" hreflang="en" href="https://kubelatch.com/terms/">
+<link rel="alternate" hreflang="es" href="https://kubelatch.com/es/terms/">
+<link rel="alternate" hreflang="x-default" href="https://kubelatch.com/terms/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/style.css">
+<meta name="theme-color" content="#080f1c">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kubelatch.com/terms/">
+<meta property="og:title" content="Terms · kubelatch">
+<meta property="og:description" content="The kubelatch End User License Agreement, and the terms of a Pro subscription.">
+<meta property="og:locale" content="en_US">
+</head>
+<body class="scheme-dark">
+<svg hidden><symbol id="mark" viewBox="0 0 48 48"><polygon class="s" points="15.50,12.80 24.26,17.02 26.42,26.49 20.36,34.09 10.64,34.09 4.58,26.49 6.74,17.02"/><path class="f" d="M16.22 20.95 L17.44 21.53 Q18.16 21.88 18.34 22.66 L18.64 23.98 Q18.81 24.76 18.32 25.38 L17.47 26.44 Q16.98 27.06 16.18 27.06 L14.82 27.06 Q14.02 27.06 13.53 26.44 L12.68 25.38 Q12.19 24.76 12.36 23.98 L12.66 22.66 Q12.84 21.88 13.56 21.53 L14.78 20.95 Q15.50 20.60 16.22 20.95 Z"/><rect class="a" x="25" y="21.5" width="19.5" height="5" rx="2.5"/><rect class="a" x="35" y="24" width="3.6" height="7.5" rx="1.8"/><rect class="a" x="40.9" y="24" width="3.6" height="5.8" rx="1.8"/></symbol></svg>
+<a class="skip" href="#main">Skip to content</a>
+
+<header>
+  <div class="topbar">
+    <nav class="wrap nav" aria-label="Main">
+      <a class="lockup" href="/"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg>kubelatch</a>
+      <ul>
+        <li><a href="https://docs.kubelatch.com/">Docs</a></li>
+        <li class="lang"><a href="/terms/" aria-current="page" hreflang="en" lang="en">EN</a><span aria-hidden="true">·</span><a href="/es/terms/" hreflang="es" lang="es">ES</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="scheme-light">
+  <section class="wrap section" aria-labelledby="title">
+    <p class="kicker">// legal</p>
+    <h1 id="title">Terms</h1>
+    <p class="intro">Two texts govern kubelatch. The End User License Agreement applies to everyone who installs it, in the Free or the Pro edition. The Pro subscription terms apply on top of it when you buy Pro or start a trial.</p>
+    <ul class="plain">
+      <li><a href="#eula">End User License Agreement</a></li>
+      <li><a href="#pro">Pro subscription terms</a></li>
+    </ul>
+  </section>
+
+  <section class="wrap section" aria-labelledby="eula">
+    <p class="kicker">// end user license agreement</p>
+    <h2 id="eula">End User License Agreement</h2>
+    <p class="updated">Version 1.0, October 2026</p>
+    <p class="intro">kubelatch ships this text as <code>LICENSE</code>, in the container image, the Helm chart and the public repository; this page is its web copy.</p>
+    <div class="legal">
+      <p>This End User License Agreement (the “Agreement”) is a contract between Picaporte Labs, Spain (the “Licensor”), and the Licensee defined below. It governs the installation and use of the Software. By installing, running or using the Software, or by installing a License Key, the Licensee accepts this Agreement. A person who accepts it on behalf of an organisation represents that they have the authority to bind that organisation. If the Licensee does not accept this Agreement, it must not install or use the Software.</p>
+      <h3 id="eula-1">1. Definitions</h3>
+      <ol class="plain" type="a">
+        <li><strong>“Software”</strong> means the kubelatch server, the kubelatch command-line client, their container images, the Helm chart, the plugins and integrations distributed with them, the documentation, and every update of them that the Licensor makes available under this Agreement.</li>
+        <li><strong>“Free edition”</strong> means the Software used without a valid License Key, within the limits set out in section 2(b).</li>
+        <li><strong>“Pro edition”</strong> means the Software used with a valid License Key, which lifts the limits of the Free edition for the Seats and the term that the License Key states.</li>
+        <li><strong>“License Key”</strong> means a token signed by the Licensor that identifies the Licensee and states its number of Seats, its expiry date and whether it is a trial.</li>
+        <li><strong>“Seats”</strong> means the number of people that a License Key allows to be enabled at the same time, counted as distinct people across all the Instances in which the License Key is installed. Every enabled person counts, administrators and break-glass accounts included; automated identities (bots) do not.</li>
+        <li><strong>“Licensee”</strong> means the natural or legal person that accepts this Agreement. Where the Licensee is an organisation, its employees and contractors may use the Software on its behalf, and the Licensee is responsible for their compliance with this Agreement.</li>
+        <li><strong>“Instance”</strong> means one deployment of the kubelatch server, with its own database, together with the Kubernetes clusters registered in it.</li>
+        <li><strong>“Pro Subscription Terms”</strong> means the terms that section 5 refers to.</li>
+      </ol>
+      <h3 id="eula-2">2. Grant of license</h3>
+      <ol class="plain" type="a">
+        <li>Subject to this Agreement, the Licensor grants the Licensee a non-exclusive, non-transferable, non-sublicensable, worldwide license to install and run any number of Instances of the Software for the Licensee’s internal business purposes.</li>
+        <li>Without a License Key, the license covers the Free edition, free of charge and with no time limit, within these limits for each Instance: at most 2 registered clusters, at most 5 enabled people, audit records served for the last 24 hours (and, in an Instance that never had a License Key, kept for at most 24 hours), and the six system roles of the Software, without custom roles. Section 4(e) describes what an Instance that once had a License Key keeps.</li>
+        <li>With a valid License Key, the license covers the Pro edition for the Seats and until the expiry date that the License Key states, plus the grace period of section 4(d).</li>
+        <li>The Licensee may copy and adapt the configuration examples, CI workflow examples and agent rules published with the Software, for use with the Software.</li>
+      </ol>
+      <h3 id="eula-3">3. Restrictions</h3>
+      <p>Except as this Agreement expressly allows, the Licensee shall not, and shall not let anyone else:</p>
+      <ol class="plain" type="a">
+        <li>copy, distribute, sell, resell, rent, lease, lend or sublicense the Software, in whole or in part, to any third party;</li>
+        <li>host the Software, or offer access to it, as a service for third parties;</li>
+        <li>reverse engineer, decompile or disassemble the Software, or attempt to derive its source code, except to the extent that applicable law expressly allows it despite this restriction;</li>
+        <li>remove, alter or obscure any notice of copyright, trademark or license in the Software;</li>
+        <li>circumvent, disable or modify the limits of the Free edition or the verification of License Keys, including by modifying the Software or by splitting the same people or clusters across several Instances in order to exceed those limits;</li>
+        <li>share a License Key with any third party, or install it in any Instance other than the Licensee’s own;</li>
+        <li>use the Software in breach of applicable law.</li>
+      </ol>
+      <h3 id="eula-4">4. License Keys and editions</h3>
+      <ol class="plain" type="a">
+        <li>The Software verifies a License Key offline, against public keys built into it. The verification calls no service of the Licensor and sends no data.</li>
+        <li>A License Key carries the Licensee’s name and e-mail address, an identifier, the number of Seats, the expiry date and whether it is a trial. A trial License Key gives the Pro edition for 30 days, without a limit on Seats and without a grace period after it expires.</li>
+        <li>If more people are enabled than the Seats allow, the Licensee shall, within 30 days, extend its Seats or disable people. After those 30 days, the Software stops new people from being added until the enabled people fit the Seats again.</li>
+        <li>When a paid License Key expires, the Pro edition continues for a grace period of 30 days.</li>
+        <li>After the grace period, or when a trial ends, the Instance returns to the limits of the Free edition for new registrations only. Nothing that exists is removed or cut: access through the proxy, grants, credentials, clusters, people and the custom roles already created keep working, and custom roles can only be deleted. Audit records older than 24 hours are kept according to the Licensee’s configured retention, but are not served until a valid License Key is installed again.</li>
+        <li>The Licensor commits to the Licensee that:
+          <ol type="i">
+            <li>what is in the Free edition stays in the Free edition, and its limits will only ever be loosened, never tightened;</li>
+            <li>the Software sends no telemetry and calls no service of the Licensor: License Keys are verified offline, and the Software works in installations without access to the internet;</li>
+            <li>a limit only stops a new registration, and nothing that exists is cut, as section 4(e) describes;</li>
+            <li>on request, a prospective or existing customer may review the source code of the Software under a non-disclosure agreement, and the Licensor will publish the summary of an external penetration test at <a href="https://kubelatch.com/security/">kubelatch.com/security/</a>.</li>
+          </ol>
+        </li>
+      </ol>
+      <h3 id="eula-5">5. Pro subscription</h3>
+      <p>The Pro edition is sold as a subscription. Its price, billing, renewal, Seats, trial and cancellation are governed by the Pro Subscription Terms published at <a href="https://kubelatch.com/terms/">kubelatch.com/terms/</a>, which form part of this Agreement for a Licensee that buys a subscription. Where they conflict with this Agreement on a matter of subscription or payment, the Pro Subscription Terms prevail.</p>
+      <h3 id="eula-6">6. Ownership and feedback</h3>
+      <ol class="plain" type="a">
+        <li>The Software is licensed, not sold. The Licensor and its licensors keep all rights, title and interest in the Software, including all intellectual and industrial property rights. The Licensee receives only the rights that this Agreement expressly grants. “kubelatch” and its logo are trademarks of the Licensor.</li>
+        <li>If the Licensee gives the Licensor suggestions, ideas or other feedback about the Software, the Licensor may use them freely, without any obligation to the Licensee. The Licensee is not obliged to give feedback.</li>
+      </ol>
+      <h3 id="eula-7">7. Third-party components</h3>
+      <p>The Software includes open-source components under their own licenses, which are listed in the documentation at <a href="https://docs.kubelatch.com">docs.kubelatch.com</a>. Those licenses govern those components, and nothing in this Agreement limits the rights that they grant.</p>
+      <h3 id="eula-8">8. Updates and support</h3>
+      <ol class="plain" type="a">
+        <li>The Licensor may make updates of the Software available. Each update is governed by this Agreement, or by the version of this Agreement that accompanies it. The Licensor has no obligation to release updates, and supports only the latest release of the Software.</li>
+        <li>The Free edition comes with community support, without any commitment of response. The Pro edition comes with the support described at <a href="https://kubelatch.com/pricing/">kubelatch.com/pricing/</a>.</li>
+      </ol>
+      <h3 id="eula-9">9. Warranty disclaimer</h3>
+      <p>To the maximum extent that applicable law allows, the Software is provided “as is” and “as available”, without any warranty of any kind, express or implied, including warranties of merchantability, fitness for a particular purpose and non-infringement, and without any warranty that the Software will be free of errors or work without interruption. The Licensee is responsible for how it configures the Software, for the permissions it grants through it, and for the backups of its own data.</p>
+      <h3 id="eula-10">10. Limitation of liability</h3>
+      <ol class="plain" type="a">
+        <li>To the maximum extent that applicable law allows, the Licensor is not liable for any indirect, incidental, special or consequential damages, or for any loss of profits, revenue, business, goodwill or data, arising out of or in connection with this Agreement or the Software.</li>
+        <li>To the maximum extent that applicable law allows, the Licensor’s total liability arising out of or in connection with this Agreement or the Software is limited to the fees that the Licensee paid to the Licensor for the Software in the 12 months before the event that gave rise to the claim.</li>
+        <li>Nothing in this Agreement limits or excludes liability for wilful misconduct or gross negligence, for death or personal injury, or any other liability that cannot be limited or excluded under Spanish law.</li>
+      </ol>
+      <h3 id="eula-11">11. Term and termination</h3>
+      <ol class="plain" type="a">
+        <li>This Agreement takes effect when the Licensee accepts it, and continues until it is terminated.</li>
+        <li>The license for the Pro edition ends when the License Key expires and its grace period, if any, has passed. The Licensee may then continue to use the Free edition under this Agreement.</li>
+        <li>If the Licensee breaches this Agreement, the license for the Pro edition terminates: at once for a breach of section 3, and otherwise if the Licensee does not remedy the breach within 30 days after the Licensor’s written notice. On termination, the Licensee shall stop using the Pro edition and remove its License Keys. It may continue to use the Free edition under this Agreement, provided that it complies with sections 2(b) and 3; if it does not, the license for the Free edition terminates too, and the Licensee shall stop using the Software and delete its copies.</li>
+        <li>Termination entitles the Licensee to no refund, except as the Pro Subscription Terms provide. Sections 6, 9, 10, 12 and 13 survive termination.</li>
+      </ol>
+      <h3 id="eula-12">12. Data</h3>
+      <ol class="plain" type="a">
+        <li>The Software sends no data to the Licensor. The data that the Software processes, including the identities, permissions and audit records of the Licensee’s people, stays in the Licensee’s own infrastructure and database. The Licensee is the controller of that data, and the Licensor has no access to it.</li>
+        <li>If the Licensee sends data to the Licensor to obtain support, the Licensor uses it only to provide that support.</li>
+        <li>Billing data is handled by Stripe on the Licensor’s behalf, as the privacy policy at <a href="https://kubelatch.com/privacy/">kubelatch.com/privacy/</a> describes.</li>
+      </ol>
+      <h3 id="eula-13">13. Governing law, venue and general provisions</h3>
+      <ol class="plain" type="a">
+        <li>This Agreement is governed by the laws of Spain, excluding their conflict-of-law rules and the United Nations Convention on Contracts for the International Sale of Goods.</li>
+        <li>Any dispute arising out of or in connection with this Agreement is submitted to the courts of the Licensor’s registered office, and the parties waive any other jurisdiction that might apply to them, to the extent that the law allows it.</li>
+        <li>This Agreement, together with the Pro Subscription Terms where they apply, is the entire agreement between the parties on its subject, and supersedes any prior agreement on it. Terms in a purchase order or other document of the Licensee do not apply unless the Licensor accepts them in writing.</li>
+        <li>If a provision of this Agreement is held invalid or unenforceable, the rest of it remains in force, and that provision is replaced by a valid one that comes as close as possible to its purpose.</li>
+        <li>The Licensee may not assign or transfer this Agreement without the Licensor’s prior written consent. The Licensor may assign it to a successor in its business.</li>
+        <li>The Licensor may publish new versions of this Agreement. A new version applies to the updates of the Software released with it; the version that accompanies the release that the Licensee runs governs that release.</li>
+        <li>A failure or delay in enforcing a provision is not a waiver of it.</li>
+      </ol>
+      <h3 id="eula-14">14. Contact</h3>
+      <p>Questions about this Agreement, notices to the Licensor and requests under it go to <a href="mailto:pro@kubelatch.com">pro@kubelatch.com</a>.</p>
+    </div>
+  </section>
+
+  <section class="wrap section" aria-labelledby="pro">
+    <p class="kicker">// pro subscription terms</p>
+    <h2 id="pro">Pro subscription terms</h2>
+    <p class="updated">Version 1.0, October 2026</p>
+    <div class="legal">
+      <p>These Pro Subscription Terms govern subscriptions to the Pro edition of kubelatch that the Customer buys from Picaporte Labs, Spain (“Picaporte Labs”). They form part of the End User License Agreement above, whose defined terms they use. The “Customer” is the Licensee that buys a subscription.</p>
+      <h3 id="pro-1">1. Business customers only</h3>
+      <p>Pro subscriptions are sold only to businesses, professionals and public bodies, for the purposes of their trade or activity, and not to consumers. By buying one, the Customer confirms that it does not act as a consumer. For that reason, the right of withdrawal that consumer law grants does not apply.</p>
+      <h3 id="pro-2">2. Subscription and price</h3>
+      <ol class="plain" type="a">
+        <li>A subscription lasts one year and is billed in advance, through Stripe, at the start of each period.</li>
+        <li>The price is per person (Seat) and year, as published at <a href="https://kubelatch.com/pricing/">kubelatch.com/pricing/</a> when the subscription is bought or renewed: today, 15 € per person per month billed yearly, that is, 180 € per person per year.</li>
+        <li>Prices exclude taxes. Stripe Tax calculates and adds VAT, or any other tax, where it is due, from the Customer’s billing address and tax identification number.</li>
+      </ol>
+      <h3 id="pro-3">3. Seats</h3>
+      <ol class="plain" type="a">
+        <li>A subscription has a minimum of 5 Seats.</li>
+        <li>The Customer can increase its Seats at any time from the customer portal. The increase is charged at once, prorated for the rest of the current period, and a new License Key with the new Seats is sent by e-mail.</li>
+        <li>To reduce its Seats, the Customer writes to <a href="mailto:pro@kubelatch.com">pro@kubelatch.com</a> before the renewal; the reduction applies from the next period, never below the minimum.</li>
+      </ol>
+      <h3 id="pro-4">4. Renewal and cancellation</h3>
+      <ol class="plain" type="a">
+        <li>A subscription renews automatically for another year at the end of each period, unless the Customer cancels it before the period ends.</li>
+        <li>The Customer cancels from the customer portal. The cancellation takes effect at the end of the period already paid, and there are no refunds for partial periods or unused Seats.</li>
+        <li>After the end of the last period, the License Key expires on its date, and the grace period and the behaviour described in section 4 of the End User License Agreement apply: nothing that exists is cut.</li>
+      </ol>
+      <h3 id="pro-5">5. Trial</h3>
+      <p>The 30-day trial of the Pro edition needs no payment card and costs nothing. Its License Key has no limit on Seats. It ends by itself after 30 days, with no charge and no renewal, unless the Customer buys a subscription. A trial has no grace period.</p>
+      <h3 id="pro-6">6. License Keys</h3>
+      <p>A License Key arrives by e-mail when a subscription or a trial starts, and a new one at each renewal or change of Seats. The Customer installs it as the documentation describes. A Customer that has lost its key can have it sent again from <a href="https://kubelatch.com/pro/key/">kubelatch.com/pro/key/</a> or by writing to <a href="mailto:pro@kubelatch.com">pro@kubelatch.com</a>.</p>
+      <h3 id="pro-7">7. Failed payments</h3>
+      <p>If a payment fails, Stripe retries it and sends reminders to the Customer. The License Key in use keeps its expiry date, and when it expires the Instance has the 30 days of grace of the End User License Agreement. If the payment is still not made, the subscription ends and no new License Key is issued; nothing that exists is cut.</p>
+      <h3 id="pro-8">8. Price changes</h3>
+      <p>Picaporte Labs announces any change of price by e-mail at least 30 days in advance. A new price applies from the Customer’s next renewal, never to a period already paid, and the Customer can cancel before that renewal.</p>
+      <h3 id="pro-9">9. Invoices</h3>
+      <p>Picaporte Labs issues an invoice for each payment. The Customer downloads its invoices, and updates its billing details, from the customer portal.</p>
+      <h3 id="pro-10">10. Support</h3>
+      <p>The subscription includes support by e-mail at <a href="mailto:pro@kubelatch.com">pro@kubelatch.com</a> during business hours in Spain, and guided upgrades, as described at <a href="https://kubelatch.com/pricing/">kubelatch.com/pricing/</a>. A service level agreement applies only when agreed in writing.</p>
+      <h3 id="pro-11">11. Changes to these terms</h3>
+      <p>Picaporte Labs may change these terms by announcing it by e-mail at least 30 days in advance. Changes apply from the Customer’s next renewal.</p>
+      <h3 id="pro-12">12. Contact</h3>
+      <p>Questions about a subscription, Seats, invoices or License Keys go to <a href="mailto:pro@kubelatch.com">pro@kubelatch.com</a>.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap footer">
+  <a class="lockup" href="/"><svg class="mark" aria-hidden="true"><use href="#mark"/></svg>kubelatch</a>
+  <ul>
+    <li><a href="https://docs.kubelatch.com/">Documentation</a></li>
+    <li><a href="https://docs.kubelatch.com/concepts/architecture/">Architecture</a></li>
+    <li><a href="https://docs.kubelatch.com/concepts/security/">Security model</a></li>
+    <li><a href="/agents/">AI agents</a></li>
+    <li><a href="/es/terms/" hreflang="es" lang="es">Español</a></li>
+  </ul>
+</footer>
+</body>
+</html>
